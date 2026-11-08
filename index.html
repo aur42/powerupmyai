@@ -123,8 +123,11 @@ table{font-size:18px}
 .hline{display:block}
 #welcomeH1 .hc{font-size:30px;font-weight:700;margin-top:8px}
 #welcomeH1 .hd{font-size:24px;font-weight:800;color:var(--accent);margin-top:6px}
-#welcomeLede,#welcomeWhy,#welcomeOnce{white-space:pre-line}
-#vignette{width:min(94vw,600px);margin-left:50%;transform:translateX(-50%)}
+#welcomeLede,#welcomeWhy{white-space:pre-line}
+#vignette{width:min(94vw,600px);margin-left:auto;margin-right:auto;overflow:hidden}
+.acc{color:var(--accent)}
+#screen-welcome summary{color:var(--ink)}
+#screen-welcome .blist li::before{color:var(--muted)}
 .flagopt:focus-visible,.langfab:focus-visible,.sheetclose:focus-visible{outline:4px solid var(--accent);outline-offset:2px}
 .langfab{position:fixed;top:max(12px,env(safe-area-inset-top));right:14px;z-index:40;width:48px;height:48px;border-radius:50%;border:2px solid var(--line);background:#fff;font-size:26px;line-height:1;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.14);padding:0}
 .langfab.show{display:flex}
@@ -169,8 +172,9 @@ details p,details li{line-height:1.55}
   #screen-welcome .painicon{width:40px;height:40px;font-size:20px}
   #screen-welcome .paincap{font-size:14px;line-height:1.3}
   #screen-welcome .visual{margin:16px 0}
-  #vignette{width:min(76vw,296px)}
+  #screen-welcome #vignette{width:min(76vw,296px);margin-left:auto;margin-right:auto}
   #welcomeLede{font-size:20px;line-height:1.4;margin-bottom:16px}
+  #welcomeWhy{font-size:18px}
   #startBtn{margin-top:8px}
   #adminTableWrap{overflow-x:visible}
   #adminTableWrap td{word-break:break-word}
@@ -259,31 +263,28 @@ details p,details li{line-height:1.55}
       </svg>
     </div>
     <p class="lede" id="welcomeLede">We give you your own
-private folder and
-memory store —
+private <span class="acc">repository</span> and <span class="acc">database</span> —
 set up for you in one click.
 No surgery yourself.</p>
     <button class="btn" id="startBtn" type="button">Set up my agent home</button>
-    <p class="why" id="welcomeWhy">One click.
+    <p class="why" id="welcomeWhy">One click, once.
 Not an app — a one-time tool.
+Need extras later? Just ask your AI.
 No AI expertise needed.</p>
-    <p class="small" id="welcomeOnce" style="text-align:center;margin-top:8px">Do this once.
-You never need to come back —
-extras later? Just ask your AI.</p>
     <details>
       <summary>Details</summary>
       <p>Someone shared this with you so your AIs actually remember you.</p>
-      <p><strong>Use this page once.</strong> No account with us. No app to download.</p>
+      <p><strong>No account with us.</strong></p>
       <ul class="blist">
-        <li><strong>Free.</strong> No payment. Everything created is yours, under your own accounts: a private folder and a memory store.</li>
+        <li><strong>No payment.</strong> Everything sits under your own accounts: a private repository and a database.</li>
         <li><strong>GitHub — one click, when switched on.</strong> If it isn't, the button says “Demo mode” and offers a code instead. Never a fake “connected”.</li>
         <li><strong>Supabase — one click, when switched on.</strong> Same deal: honest demo label, same code fallback.</li>
         <li><strong>Your AI tools — one paste each.</strong> No shared sign-in exists across them, so each gets a ready-to-paste block.</li>
         <li><strong>Credentials never go in the repo.</strong> No server of ours touches your keys; pasted codes are checked in your browser, never saved.</li>
         <li><strong>“Done” means read back.</strong> A step counts only after the provider confirms it — and provider errors are shown unedited.</li>
       </ul>
+      <button class="btn quiet" id="welcomeExtrasBtn" type="button">Just want the template files?</button>
     </details>
-    <button class="btn quiet" id="welcomeExtrasBtn" type="button">Just want the template files?</button>
   </section>
 
   <!-- STEP 1 OF 3 : NAME -->
@@ -742,7 +743,7 @@ extras later? Just ask your AI.</p>
     <button type="button" class="sheetclose" id="langSheetClose">Close</button>
   </div>
 
-  <p class="footer-line" id="footerLine">PowerUpMyAI · powerupmyai.com · Free for the first members · Everything created is yours</p>
+  <p class="footer-line" id="footerLine">PowerUpMyAI · powerupmyai.com · Everything created is yours</p>
 </div>
 
 <script>
@@ -2140,11 +2141,9 @@ var ES_DICT={
 "Tired of repeating yourself?":"¿Cansado de repetirte?",
 "Your AI forgets your instructions.":"Tu IA olvida tus instrucciones.",
 "Your AIs don't share a memory.":"Tus IA no comparten una memoria.",
-"We give you your own private folder and memory store — set up for you in one click. No surgery yourself.":"Te creamos tu propia carpeta privada y tu memoria — con un solo clic. Tú no haces la cirugía.",
 "Set up my agent home":"Crear mi espacio de IA",
-"One click.\nNot an app — a one-time tool.\nNo AI expertise needed.":"Un clic.\nNo es una app:\nuna herramienta de una sola vez.\nNo necesitas saber de IA.",
-"Do this once.\nYou never need to come back —\nextras later? Just ask your AI.":"Hazlo una sola vez.\nNo tienes que volver —\n¿algo más después?\nPregúntale a tu IA.",
-"PowerUpMyAI · powerupmyai.com · Free for the first members · Everything created is yours":"PowerUpMyAI · powerupmyai.com · Gratis para los primeros · Todo lo creado es tuyo",
+"One click, once.\nNot an app — a one-time tool.\nNeed extras later? Just ask your AI.\nNo AI expertise needed.":"Un clic, una sola vez.\nNo es una app — una herramienta de una sola vez.\n¿Algo más después? Pregúntale a tu IA.\nNo necesitas saber de IA.",
+"PowerUpMyAI · powerupmyai.com · Everything created is yours":"PowerUpMyAI · powerupmyai.com · Todo lo creado es tuyo",
 "What's your name?":"¿Cómo te llamas?",
 "This fills your home with your details.":"Esto llena tu espacio con tus datos.",
 "Continue with Google":"Continuar con Google",
@@ -2256,11 +2255,10 @@ function applyLang(){
   setTextId("painCap1",tt("Tired of repeating yourself?","매번 같은 말, 지치셨죠?","¿Cansado de repetirte?"));
   setTextId("painCap2",tt("Your AI forgets your instructions.","AI가 내 말을 자꾸 잊어요.","Tu IA olvida tus instrucciones."));
   setTextId("painCap3",tt("Your AIs don't share a memory.","AI들끼리 기억을 나누지 않아요.","Tus IA no comparten una memoria."));
-  setTextId("welcomeLede",tt("We give you your own\nprivate folder and\nmemory store —\nset up for you in one click.\nNo surgery yourself.","나만의 비밀 폴더와\n기억 저장소를 만들어 드려요.\n한 번만 누르면 끝.\n직접 할 일은 없어요.","Te creamos tu carpeta privada\ny tu memoria, con un solo clic.\nTú no haces la cirugía."));
+  var wl=$("welcomeLede"); if(wl)wl.innerHTML=tt("We give you your own\nprivate <span class=\"acc\">repository</span> and <span class=\"acc\">database</span> —\nset up for you in one click.\nNo surgery yourself.","나만의\n비밀 <span class=\"acc\">저장소</span>와 <span class=\"acc\">데이터베이스</span>를\n한 번 클릭으로 만들어 드려요.\n직접 할 일은 없어요.","Te damos tu propio\n<span class=\"acc\">repositorio</span> privado y tu <span class=\"acc\">base de datos</span> —\nlistos con un solo clic.\nTú no haces la cirugía.");
   setTextId("startBtn",tt("Set up my agent home","내 AI 공간 만들기"));
-  setTextId("welcomeWhy",tt("One click.\nNot an app — a one-time tool.\nNo AI expertise needed.","한 번 클릭.\n앱이 아니라, 한 번 쓰는 도구예요.\nAI를 잘 몰라도 돼요."));
-  setTextId("welcomeOnce",tt("Do this once.\nYou never need to come back —\nextras later? Just ask your AI.","한 번만 하세요.\n다시 올 필요 없어요 —\n나중에 더 필요하면\nAI에게 물어보세요."));
-  setTextId("footerLine",tt("PowerUpMyAI · powerupmyai.com · Free for the first members · Everything created is yours","PowerUpMyAI · powerupmyai.com · 처음 오신 분은 무료예요 · 만든 건 모두 내 거예요"));
+  setTextId("welcomeWhy",tt("One click, once.\nNot an app — a one-time tool.\nNeed extras later? Just ask your AI.\nNo AI expertise needed.","한 번 클릭, 한 번만.\n앱이 아니라, 한 번 쓰는 도구예요.\n나중에 더 필요하면? AI에게 물어보세요.\nAI를 잘 몰라도 돼요."));
+  setTextId("footerLine",tt("PowerUpMyAI · powerupmyai.com · Everything created is yours","PowerUpMyAI · powerupmyai.com · 만든 건 모두 내 거예요"));
   // Step 0
   setTextId("step0H1",tt("What's your name?","이름이 뭐예요?"));
   setTextId("step0Lede",tt("This fills your home with your details.","내 정보로 공간을 채워요."));
@@ -2354,7 +2352,7 @@ function applyLang(){
   });
   // Details essential prose (Korean: shorter, essential content only)
   var wp=document.querySelector("#screen-welcome details p"); if(wp)wp.textContent=tt("Someone shared this with you so your AIs actually remember you.","AI가 나를 기억하게 하려고 누가 이 페이지를 보냈어요.","Alguien te compartió esto para que tus IA te recuerden de verdad.");
-  var wp2=document.querySelectorAll("#screen-welcome details p")[1]; if(wp2)wp2.innerHTML=tt("<strong>Use this page once.</strong> No account with us. No app to download.","<strong>한 번만 쓰세요.</strong> 계정도, 앱도 없어요.","<strong>Usa esta página una sola vez.</strong> Sin cuenta con nosotros. Sin app.");
+  var wp2=document.querySelectorAll("#screen-welcome details p")[1]; if(wp2)wp2.innerHTML=tt("<strong>No account with us.</strong>","<strong>계정도 없어요.</strong>","<strong>Sin cuenta con nosotros.</strong>");
   // Outbound deep-link guidance, in chosen language
   document.querySelectorAll(".outbound-note").forEach(function(el){el.textContent=tt("We'll open the right page — just tap Allow/Create, then come back.","맞는 페이지를 열어요 — 허용/만들기만 누르고 돌아오세요.");});
   var bl=document.querySelector(".bubble-label"); if(bl)bl.textContent=tt("Read back from your home just now.","방금 내 공간에서 읽어 왔어요.");
