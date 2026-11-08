@@ -236,10 +236,27 @@ details p,details li{line-height:1.55}
 .vignette.paused .tile-move,.vignette.paused .tile-look,.vignette.paused .pillbg,.vignette.paused .hub,.vignette.paused .hub-glow,.vignette.paused .lines,.vignette.paused .ring{animation-play-state:paused !important}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.spinner,li.doing .dot,.big-icon.ok,#screen-working .spinner,.vignette *{animation:none !important}.screen.active{animation:none}.vignette .tile-look{opacity:1}.vignette .pillbg{fill:#E3EDFF;stroke-opacity:.6}.vignette .hub{opacity:1}.vignette .hub-glow{opacity:.45}.vignette .lines{opacity:.6}.vignette .ring{opacity:.5}.langsheet.open{animation:none}}
 
+
+.preview-bar{position:sticky;top:10px;z-index:30;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--warn-bg);border:2px solid var(--warn-line);border-radius:999px;padding:8px 10px 8px 16px;margin-bottom:18px}
+.preview-bar .pv-pill{font-size:16px;font-weight:700;color:var(--warn-ink)}
+.preview-bar .pv-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.preview-bar button{font:inherit;font-size:15px;font-weight:700;cursor:pointer;border-radius:999px;border:2px solid var(--line);background:#fff;color:var(--ink);padding:6px 12px;min-height:36px}
+.preview-bar button:hover{background:var(--surface2)}
+body.preview .dots span{cursor:pointer}
+body.preview .dots span:hover{outline:2px solid var(--accent);outline-offset:2px}
+.come-back-line{font-weight:600}
 </style>
 </head>
 <body>
 <div class="wrap">
+  <div id="previewBar" class="preview-bar hidden" role="note">
+    <span class="pv-pill" id="previewPill">Preview — nothing is created</span>
+    <span class="pv-actions">
+      <button type="button" id="previewPrevBtn">← Prev</button>
+      <button type="button" id="previewNextBtn">Next →</button>
+      <button type="button" id="previewExitBtn">Exit preview</button>
+    </span>
+  </div>
 
   <div class="progress hidden" id="progressWrap" aria-hidden="true">
     <div class="progress-label" id="progressLabel">Step 1 of 3</div>
@@ -316,8 +333,8 @@ No AI expertise needed.</p>
         <li id="welcomeDetailBest"><strong>You start from everyone's best setups</strong> — one shared register.</li>
         <li id="welcomeDetailSync"><strong>You never sync anything yourself.</strong> Your AIs do it for you.</li>
       </ul>
-      <button class="btn quiet" id="welcomeExtrasBtn" type="button">Just want the template files?</button>
     </details>
+    <button class="btn quiet" id="welcomeExtrasBtn" type="button">Just want the template files?</button>
   </section>
 
   <!-- STEP 1 OF 3 : NAME -->
@@ -356,7 +373,7 @@ No AI expertise needed.</p>
     <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">📁</div>
     <h1 id="choiceH1">Do you have GitHub?</h1>
     <p class="lede" id="choiceLede">If not, we'll show you how.</p>
-    <button class="btn" id="ghHaveBtn" type="button">I have GitHub</button>
+    <button class="btn" id="ghHaveBtn" type="button">I have GitHub — connect it</button>
     <button class="btn secondary" id="ghNewBtn" type="button">I don't have GitHub</button>
     <p class="why" id="choiceWhy">Nothing is public, ever.</p>
   </section>
@@ -368,6 +385,7 @@ No AI expertise needed.</p>
     <p class="lede" id="signupLede">It's free and takes two minutes.</p>
     <a class="btn" href="https://github.com/signup" target="_blank" rel="noopener">Open GitHub signup</a>
     <p class="why outbound-note">We'll open the right page — just tap Allow/Create, then come back.</p>
+    <p class="why come-back-line">You'll come back to this tab — your place is saved.</p>
     <p class="why">Free — straight from GitHub.</p>
     <button class="text-btn" id="ghSignupHaveBtn" type="button">I have GitHub now</button>
     <details>
@@ -388,6 +406,7 @@ No AI expertise needed.</p>
     <p class="lede" id="step1Lede">Only you can ever see what's inside.</p>
     <button class="btn" id="ghPrimaryBtn" type="button">Connect and create it</button>
     <p class="why" id="step1Why">So your AIs share one memory.</p>
+    <p class="why come-back-line">You'll come back to this tab — your place is saved.</p>
     <p class="demo-line hidden" id="ghDemoLine">Demo mode — use a code instead (in Details).</p>
     <details id="ghDetails">
       <summary>Details</summary>
@@ -438,6 +457,7 @@ No AI expertise needed.</p>
     <p class="lede" id="step2Lede">Locked away, and only you hold the key.</p>
     <button class="btn" id="sbPrimaryBtn" type="button">Create my private memory</button>
     <p class="why" id="step2Why">So they remember between chats.</p>
+    <p class="why come-back-line">You'll come back to this tab — your place is saved.</p>
     <p class="demo-line hidden" id="sbDemoLine">Demo mode — use a code instead (in Details).</p>
     <button class="text-btn" id="sbSkip" type="button">Skip for now</button>
     <details id="sbDetails">
@@ -551,6 +571,7 @@ No AI expertise needed.</p>
   <section class="screen" id="step4">
     <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">✓</div>
     <h1 id="doneH1">You're done 🎉</h1>
+    <p id="wiringHonestLine" style="font-size:20px;font-weight:600;margin:0 0 14px">Your AIs can't see this by themselves. One paste per AI — this message does the rest.</p>
     <p class="lede" id="doneLede">You never need to come back here. Everything lives in your own accounts now — want extras later, just ask your AI.</p>
     <p class="small" id="doneSub">Your AIs can now remember you properly — expert-level setup, done once.</p>
     <div id="proofBubble" class="hidden">
@@ -749,7 +770,7 @@ No AI expertise needed.</p>
       <input type="text" id="mDb" placeholder="https://xxxx.supabase.co" autocomplete="off" spellcheck="false" />
       <button class="btn secondary" id="dlBtn" type="button">Download all template files</button>
       <p class="small" style="margin-top:8px">Your browser will save each file one by one — allow multiple downloads if it asks. Files:</p>
-      <p class="filelist">README.md · SOUL.md · IDENTITY.md · USER.md · AGENTS.md · MEMORY.md · DECISIONS.md · CONNECT.md · ORCHESTRATION.md · BEST-PRACTICES.md · skills/README.md · skills/memory-hygiene.md · skills/verify-before-claiming.md · skills/import-and-reconcile.md · agent.config.example.json · .env.example · .gitignore · db/001_starter_schema.sql · tools/import_md.py</p>
+      <p class="filelist">README.md · SOUL.md · IDENTITY.md · USER.md · AGENTS.md · MEMORY.md · DECISIONS.md · CONNECT.md · ORCHESTRATION.md · BEST-PRACTICES.md · skills/README.md · skills/memory-hygiene.md · skills/verify-before-claiming.md · skills/import-and-reconcile.md · agent.config.example.json · .env.example · .env.service-role.example · .gitignore · db/001_starter_schema.sql · tools/import_md.py · tools/export_home.py</p>
       <div id="manualBlocks"></div>
       </details>
     </div>
@@ -803,6 +824,7 @@ var CONFIG = {
      and the owner's secret admin link (#admin-<key>) can read the list back. */
   registryUrl: "",
   MUSE_REFERRAL_CODE: "18GRDY",
+  GROK_REFERRAL_CODE: "8RR96PZ7KDNHUD",
   /* "Get the full set" signup links. Defaults are the plain official signup pages;
      the operator may replace any of them with a referral/invite link — signups then
      carry the sharer's referral code automatically, because opening the link IS the
@@ -810,7 +832,7 @@ var CONFIG = {
   signupUrls: {
     claude: "https://claude.ai/",
     chatgpt: "https://chatgpt.com/",
-    grok: "https://grok.com/",
+    grok: "https://grok.com/refer/bot?code=8RR96PZ7KDNHUD",
     muse: "https://muse.ai/join"
   }
 };
@@ -826,6 +848,7 @@ var S = {
   dbPassword:"", anonKey:"", serviceKey:"", dbDone:false, dbSkipped:false,
   wired:false, verificationPhrase:"", ownerId:""
 };
+var IS_PREVIEW=false;
 function $(id){return document.getElementById(id);}
 function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function b64encode(str){
@@ -884,7 +907,8 @@ return "# "+v.repoName+" — my agent home\n\n"+
 "- `CONNECT.md` — the paste blocks that point each of my AI tools at this repo and database.\n"+
 "- `agent.config.json` — non-secret config only: project reference and public URL. **No keys, ever.**\n"+
 "- `db/` — the database schema and migrations.\n"+
-"- `tools/import_md.py` — imports existing Markdown memory files into the database.\n\n"+
+"- `tools/import_md.py` — imports existing Markdown memory files into the database.\n"+
+"- `tools/export_home.py` — exports your whole database back out to plain Markdown — take your home anywhere, any time.\n\n"+
 "## Rules for any AI tool reading this\n\n"+
 "1. Read `AGENTS.md`, `USER.md`, `SOUL.md` and `MEMORY.md` before doing anything else.\n"+
 "2. Write durable facts about me to the database (`memories` table), not just into chat. Keep `MEMORY.md` as the curated summary.\n"+
@@ -934,21 +958,10 @@ return "# USER.md — who I am\n\n"+
 "## What I want more / less of\n"+
 "<!-- Goals in plain words. The structured version lives in the `goals` table. -->\n";
 }
+var AGENTS_TEMPLATE="# AGENTS.md — How your assistant works here\n\nYour operating manual for this repo. The durable lessons and conventions you pick up as you work go here — not facts about the person (that's `USER.md` / `MEMORY.md`) and not persona (that's `SOUL.md`).\n\n## Conventions\n\nAdd an entry whenever you work something out worth keeping, for example:\n\n- a convention you've settled on (\"keep data exports in `exports/` and clean them up monthly\")\n- a tool or site quirk worth remembering\n- a workflow that worked, or a mistake not to repeat\n\nIt starts empty and is meant to grow slowly. Don't pad it; a short, accurate file beats a long, stale one.\n\n## Standing rules\n\n- **The database is canonical.** Files are the human-readable layer. On conflict, the database wins.\n- **Credentials never go in this repo.** Keys live in the owner's local `.env` or in GitHub Secrets only.\n- **Owner-only.** Nothing learned about the owner leaves this repo/database. Ever.\n- **Verify before claiming.** \"Done\" means checked against the source (the repo, the database, the provider) — not \"I ran the command.\"\n- **Write memory as you learn it.** Durable facts, preferences, decisions, and commitments go to the database and `MEMORY.md` in the same session you learn them.\n- **Open decisions live in `DECISIONS.md`.** When a situation matches one, ask the owner that one question (one at a time, never a list), record the answer there, and apply it.\n\n\n## Skills grow themselves\n\nThe `skills/` folder holds reusable procedures. The owner should never need to\nknow that word. When the same kind of task comes up a second time, write it up\nas a skill — what to do, step by step, one line at the top saying where it came\nfrom — so the next time is automatic. If a new skill overlaps an existing one,\nreconcile instead of duplicating, and never overwrite a skill silently.\n";
+var SKILLS_README_TEMPLATE="# Skills\n\nReusable know-how your assistant loads when the task matches. A skill is a short, tested procedure — not a note. Write one whenever a way of working proves itself twice.\n\n**For the owner:** you never have to write one, or even know this word. Skills arrive with your home, and your assistants add new ones automatically when a task repeats — that is the point of them.\n\n| Skill | Use it when |\n|---|---|\n| [memory-hygiene](memory-hygiene.md) | Saving, correcting, or pruning what the system knows about you |\n| [verify-before-claiming](verify-before-claiming.md) | Anything is about to be reported as done, created, or fixed |\n| [import-and-reconcile](import-and-reconcile.md) | Bringing in preferences/memories from another tool |\n\n## Skill packs from elsewhere\n\nThis starter pack is a beginning, not a boundary. A skill is just a Markdown\nfile, so packs from anywhere drop straight in: another AI tool's skill\nformat, a public repository, a zip from a friend. Copy the files into this\nfolder, write one line at the top of each saying where it came from, and it\nis part of your home.\n\nTwo rules, same as everywhere in this home:\n\n1. **Reconcile before replacing.** If an incoming skill overlaps one already\n   here, use the import-and-reconcile procedure and let the owner choose —\n   never overwrite a working skill silently.\n2. **Provenance stays.** Keep the source line. A skill whose origin nobody\n   remembers is a skill nobody can re-check.\n";
 function tplAgents(v){
-return "# AGENTS.md — how the assistant should work\n\n"+
-"## Before anything else\n"+
-"Read `README.md`, `USER.md`, `SOUL.md` and `MEMORY.md` in this repo. If a database connection is configured (see `agent.config.json` and the local `.env`), the database is the canonical store — check it for facts about the user before answering from chat memory alone.\n\n"+
-"## Memory discipline\n"+
-"- When you learn a durable fact about the user (a preference, a person, a decision, a date), write it to the `memories` table with its source, and update `MEMORY.md` if it belongs in the curated summary.\n"+
-"- A correction from the user beats any older source: mark the old memory superseded, don't just add a conflicting one.\n"+
-"- Something the assistant itself said is never evidence about the user. Only user statements and verified sources count.\n\n"+
-"## Behaviour\n"+
-"- Be proactive within the bounds in `SOUL.md`: surface what is coming, what is at risk, and what looks forgotten — not just answers to what was asked.\n"+
-"- Verify before stating: check the repo, the database, or a real source before presenting a fact as settled.\n"+
-"- Never send, post, or commit anything as the user without explicit approval.\n"+
-"- Never print, request, or store credentials. If a task needs a key, it comes from the local `.env` at runtime only.\n\n"+
-"## Privacy\n"+
-"Everything in this repo and database is the user's private information. Do not copy it to any other tool, repo, or conversation.\n";
+return AGENTS_TEMPLATE;
 }
 function tplMemory(v){
 return "# MEMORY.md — curated long-term memory\n\n"+
@@ -973,6 +986,25 @@ return "# Copy this file to .env and fill it in. .env is git-ignored — never c
 "SUPABASE_ANON_KEY=\n"+
 "SUPABASE_SERVICE_ROLE_KEY=   # local use only (e.g. tools/import_md.py) — full access, guard it\n"+
 "# DATABASE_URL=              # only if a tool connects to Postgres directly\n";
+}
+function tplEnvServiceRoleExample(){
+return "# ⚠️  IMPORTER-ONLY — THE DANGEROUS KEY. Read this before filling in.\n"+
+"#\n"+
+"# Copy this file to .env.service-role and fill in locally.\n"+
+"# .env.service-role is git-ignored — NEVER commit it.\n"+
+"#\n"+
+"# The service-role key bypasses ALL row-level security: anyone holding it\n"+
+"# can read and write your ENTIRE memory store. It exists for exactly one\n"+
+"# job: the local importer (tools/import_md.py) running on YOUR machine.\n"+
+"#\n"+
+"# - NEVER paste it into any AI tool (not Muse, ChatGPT, Grok — none).\n"+
+"# - NEVER put it in the repo, a chat, an email, or GitHub Secrets for a\n"+
+"#   third-party service.\n"+
+"# - AI tools only ever get SUPABASE_ANON_KEY (in .env) plus your signed-in\n"+
+"#   session. See CONNECT.md.\n"+
+"#\n"+
+"# Get it from YOUR Supabase project: Settings → API → service_role.\n"+
+"SUPABASE_SERVICE_ROLE_KEY=\n";
 }
 function tplConfigExample(v){
 return JSON.stringify({repo:v.repoName,supabase:{project_ref:"YOUR-PROJECT-REF",url:"https://YOUR-PROJECT-REF.supabase.co"},canonical_store:"database",note:"Non-secret values only. Keys live in a local .env, never in this repo."},null,2)+"\n";
@@ -1166,6 +1198,240 @@ return "#!/usr/bin/env python3\n"+
 "    main()\n";
 }
 
+function tplExportPy(){
+return "#!/usr/bin/env python3\n"+
+"\"\"\"\n"+
+"export_home.py — export your Agent Home database back out to plain Markdown.\n"+
+"\n"+
+"The way out, whenever you want it: everything your home has learned about you\n"+
+"leaves as ordinary .md files you can read, keep, move to another tool, or feed\n"+
+"into a new home with tools/import_md.py. Your data is yours — leaving must be\n"+
+"as easy as joining was.\n"+
+"\n"+
+"Usage:\n"+
+"    python tools/export_home.py [--out ./home-export] [--dry-run]\n"+
+"\n"+
+"Credentials (all local, git-ignored, never committed — same files the\n"+
+"importer uses):\n"+
+"    .env               SUPABASE_URL, AGENT_HOME_OWNER_ID\n"+
+"    .env.service-role  SUPABASE_SERVICE_ROLE_KEY (read from this file or the\n"+
+"                       environment variable of the same name)\n"+
+"\n"+
+"Safety behaviour:\n"+
+"- --dry-run prints COUNTS ONLY and writes nothing.\n"+
+"- Lines that look like credentials are screened out of the export and only\n"+
+"  COUNTED in the report — never written, never printed.\n"+
+"- Network/API failures print one plain sentence and exit 1 — no tracebacks.\n"+
+"\"\"\"\n"+
+"import json\n"+
+"import os\n"+
+"import re\n"+
+"import sys\n"+
+"import urllib.error\n"+
+"import urllib.request\n"+
+"from pathlib import Path\n"+
+"\n"+
+"CRED_LABEL_RE = re.compile(\n"+
+"    r\"(api[_-]?key|access[_-]?token|auth[_-]?token|token|secret|passwd|password|\"\n"+
+"    r\"service[_-]?role|private[_-]?key|[a-z0-9_]*_key)\\s*[:=]\", re.IGNORECASE)\n"+
+"CRED_PREFIX_RE = re.compile(\n"+
+"    r\"\\b(sk-[A-Za-z0-9_-]{10,}|ghp_[A-Za-z0-9]{10,}|gho_[A-Za-z0-9]{10,}|\"\n"+
+"    r\"sbp_[A-Za-z0-9_-]{10,}|AKIA[A-Z0-9]{12,}|xox[bap]-[A-Za-z0-9-]{10,}|\"\n"+
+"    r\"-----BEGIN [A-Z ]*PRIVATE KEY-----)\")\n"+
+"\n"+
+"TABLES = (\"memories\", \"people\", \"goals\", \"conversations\", \"sources\")\n"+
+"\n"+
+"\n"+
+"def looks_like_credential(line: str) -> bool:\n"+
+"    return bool(CRED_LABEL_RE.search(line) or CRED_PREFIX_RE.search(line))\n"+
+"\n"+
+"\n"+
+"def load_env_file(path: Path) -> dict:\n"+
+"    env = {}\n"+
+"    if path.exists():\n"+
+"        for line in path.read_text(encoding=\"utf-8\").splitlines():\n"+
+"            line = line.strip()\n"+
+"            if line and not line.startswith(\"#\") and \"=\" in line:\n"+
+"                k, v = line.split(\"=\", 1)\n"+
+"                env[k.strip()] = v.strip().strip('\"').strip(\"'\")\n"+
+"    return env\n"+
+"\n"+
+"\n"+
+"def load_config(root: Path):\n"+
+"    env = {}\n"+
+"    env.update(load_env_file(root / \".env\"))\n"+
+"    env.update(load_env_file(root / \".env.service-role\"))\n"+
+"    for key in (\"SUPABASE_URL\", \"AGENT_HOME_OWNER_ID\", \"SUPABASE_SERVICE_ROLE_KEY\"):\n"+
+"        if os.environ.get(key):\n"+
+"            env[key] = os.environ[key]\n"+
+"    missing = [k for k in (\"SUPABASE_URL\", \"AGENT_HOME_OWNER_ID\",\n"+
+"                           \"SUPABASE_SERVICE_ROLE_KEY\") if not env.get(k)]\n"+
+"    return env, missing\n"+
+"\n"+
+"\n"+
+"def fetch_table(base_url: str, key: str, table: str, owner_id: str) -> list:\n"+
+"    rows, offset, page = [], 0, 1000\n"+
+"    while True:\n"+
+"        url = (f\"{base_url}/rest/v1/{table}\"\n"+
+"               f\"?owner_id=eq.{owner_id}&order=created_at.asc\"\n"+
+"               f\"&limit={page}&offset={offset}\")\n"+
+"        req = urllib.request.Request(url, headers={\n"+
+"            \"apikey\": key,\n"+
+"            \"Authorization\": f\"Bearer {key}\",\n"+
+"            \"Accept\": \"application/json\",\n"+
+"        })\n"+
+"        with urllib.request.urlopen(req, timeout=30) as resp:\n"+
+"            batch = json.loads(resp.read().decode(\"utf-8\"))\n"+
+"        rows.extend(batch)\n"+
+"        if len(batch) < page:\n"+
+"            return rows\n"+
+"        offset += page\n"+
+"\n"+
+"\n"+
+"def clean(text: str, stats: dict) -> str:\n"+
+"    \"\"\"Screen credential-looking lines out of exported content.\"\"\"\n"+
+"    kept = []\n"+
+"    for line in str(text).splitlines():\n"+
+"        if looks_like_credential(line):\n"+
+"            stats[\"screened\"] += 1\n"+
+"        else:\n"+
+"            kept.append(line)\n"+
+"    return \"\\n\".join(kept).strip()\n"+
+"\n"+
+"\n"+
+"def render_memories(rows, stats):\n"+
+"    lines = [\"# Memories (exported from your Agent Home database)\", \"\"]\n"+
+"    for r in rows:\n"+
+"        if r.get(\"superseded_by\"):\n"+
+"            continue\n"+
+"        content = clean(r.get(\"content\", \"\"), stats)\n"+
+"        if not content:\n"+
+"            continue\n"+
+"        meta = \" · \".join(x for x in (r.get(\"kind\", \"fact\"),\n"+
+"                                      r.get(\"source\", \"\"),\n"+
+"                                      str(r.get(\"created_at\", \"\"))[:10]) if x)\n"+
+"        lines.append(f\"- {content} ({meta})\")\n"+
+"    return \"\\n\".join(lines) + \"\\n\"\n"+
+"\n"+
+"\n"+
+"def render_people(rows, stats):\n"+
+"    lines = [\"# People\", \"\"]\n"+
+"    for r in rows:\n"+
+"        name = clean(r.get(\"name\", \"\"), stats)\n"+
+"        rel = clean(r.get(\"relationship\", \"\"), stats)\n"+
+"        notes = clean(r.get(\"notes\", \"\"), stats)\n"+
+"        lines.append(f\"- {name}\" + (f\" — {rel}\" if rel else \"\")\n"+
+"                     + (f\": {notes}\" if notes else \"\"))\n"+
+"    return \"\\n\".join(lines) + \"\\n\"\n"+
+"\n"+
+"\n"+
+"def render_goals(rows, stats):\n"+
+"    lines = [\"# Goals\", \"\"]\n"+
+"    for r in rows:\n"+
+"        title = clean(r.get(\"title\", \"\"), stats)\n"+
+"        desc = clean(r.get(\"description\", \"\"), stats)\n"+
+"        due = str(r.get(\"due_at\") or \"\")[:10]\n"+
+"        lines.append(f\"- [{r.get('status', 'active')}] {title}\"\n"+
+"                     + (f\" — {desc}\" if desc else \"\")\n"+
+"                     + (f\" (due {due})\" if due else \"\"))\n"+
+"    return \"\\n\".join(lines) + \"\\n\"\n"+
+"\n"+
+"\n"+
+"def render_conversations(rows, stats):\n"+
+"    lines = [\"# Conversations (log)\", \"\"]\n"+
+"    for r in rows:\n"+
+"        content = clean(r.get(\"content\", \"\"), stats)\n"+
+"        if not content:\n"+
+"            continue\n"+
+"        when = str(r.get(\"occurred_at\", \"\"))[:16].replace(\"T\", \" \")\n"+
+"        lines.append(f\"- [{when}] {r.get('source', '')}/{r.get('role', '')}: {content}\")\n"+
+"    return \"\\n\".join(lines) + \"\\n\"\n"+
+"\n"+
+"\n"+
+"def render_sources(rows, stats):\n"+
+"    lines = [\"# Sources\", \"\"]\n"+
+"    for r in rows:\n"+
+"        name = clean(r.get(\"name\", \"\"), stats)\n"+
+"        notes = clean(r.get(\"notes\", \"\"), stats)\n"+
+"        lines.append(f\"- {name}\" + (f\" ({r.get('kind', '')})\" if r.get(\"kind\") else \"\")\n"+
+"                     + (f\": {notes}\" if notes else \"\"))\n"+
+"    return \"\\n\".join(lines) + \"\\n\"\n"+
+"\n"+
+"\n"+
+"RENDERERS = {\n"+
+"    \"memories\": render_memories,\n"+
+"    \"people\": render_people,\n"+
+"    \"goals\": render_goals,\n"+
+"    \"conversations\": render_conversations,\n"+
+"    \"sources\": render_sources,\n"+
+"}\n"+
+"\n"+
+"EXPORT_README = \"\"\"# Your Agent Home export\n"+
+"\n"+
+"Plain Markdown, exported from your own database by tools/export_home.py.\n"+
+"Read it anywhere, keep it, or move it:\n"+
+"\n"+
+"- Into a NEW Agent Home: run that home's tools/reconcile_import.py on this\n"+
+"  folder first (the usual gate), then tools/import_md.py.\n"+
+"- Into another AI tool: paste or attach the files — they are ordinary\n"+
+"  Markdown with no special format.\n"+
+"- Just for the record: they are yours; nothing here phones home.\n"+
+"\"\"\"\n"+
+"\n"+
+"\n"+
+"def main(argv) -> int:\n"+
+"    out = Path(\"./home-export\")\n"+
+"    dry_run = \"--dry-run\" in argv\n"+
+"    args = [a for a in argv if not a.startswith(\"--\")]\n"+
+"    if \"--out\" in argv:\n"+
+"        out = Path(argv[argv.index(\"--out\") + 1])\n"+
+"    elif args:\n"+
+"        out = Path(args[0])\n"+
+"    root = Path(__file__).resolve().parent.parent\n"+
+"    env, missing = load_config(root)\n"+
+"    if missing:\n"+
+"        print(f\"Cannot export yet: missing {', '.join(missing)} \"\n"+
+"              f\"(expected in .env / .env.service-role next to this repo).\")\n"+
+"        return 1\n"+
+"    try:\n"+
+"        data = {t: fetch_table(env[\"SUPABASE_URL\"], env[\"SUPABASE_SERVICE_ROLE_KEY\"],\n"+
+"                               t, env[\"AGENT_HOME_OWNER_ID\"]) for t in TABLES}\n"+
+"    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, ValueError):\n"+
+"        print(\"Could not reach your database. Check your connection and your \"\n"+
+"              \".env values, then try again.\")\n"+
+"        return 1\n"+
+"    stats = {\"screened\": 0}\n"+
+"    files = {f\"{t}.md\": RENDERERS[t](data[t], stats) for t in TABLES}\n"+
+"    counts = {t: len(data[t]) for t in TABLES}\n"+
+"    if dry_run:\n"+
+"        print(\"Export dry run — counts only, nothing written:\")\n"+
+"        for t in TABLES:\n"+
+"            print(f\"  {t}: {counts[t]} rows\")\n"+
+"        if stats[\"screened\"]:\n"+
+"            print(f\"  ({stats['screened']} credential-looking lines would be screened out)\")\n"+
+"        return 0\n"+
+"    out.mkdir(parents=True, exist_ok=True)\n"+
+"    for name, text in files.items():\n"+
+"        (out / name).write_text(text, encoding=\"utf-8\")\n"+
+"    (out / \"EXPORT-README.md\").write_text(EXPORT_README, encoding=\"utf-8\")\n"+
+"    total = sum(counts.values())\n"+
+"    print(f\"Exported {total} rows to {out}/ \"\n"+
+"          f\"({', '.join(f'{t}: {counts[t]}' for t in TABLES)}).\")\n"+
+"    if stats[\"screened\"]:\n"+
+"        print(f\"{stats['screened']} credential-looking lines were screened out \"\n"+
+"              f\"and not written.\")\n"+
+"    return 0\n"+
+"\n"+
+"\n"+
+"if __name__ == \"__main__\":\n"+
+"    try:\n"+
+"        sys.exit(main(sys.argv[1:]))\n"+
+"    except Exception:\n"+
+"        print(\"The export did not finish. Nothing was written or changed; \"\n"+
+"              \"check your .env values and try again.\")\n"+
+"        sys.exit(1)\n";
+}
+
 /* ============ CONNECT blocks ============ */
 var TOOLS=[
   {id:"muse",label:"Muse"},
@@ -1175,30 +1441,15 @@ var TOOLS=[
   {id:"instinct",label:"Instinct"},
   {id:"other",label:"Any other AI tool"}
 ];
+var CONNECT_TEMPLATE="# CONNECT.md — Point your AI tools here\n\n_This file is generated per person by the setup page, with your real repo and database URLs filled in. The version in the template repo uses placeholders — replace `YOUR-USERNAME` and `YOUR-PROJECT-REF`, or regenerate it from the setup page._\n\nHonest label: there is no uniform one-click OAuth into every AI tool. The honest version is **one button that generates all the paste blocks below** — you paste each block once, into that tool's custom instructions / project instructions / system prompt.\n\n---\n\n## For every tool — the universal block\n\n```text\nMy agent home is a private GitHub repo: https://github.com/YOUR-USERNAME/agent-home\nMy personal database is: https://YOUR-PROJECT-REF.supabase.co (Supabase, owner-only RLS)\n\nBefore answering, read USER.md, MEMORY.md, AGENTS.md, SOUL.md and IDENTITY.md from that repo.\nThe database is canonical; the Markdown files are the human-readable layer.\nWrite durable facts, preferences, decisions and commitments about me to the database\nand mirror them in MEMORY.md. Never store credentials anywhere. Never share anything\nyou learn about me with anyone else or any other store.\nThis home has a DECISIONS.md. When a situation matches an open decision, ask the owner\nthat one question, record their answer in DECISIONS.md, and apply it — one at a time,\nnever a list.\n\nFirst contact — do these four things once, in this order:\n1. Prove you read it: reply to the owner with the verification phrase seeded in MEMORY.md.\n2. Empty your pockets: list what YOU already hold about the owner — memories, settings,\n   custom instructions, and any skills or procedures you use — so it can be reconciled\n   into this home. Nothing merges silently; conflicts are the owner's call.\n3. Rewire: from now on this home is canonical. Check it before trusting your own\n   memory of the owner, and write what you learn back here, not only in your app.\n4. Contribute: reusable procedures you already have, or develop later, belong in\n   skills/ (note where each came from; duplicates reconcile first, never overwrite).\n   And when the owner asks for the same kind of task a second time, write it up as\n   a new skill there — what to do, step by step — so next time it is automatic.\n   The owner never has to ask for a skill, or know the word.\n\nIf you have a place for standing instructions (custom instructions, project\ninstructions, memory settings), this block belongs there, so it survives new chats —\nnot only in this one conversation.\n```\n\n## Skills and packs from elsewhere\n\nYour home ships with a starter skill pack in `skills/` (memory-hygiene,\nverify-before-claiming, import-and-reconcile). It is not a closed set:\n\n- **Skill packs from anywhere are welcome** — another AI tool's skills, a\n  public repo, a zip a friend sent. Copy the Markdown files into `skills/`,\n  note where each came from at the top of the file, and it works here.\n- **Never overwrite silently.** If an incoming skill duplicates or conflicts\n  with one already here, reconcile first (the import-and-reconcile skill is\n  the procedure) and let the owner pick — same rule as memories.\n- **Templates and files from elsewhere** follow the same path: reconcile,\n  then import (README has the two commands). Nothing outside this repo is\n  second-class.\n\n## Muse\n\nPaste the universal block into Settings → Custom Instructions, and add the repo as a project source if your plan supports it.\n_Capability, honestly: custom instructions alone don't give Muse access to a private repo — it can read your home only when the repo/files are attached as a project source or the tool is connected to your database. Without that, it has the block's snapshot, not live files._\n\n## Claude\n\nCreate a Project named \"Agent Home\", paste the universal block as the project instructions, and upload USER.md / MEMORY.md / AGENTS.md as project knowledge.\n_Capability, honestly: Claude cannot open your private repo from a link by itself — the uploaded files ARE its copy of your home. Re-upload after big edits to MEMORY.md or USER.md._\n\n## ChatGPT\n\nPaste the universal block into Settings → Personalization → Custom Instructions.\n_Capability, honestly: custom instructions don't grant file or database access. ChatGPT works from the pasted block (a snapshot) unless you also give it the files or a connector in the conversation._\n\n## Grok\n\nPaste the universal block at the start of a new conversation, or into its custom instructions where available.\n_Capability, honestly: a block pasted into one conversation is a snapshot for that conversation only._\n\n## Instinct\n\nPaste the universal block into its instructions for you.\n\n## Notion — a source, not a chat tool\n\nMany people keep real knowledge in Notion. Honest label first: there is no consumer one-click API connect that pulls your Notion into this home — anyone who tells you otherwise is selling something. There are two honest paths, and you can use either or both:\n\n**(a) Import (one-way, whenever you want a refresh).** In Notion: Settings → **Export all workspace content**, format **Markdown & CSV**. Unzip it, put the exported `.md` files in a folder named `notion-export/`, and run them through exactly the same gate as every other source:\n\n```bash\npython tools/reconcile_import.py ./notion-export/   # resolve conflicts first\npython tools/import_md.py ./notion-export/\n```\n\nThe tooling credits these files to the source **notion-export** automatically (that's what the folder name does), and conflicts with your other tools are reconciled, never silently overwritten — same rules as everything else.\n\n**(b) Mirror (optional, readable copy in Notion).** If you like reading your memory in Notion, an AI tool with Notion access can keep ONE Notion page as a readable mirror of the summaries in MEMORY.md and USER.md. Paste this into that tool:\n\n```text\nKeep the Notion page titled \"My Agent Home (mirror)\" in sync with the summaries\nin MEMORY.md and USER.md from my agent home repo: when those files change,\nupdate the page to match. This page is a ONE-WAY MIRROR for reading only —\nit is never the canonical copy, and edits made in Notion do not flow back.\nIf the mirror and the home disagree, the home (database, then files) wins.\nPut \"Mirror — canonical copy lives in my agent home\" at the top of the page.\n```\n\n_Capability, honestly: the mirror is only as fresh as the last time a tool ran it, and Notion edits to the mirror go nowhere — correct facts in your home (via any wired tool), not in the mirror._\n\n## Confirm it's wired — the sync check\n\nAfter pasting a block into an app, send it this message. The check is built around your **verification phrase**: at setup, a random phrase (two words + a number) was written as a seed line in MEMORY.md — `Verification phrase: <two words>-<number>`. A tool can only quote it if it can actually read your files, so a correct phrase **plus** a real quoted fact is strong evidence the app is reading your home. It is not absolute proof — treat a wrong, missing, or vague phrase as \"not wired\", even if the other answers sound plausible: plausible is what guessing looks like.\n\n```text\nSync check. Read my agent home (the repo in my instructions) and reply with exactly:\n1. My verification phrase, quoted verbatim from MEMORY.md (the line starting \"Verification phrase:\")\n2. My name, as written in USER.md\n3. One other fact from MEMORY.md, quoted\n4. \"Canonical store: database\" — if that's what my README says\nTwo honest fallbacks, use them instead of guessing:\n- If you can't read the repo at all, say: \"I can't read your agent home yet.\"\n- If you can read it but a field is still blank, name the blank field —\n  that means we're wired, just not filled in yet.\n```\n\nIf the phrase comes back wrong or missing, that app isn't reading your home yet — check its capability note above (it may need the files uploaded, not just the block) and re-paste.\n\n## Any other tool\n\nIf it has a system prompt, custom instructions, or a \"memory\" setting — the universal block goes there. If it can read files, give it this repo. If it can call an API, give it the database URL and the **anon key — the variable named `SUPABASE_ANON_KEY` in your .env** — together with your signed-in session.\n\n**Never give any tool the service-role key** (`SUPABASE_SERVICE_ROLE_KEY`, kept separately in `.env.service-role`). That key bypasses all row-level security over your whole memory store. It exists for one job only: the importer running locally on your own machine. No AI tool ever needs it.\n";
+var UNIVERSAL_BLOCK="My agent home is a private GitHub repo: https://github.com/YOUR-USERNAME/agent-home\nMy personal database is: https://YOUR-PROJECT-REF.supabase.co (Supabase, owner-only RLS)\n\nBefore answering, read USER.md, MEMORY.md, AGENTS.md, SOUL.md and IDENTITY.md from that repo.\nThe database is canonical; the Markdown files are the human-readable layer.\nWrite durable facts, preferences, decisions and commitments about me to the database\nand mirror them in MEMORY.md. Never store credentials anywhere. Never share anything\nyou learn about me with anyone else or any other store.\nThis home has a DECISIONS.md. When a situation matches an open decision, ask the owner\nthat one question, record their answer in DECISIONS.md, and apply it — one at a time,\nnever a list.\n\nFirst contact — do these four things once, in this order:\n1. Prove you read it: reply to the owner with the verification phrase seeded in MEMORY.md.\n2. Empty your pockets: list what YOU already hold about the owner — memories, settings,\n   custom instructions, and any skills or procedures you use — so it can be reconciled\n   into this home. Nothing merges silently; conflicts are the owner's call.\n3. Rewire: from now on this home is canonical. Check it before trusting your own\n   memory of the owner, and write what you learn back here, not only in your app.\n4. Contribute: reusable procedures you already have, or develop later, belong in\n   skills/ (note where each came from; duplicates reconcile first, never overwrite).\n   And when the owner asks for the same kind of task a second time, write it up as\n   a new skill there — what to do, step by step — so next time it is automatic.\n   The owner never has to ask for a skill, or know the word.\n\nIf you have a place for standing instructions (custom instructions, project\ninstructions, memory settings), this block belongs there, so it survives new chats —\nnot only in this one conversation.\n";
 function connectBlock(tool,v){
   var repo=v.repoUrl||"https://github.com/YOUR-USERNAME/"+v.repoName;
   var hasDb=/^https?:\/\//.test(v.projectUrl||"");
-  var head="You have a new home base for everything you learn about me. Use it from now on.\n\n"+
-  "Repo (private, mine): "+repo+"\n";
-  var rules;
-  if(hasDb){
-    rules="Database (canonical store): "+v.projectUrl+"\n\n"+
-    "Before helping me with anything:\n"+
-    "1. Read README.md, AGENTS.md, USER.md, SOUL.md and MEMORY.md in that repo.\n"+
-    "2. The database is the canonical store; the Markdown files are the human-readable layer. If they disagree, the database wins.\n"+
-    "3. When you learn a durable fact about me — a preference, a person, a decision, a date — write it to the `memories` table in that database (with its source), and keep MEMORY.md as the curated summary. A correction from me beats any older source: supersede the old memory, don't add a conflicting one.\n"+
-    "4. What you learn about me stays in my repo and my database, under my keys. Never copy it anywhere else.\n";
-  }else{
-    rules="Database: none yet — I work from the files until I add one.\n\n"+
-    "Before helping me with anything:\n"+
-    "1. Read README.md, AGENTS.md, USER.md, SOUL.md and MEMORY.md in that repo.\n"+
-    "2. Until a database is added, the Markdown files are the canonical store — MEMORY.md is where durable facts live. (A database comes later and takes over as canonical then; README.md explains the switch.)\n"+
-    "3. When you learn a durable fact about me — a preference, a person, a decision, a date — write it into MEMORY.md in that repo (with where it came from). A correction from me beats any older note: replace the old line, don't add a conflicting one.\n"+
-    "4. What you learn about me stays in my repo, under my keys. Never copy it anywhere else.\n";
-  }
-  return head+rules+
-  "5. Never ask for, print, or commit my credentials. Keys live only in a local .env file on my machine. The only key an app may ever receive from that file is the one named SUPABASE_ANON_KEY — never the service-role key, which is importer-only.\n\n"+
-  "Confirm you've read the files by telling me, in one line each: who I am, what I'm working on, and one open loop from MEMORY.md.";
+  var out=UNIVERSAL_BLOCK.split("https://github.com/YOUR-USERNAME/agent-home").join(repo);
+  if(hasDb){ out=out.split("https://YOUR-PROJECT-REF.supabase.co").join(v.projectUrl); }
+  else { out=out.replace("My personal database is: https://YOUR-PROJECT-REF.supabase.co (Supabase, owner-only RLS)","My personal database is: none yet \u2014 the files are canonical until I add one."); }
+  return out.replace(/\n+$/,"");
 }
 function tplDecisions(v){
 return "# DECISIONS.md — choices made for you, and choices still open\n\n"+
@@ -1223,20 +1474,14 @@ return "# DECISIONS.md — choices made for you, and choices still open\n\n"+
 "<!-- Answers land here, dated, as open choices get decided. -->\n";
 }
 function tplConnect(v){
-  var out="# CONNECT.md — point every AI tool at this home\n\n"+
-  "There is no shared one-click sign-in across AI tools, so each tool gets a paste block. Paste the block for a tool as its first message, or into its custom / project instructions. Re-paste after big changes to `AGENTS.md` or `USER.md`.\n";
-  TOOLS.forEach(function(t){
-    out+="\n## "+t.label+"\n\n```text\n"+connectBlock(t,{repoUrl:v.repoUrl,repoName:v.repoName,projectUrl:v.projectUrl})+"\n```\n";
-  });
+  var repo=v.repoUrl||"https://github.com/YOUR-USERNAME/"+v.repoName;
+  var out=CONNECT_TEMPLATE.split("https://github.com/YOUR-USERNAME/agent-home").join(repo);
+  if(v.projectUrl){ out=out.split("https://YOUR-PROJECT-REF.supabase.co").join(v.projectUrl); }
+  if(v.projectRef){ out=out.split("YOUR-PROJECT-REF").join(v.projectRef); }
   return out;
 }
 function tplSkillsIndex(){
-return "# Skills — reusable know-how for your assistant\n\n"+
-"Skills are short instruction files your assistant loads when a situation matches. They turn hard-won lessons into behaviour that repeats without you re-teaching it.\n\n"+
-"- `memory-hygiene.md` — how to keep the memory store clean and trustworthy.\n"+
-"- `verify-before-claiming.md` — never say something is done or true until it has been checked.\n"+
-"- `import-and-reconcile.md` — how to bring in memories from other tools without overwriting anything.\n\n"+
-"Add your own: one file per skill, named for the situation, written as direct instructions.\n";
+return SKILLS_README_TEMPLATE;
 }
 function tplSkillMemory(){
 return "# Skill: memory hygiene\n\n"+
@@ -1308,9 +1553,11 @@ function templateFiles(v){
     {path:"CONNECT.md",content:tplConnect(v)},
     {path:"agent.config.example.json",content:tplConfigExample(v)},
     {path:".env.example",content:tplEnvExample(v)},
+    {path:".env.service-role.example",content:tplEnvServiceRoleExample()},
     {path:".gitignore",content:tplGitignore()},
     {path:"db/001_starter_schema.sql",content:tplSchema()},
     {path:"tools/import_md.py",content:tplImportPy()},
+    {path:"tools/export_home.py",content:tplExportPy()},
     {path:"ORCHESTRATION.md",content:tplOrchestration()},
     {path:"BEST-PRACTICES.md",content:tplBestPractices(v)},
     {path:"skills/README.md",content:tplSkillsIndex()},
@@ -1386,6 +1633,7 @@ function readBasics(){
   return S.repoName;
 }
 async function ghFetch(path,opts){
+  if(IS_PREVIEW) throw new Error("Preview — nothing is created");
   opts=opts||{};
   opts.headers=Object.assign({
     "Authorization":"Bearer "+S.ghToken,
@@ -1399,6 +1647,7 @@ async function ghFetch(path,opts){
   return body;
 }
 async function ghCreate(){
+  if(IS_PREVIEW){showSuccessState("\u2713 Your folder is private","Checked on GitHub just now.","Continue",function(){showScreen("step2");}); return;}
   clearErr("ghErr"); $("ghOk").classList.remove("show");
   readBasics();
   if(!S.ghToken)S.ghToken=$("ghToken").value.trim();
@@ -1466,6 +1715,7 @@ async function ghCreate(){
 
 /* ============ Supabase ============ */
 async function sbFetch(path,opts){
+  if(IS_PREVIEW) throw new Error("Preview — nothing is created");
   opts=opts||{};
   opts.headers=Object.assign({
     "Authorization":"Bearer "+S.sbToken,
@@ -1497,6 +1747,7 @@ async function sbQuery(ref,sql){
 }
 function sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
 async function sbCreate(){
+  if(IS_PREVIEW){showSuccessState("\u2713 Only you can open it","Checked in your database just now.","Continue",function(){runWireFlow();}); return;}
   clearErr("sbErr"); $("sbOk").classList.remove("show");
   readBasics();
   if(!S.sbToken)S.sbToken=$("sbToken").value.trim();
@@ -1558,7 +1809,9 @@ async function sbCreate(){
       var keys=await sbFetch("/projects/"+S.projectRef+"/api-keys");
       (keys||[]).forEach(function(k){
         if(k.name==="anon")S.anonKey=k.api_key;
-        if(k.name==="service_role")S.serviceKey=k.api_key;
+        /* The service_role key is never read into this page: it bypasses all
+           row-level security, so it stays in the owner's Supabase dashboard
+           until they paste it into their LOCAL .env.service-role file. */
       });
     }catch(e){ /* keys can also be copied from the dashboard; not fatal */ }
 
@@ -1606,11 +1859,12 @@ function envServiceContents(){
   return "# .env.service-role — LOCAL ONLY. Importer only — never give this to any AI app. Never commit this file.\n"+
   "# Full database access. Used only by tools/import_md.py running on your own machine.\n"+
   "SUPABASE_URL="+(S.projectUrl||"")+"\n"+
-  "SUPABASE_SERVICE_ROLE_KEY="+(S.serviceKey||"")+"\n"+
+  "SUPABASE_SERVICE_ROLE_KEY=   # paste it here from your Supabase dashboard (Settings \u2192 API) \u2014 this page never holds it\n"+
   "OWNER_ID="+(S.ownerId||"")+"\n"+
   "# Get the key from: https://supabase.com/dashboard/project/"+(S.projectRef||"YOUR-REF")+"/settings/api\n";
 }
 async function wire(){
+  if(IS_PREVIEW){S.wired=true; showDone(); return;}
   clearErr("wireErr"); $("wireOk").classList.remove("show");
   if(!S.repoDone){showErr("wireErr","Create the repo in step 1 first.");return;}
   if(!S.ghToken){
@@ -1624,6 +1878,7 @@ async function wire(){
     await putFile("agent.config.json",tplConfig(v),"Wire agent home config (ref + URL only, no keys)");
     setCheck("wireCheck","wire-config","done","committed");
     setCheck("wireCheck","wire-connect","doing","committing…");
+    /* Only these three non-secret files are committed here. Keys are never committed: .env and .env.service-role are local-only files the owner saves from the done screen. */
     await putFile("CONNECT.md",tplConnect(v),"Personalise CONNECT.md for "+(S.name||"owner"));
     await putFile(".env.example",tplEnvExample(v),".env.example with project URL");
     setCheck("wireCheck","wire-connect","done","committed");
@@ -2169,6 +2424,12 @@ refreshManual();
    for the recipient), then the saved toggle, then the browser language. */
 var LANG="en";
 var ES_DICT={
+"I have GitHub — connect it":"Ya tengo GitHub — conéctalo",
+"You'll come back to this tab — your place is saved.":"Volverás a esta pestaña — tu lugar está guardado.",
+"Your AIs can't see this by themselves. One paste per AI — this message does the rest.":"Tus IA no pueden ver esto por sí mismas. Un pegado por IA — este mensaje hace el resto.",
+"Preview — nothing is created":"Vista previa — no se crea nada",
+"Exit preview":"Salir de la vista previa",
+"Skills are included — little instruction cards your AIs learn from. New ones get written automatically when a task repeats.":"También hay skills — pequeñas tarjetas de instrucciones de las que aprenden tus IA. Las nuevas se escriben automáticamente cuando una tarea se repite.",
 "Every AI you use. One memory.":"Todos los IA que usas. Una sola memoria.",
 "One private home, so every AI helper knows you.":"Un solo espacio privado, para que cada IA te conozca.",
 "Tired of repeating yourself?":"¿Cansado de repetirte?",
@@ -2307,7 +2568,13 @@ function applyLang(){
   // Choice + signup
   setTextId("choiceH1",tt("Do you have GitHub?","GitHub가 있어요?"));
   setTextId("choiceLede",tt("If not, we'll show you how.","없으면 알려드릴게요."));
-  setTextId("ghHaveBtn",tt("I have GitHub","있어요"));
+  setTextId("ghHaveBtn",tt("I have GitHub — connect it","GitHub가 있어요 — 연결하기","Ya tengo GitHub — conéctalo"));
+  setTextId("wiringHonestLine",tt("Your AIs can't see this by themselves. One paste per AI — this message does the rest.","AI들은 혼자서는 이걸 못 봐요. AI마다 한 번만 붙여넣으면, 이 글이 나머지를 해요.","Tus IA no pueden ver esto por sí mismas. Un pegado por IA — este mensaje hace el resto."));
+  document.querySelectorAll(".come-back-line").forEach(function(el){el.textContent=tt("You'll come back to this tab — your place is saved.","이 탭으로 돌아와요 — 자리는 저장돼 있어요.","Volverás a esta pestaña — tu lugar está guardado.");});
+  setTextId("previewPill",tt("Preview — nothing is created","미리보기 — 아무것도 만들어지지 않아요","Vista previa — no se crea nada"));
+  setTextId("previewExitBtn",tt("Exit preview","미리보기 나가기","Salir de la vista previa"));
+  setTextId("previewPrevBtn",tt("← Prev","← 이전","← Anterior"));
+  setTextId("previewNextBtn",tt("Next →","다음 →","Siguiente →"));
   setTextId("ghNewBtn",tt("I don't have GitHub","없어요"));
   setTextId("choiceWhy",tt("Nothing is public, ever.","절대 공개 안 돼요."));
   setTextId("signupH1",tt("Create a GitHub account","GitHub 계정 만들기"));
@@ -2418,6 +2685,7 @@ function renderHow(){
   +li(brandTileHTML("supabase",true),tt("Your private memory store (Supabase) — what your AIs learn about you, locked to you.","나만의 비밀 기억 저장소 (Supabase) — AI가 배운 내 정보, 나에게만 잠겨 있어요.","Tu memoria privada (Supabase) — lo que tus IA aprenden de ti, bloqueado para ti."))
   +li(brandTileHTML("claude",true),tt("Your AIs wired to both — every app reads and writes the same home.","AI들이 둘 다에 연결돼요 — 모든 앱이 같은 공간을 읽고 써요.","Tus IA conectadas a ambos — cada app lee y escribe en el mismo espacio."))
   +li(regTile,tt("The best-practices register — the shared list of what works, kept in your home.","베스트 프랙티스 목록 — 검증된 방법들의 공유 목록, 내 공간에 있어요.","El registro de buenas prácticas — la lista compartida de lo que funciona, en tu espacio."))
+  +li("",tt("Skills are included — little instruction cards your AIs learn from. New ones get written automatically when a task repeats.","스킬도 포함돼요 — AI가 배우는 작은 안내 카드예요. 같은 일이 반복되면 새 카드가 자동으로 생겨요.","También hay skills — pequeñas tarjetas de instrucciones de las que aprenden tus IA. Las nuevas se escriben automáticamente cuando una tarea se repite."))
   +liB("",tt("What do you have to do after this? ","이후에 할 일은? ","¿Qué tienes que hacer después? "),tt("Nothing. Your AIs keep it in sync. Occasionally one will ask you a single question.","없어요. AI들이 알아서 맞추고, 가끔 질문 하나만 물어봐요.","Nada. Tus IA lo mantienen en sync. A veces una te hará una sola pregunta."))
   +'</ul>'
   +'<h3>'+esc(tt("The files","파일들","Los archivos"))+'</h3>'
@@ -2476,7 +2744,7 @@ function showScreen(id){
     [1,2,3].forEach(function(n){
       var d=$("dot"+n); d.className=n===stepMap[id]?"on":(n<stepMap[id]?"done":"");
     });
-  } else pw.classList.add("hidden");
+  } else if(IS_PREVIEW){ pw.classList.remove("hidden"); } else pw.classList.add("hidden");
   window.scrollTo({top:0,behavior:"smooth"});
 }
 var WIZ_WORK_TEXT={
@@ -2547,6 +2815,7 @@ function showFailedState(tech,context,retryFn,backScreen){
   showScreen("screen-failed");
 }
 async function runGithubFlow(){
+  if(IS_PREVIEW){showSuccessState("\u2713 Your folder is private","Checked on GitHub just now.","Continue",function(){showScreen("step2");}); return;}
   if(!S.ghToken)S.ghToken=$("ghToken").value.trim();
   if(!S.ghToken){
     if(oauthConfigured("github")){ startOAuth("github"); return; }
@@ -2566,6 +2835,7 @@ async function runGithubFlow(){
   }
 }
 async function runSupabaseFlow(){
+  if(IS_PREVIEW){showSuccessState("\u2713 Only you can open it","Checked in your database just now.","Continue",function(){runWireFlow();}); return;}
   if(!S.sbToken)S.sbToken=$("sbToken").value.trim();
   if(!S.sbToken){
     if(oauthConfigured("supabase")){ startOAuth("supabase"); return; }
@@ -2585,6 +2855,7 @@ async function runSupabaseFlow(){
   }
 }
 async function runWireFlow(){
+  if(IS_PREVIEW){S.wired=true; showDone(); return;}
   if(!S.repoDone){ fullSetReturn="step4"; showScreen("stepFullSet"); return; }
   wizBack="step2";
   showWorking("Joining everything together…","Joining the two together…","step2");
@@ -2628,6 +2899,7 @@ function renderFullSet(){
 }
 async function loadProofBubble(){
   var wrap=$("proofBubble"); if(!wrap)return;
+  if(IS_PREVIEW){ $("proofBubbleText").textContent="Hi Alex Rivera \u2014 I remember: set up my agent home. Verification phrase: harbor-lantern-42."; var _bl=document.querySelector(".bubble-label"); if(_bl)_bl.textContent=tt("Preview \u2014 sample text","\ubbf8\ub9ac\ubcf4\uae30 \u2014 \uc0d8\ud50c \uae00\uc774\uc5d0\uc694","Vista previa \u2014 texto de ejemplo"); wrap.classList.remove("hidden"); return; }
   wrap.classList.add("hidden");
   if(!S.repoDone||!S.ghToken||!S.repoFull)return;
   try{
@@ -2674,8 +2946,48 @@ if($("langSheetBack"))$("langSheetBack").addEventListener("click",closeLangSheet
 ["fName","fEmail"].forEach(function(id){var el=$(id); if(el)el.addEventListener("input",function(){savePlace();});});
 document.addEventListener("click",function(e){var a=e.target&&e.target.closest?e.target.closest("a[target='_blank']"):null; if(a)savePlace();},true);
 applyLang();
+
+/* ============ OPERATOR PREVIEW MODE (#preview only; never linked in normal UI) ============ */
+var PREVIEW_ORDER=["screen-welcome","step0","step1choice","step1signup","step1","step2","screen-working","screen-success","screen-failed","stepFullSet","step4","screen-extras"];
+function enterPreview(){
+  IS_PREVIEW=true;
+  document.body.classList.add("preview");
+  var bar=$("previewBar"); if(bar)bar.classList.remove("hidden");
+  S.name="Alex Rivera"; S.email="alex@example.com"; S.repoName="agent-home"; S.repoTouched=true;
+  if($("fName"))$("fName").value="Alex Rivera";
+  if($("fEmail"))$("fEmail").value="alex@example.com";
+  if($("fRepo"))$("fRepo").value="agent-home";
+  S.ghUser="alexrivera"; S.repoFull="alexrivera/agent-home"; S.repoUrl="https://github.com/alexrivera/agent-home";
+  S.projectRef="sampleproject"; S.projectUrl="https://sampleproject.supabase.co";
+  S.verificationPhrase="harbor-lantern-42"; S.repoDone=true; S.dbDone=true; S.dbSkipped=false;
+  try{readBasics(); S.name="Alex Rivera"; S.repoUrl="https://github.com/alexrivera/agent-home"; S.projectRef="sampleproject"; S.projectUrl="https://sampleproject.supabase.co"; refreshManual();}catch(e){}
+  try{renderConfirm("confirmBlocks",currentVars()); renderBlocks("doneBlocks",currentVars());}catch(e){}
+}
+function exitPreview(){
+  IS_PREVIEW=false;
+  document.body.classList.remove("preview");
+  var bar=$("previewBar"); if(bar)bar.classList.add("hidden");
+  try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}
+  showScreen("screen-welcome");
+}
+function previewStep(delta){
+  var cur="screen-welcome";
+  PREVIEW_ORDER.forEach(function(id){var el=$(id); if(el&&el.classList.contains("active"))cur=id;});
+  var i=PREVIEW_ORDER.indexOf(cur); if(i<0)i=0;
+  var n=Math.max(0,Math.min(PREVIEW_ORDER.length-1,i+delta));
+  var target=PREVIEW_ORDER[n];
+  if(target==="step4"){showDone(); return;}
+  showScreen(target);
+}
+if($("previewExitBtn"))$("previewExitBtn").addEventListener("click",exitPreview);
+if($("previewPrevBtn"))$("previewPrevBtn").addEventListener("click",function(){previewStep(-1);});
+if($("previewNextBtn"))$("previewNextBtn").addEventListener("click",function(){previewStep(1);});
+[["dot1","step0"],["dot2","step1choice"],["dot3","step2"]].forEach(function(pair){
+  var d=$(pair[0]); if(d){ d.setAttribute("role","button"); d.addEventListener("click",function(){ if(IS_PREVIEW)showScreen(pair[1]); }); }
+});
 (function restorePlace(){
   var isOAuth=!!(location.search||"").match(/[?&]code=/), isAdmin=!!(location.hash||"").match(/^#admin-/);
+  if((location.hash||"")==="#preview"){ enterPreview(); showScreen("screen-welcome"); return; }
   if(isOAuth||isAdmin) return; /* OAuth return / admin already route themselves */
   var saved=null; try{saved=JSON.parse(sessionStorage.getItem("ah_state")||"null");}catch(e){}
   if(saved){
