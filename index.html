@@ -7972,12 +7972,62 @@ async function qn() {
                     ""))
     } catch (b) {}
     if (!s || s.state !== a) {
-        x(s && s.provider ===
-            "supabase" ?
-            "sbErr" :
-            "ghErr",
-            "That sign-in didn't check out. A safety code didn't match, so nothing was connected. Please click Connect and try again."
-            );
+        if (e) {
+            setTimeout(
+            function() {
+                try {
+                    k("adminView")
+                } catch (
+                    _
+                    ) {}
+            }, 0);
+            var m9 = i(
+                "adminNote");
+            if (m9) m9
+                .textContent =
+                "Sign-in didn't finish. Try again.";
+            fe(!0);
+            return
+        }
+        var xp = s && s.provider ===
+            "supabase";
+        setTimeout(function() {
+            try {
+                if (xp) {
+                    Wm("preflight"),
+                        k("screen-working");
+                    var sd9 = i(
+                        "sbDetails");
+                    if (sd9) sd9
+                        .open = !0
+                } else k("step1")
+            } catch (
+            _) {}
+            x(xp ? "sbErr" :
+                "ghErr",
+                r("That sign-in didn't check out. A safety code didn't match, so nothing was connected. Please click Connect and try again.",
+                    "로그인이 확인되지 않았어요. 안전 코드가 맞지 않아서 아무것도 연결하지 않았어요. 연결을 눌러 다시 해 주세요.",
+                    "Ese acceso no se verificó. Un código de seguridad no coincidió, así que no se conectó nada. Toca Conectar e inténtalo de nuevo."
+                    )
+                )
+        var e9 = i(xp ? "sbErr" :
+                "ghErr");
+            if (e9) {
+                var p9 = e9
+                    .parentElement;
+                while (p9) {
+                    if (p9.tagName ===
+                        "DETAILS") p9
+                        .open = !0;
+                    p9 = p9
+                        .parentElement
+                }
+                if (e9.scrollIntoView)
+                    e9.scrollIntoView({
+                        block: "center"
+                    })
+            }
+            }, 0);
         return
     }
     try {
@@ -8185,11 +8235,41 @@ async function qn() {
                 "invalid" : "missing");
             return
         }
-        x(s.provider ===
-            "supabase" ?
-            "sbErr" :
-            "ghErr", b
-            .message)
+        var xp2 = s.provider ===
+            "supabase";
+        setTimeout(function() {
+            try {
+                if (xp2) {
+                    Wm("preflight"),
+                        k("screen-working");
+                    var sd8 = i(
+                        "sbDetails");
+                    if (sd8) sd8
+                        .open = !0
+                } else k("step1")
+            } catch (
+            _) {}
+            x(xp2 ? "sbErr" :
+                "ghErr", b
+                .message)
+        var e9 = i(xp2 ? "sbErr" :
+                "ghErr");
+            if (e9) {
+                var p9 = e9
+                    .parentElement;
+                while (p9) {
+                    if (p9.tagName ===
+                        "DETAILS") p9
+                        .open = !0;
+                    p9 = p9
+                        .parentElement
+                }
+                if (e9.scrollIntoView)
+                    e9.scrollIntoView({
+                        block: "center"
+                    })
+            }
+            }, 0)
     }
 }
 
@@ -10463,14 +10543,14 @@ AI를 잘 몰라도 돼요.`)), u("footerYours",
                 "Crea una cuenta gratis de GitHub"
                 )), u(
             "ghSignupText", r(
-                "Only GitHub can create your account. This page can't do it for you. It takes about two minutes. Then come back here and tap the button below. GitHub's own sign-in handles the rest.",
-                "계정은 GitHub만 만들 수 있어요. 이 페이지는 못 해요. 2분쯤 걸려요. 끝나면 여기로 돌아와 아래 버튼을 눌러 주세요. 나머지는 GitHub 로그인이 해요.",
-                "Solo GitHub puede crear tu cuenta. Esta página no puede hacerlo por ti. Toma unos dos minutos. Luego vuelve aquí y toca el botón de abajo. El inicio de GitHub hace el resto."
+                "Only GitHub can create your account. This page can't do it for you. It takes about two minutes. GitHub will ask for your email and a password, show you a quick puzzle, then email you a code to type in. Your password needs 15 or more characters, or 8 or more with a number and a lowercase letter, and if the username you want is taken, GitHub will ask you to pick another. It opens in a new tab. This page stays open right here. Then come back here and tap the button below. GitHub's own sign-in handles the rest.",
+                "계정은 GitHub만 만들 수 있어요. 이 페이지는 못 해요. 2분쯤 걸려요. GitHub가 이메일과 비밀번호를 묻고, 간단한 퍼즐을 보여 준 뒤, 입력할 코드를 이메일로 보내요. 비밀번호는 15자 이상이거나 숫자와 소문자가 들어간 8자 이상이어야 해요. 원하는 사용자 이름이 이미 쓰이고 있으면 GitHub가 다른 이름을 고르게 해요. 새 탭에서 열려요. 이 페이지는 여기 그대로 있어요. 끝나면 여기로 돌아와 아래 버튼을 눌러 주세요. 나머지는 GitHub 로그인이 해요.",
+                "Solo GitHub puede crear tu cuenta. Esta página no puede hacerlo por ti. Toma unos dos minutos. GitHub te pedirá tu correo y una contraseña, te mostrará un rompecabezas rápido y luego te enviará un código por correo para escribirlo. Tu contraseña necesita 15 o más caracteres, u 8 o más con un número y una minúscula, y si el nombre de usuario que quieres ya está en uso, GitHub te pedirá elegir otro. Se abre en una pestaña nueva. Esta página se queda abierta aquí. Luego vuelve aquí y toca el botón de abajo. El inicio de GitHub hace el resto."
                 )), u(
             "ghSignupLink", r(
-                "Open GitHub signup",
-                "GitHub 가입 열기",
-                "Abrir el registro de GitHub"
+                "Open GitHub signup (new tab)",
+                "GitHub 가입 열기 (새 탭)",
+                "Abrir el registro de GitHub (pestaña nueva)"
                 )), u(
             "ghSignupFree", r(
                 "Free — straight from GitHub.",
