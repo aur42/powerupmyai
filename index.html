@@ -252,6 +252,23 @@ details p,details li{line-height:1.55}
 body.preview .dots span{cursor:pointer}
 body.preview .dots span:hover{outline:2px solid var(--accent);outline-offset:2px}
 .come-back-line{font-weight:600}
+/* --- GitHub step: a few px more air between the stacked blocks (+~4px per gap) --- */
+#step1 .btn{margin-top:20px}
+#step1 .why{margin-top:16px}
+#step1 .demo-line{margin-top:20px}
+#ghDetails{margin-top:30px;padding-top:22px}
+#ghDetails>p{margin-bottom:18px}
+#ghHavePanel .btn{margin-top:20px}
+#ghConnectNote{margin-top:12px !important}
+#ghHavePanel .blist{margin-top:18px !important}
+#ghCheck{margin-top:18px;margin-bottom:18px}
+#ghAdvanced{margin-top:30px;padding-top:22px}
+/* --- Fallback entry in attention colour: only the "Having trouble?" fold headers --- */
+#ghAdvanced>summary,#sbAdvanced>summary{background:var(--warn-bg);color:var(--warn-ink);border:2px solid var(--warn-line);border-radius:14px;padding:12px 16px}
+#ghAdvanced>summary:hover,#sbAdvanced>summary:hover{color:var(--warn-ink)}
+#ghAdvanced>summary:active,#sbAdvanced>summary:active{color:var(--warn-ink)}
+/* --- Problem report (failed states only): quiet secondary copy button --- */
+.report-btn-inline{margin-top:10px}
 </style>
 </head>
 <body>
@@ -391,9 +408,7 @@ No AI expertise needed.</p>
     <h1 id="signupH1">Create a GitHub account</h1>
     <p class="lede" id="signupLede">It's free and takes two minutes.</p>
     <a class="btn" href="https://github.com/signup" target="_blank" rel="noopener">Open GitHub signup</a>
-    <p class="why outbound-note">We'll open the right page — just tap Allow/Create, then come back.</p>
-    <p class="why come-back-line">You'll come back to this tab — your place is saved.</p>
-    <p class="why">Free — straight from GitHub.</p>
+    <p class="why" id="signupFreeLine">Free — straight from GitHub.</p>
     <button class="text-btn" id="ghSignupHaveBtn" type="button">I have GitHub now</button>
     <details>
       <summary>Details</summary>
@@ -413,7 +428,6 @@ No AI expertise needed.</p>
     <p class="lede" id="step1Lede">Only you can ever see what's inside.</p>
     <button class="btn" id="ghPrimaryBtn" type="button">Connect and create it</button>
     <p class="why" id="step1Why">So your AIs share one memory.</p>
-    <p class="why come-back-line">You'll come back to this tab — your place is saved.</p>
     <p class="demo-line hidden" id="ghDemoLine">Demo mode — use a code instead (in Details).</p>
     <details id="ghDetails">
       <summary>Details</summary>
@@ -438,20 +452,19 @@ No AI expertise needed.</p>
         <div class="okbox" id="ghOk"></div>
         <details id="ghAdvanced">
           <summary>Having trouble? Connect with a code instead</summary>
-          <p class="small" style="margin-top:8px">Only use this if the button above isn't working. You'll make a one-time code on GitHub and paste it here. Follow the steps exactly:</p>
+          <p class="small" style="margin-top:8px">Only if the button above fails. Make a one-time code on GitHub, paste it here:</p>
           <ol class="small" style="margin:8px 0;padding-left:24px;line-height:1.7">
-            <li><a href="https://github.com/settings/tokens/new?scopes=repo&amp;description=agent-home%20setup" target="_blank" rel="noopener">Tap here — it opens GitHub in a new tab</a>, already on the right screen, with the right boxes ticked.</li>
-            <li class="outbound-note">We'll open the right page — just tap Allow/Create, then come back.</li>
-            <li>The name box should say “agent-home setup”. If it's empty, type that in.</li>
-            <li>Scroll to the bottom and tap the green <strong>Generate token</strong> button.</li>
-            <li>GitHub shows a long code starting with <code>ghp_</code>. Tap the copy icon next to it.</li>
-            <li>Come back to this tab and paste the code in the box below. This page checks it straight away and tells you if it works.</li>
+            <li><a href="https://github.com/settings/tokens/new?scopes=repo&amp;description=agent-home%20setup" target="_blank" rel="noopener">Tap here</a> — GitHub opens, right screen, boxes ticked.</li>
+            <li>Name box: “agent-home setup”. Empty? Type it in.</li>
+            <li>Scroll down. Tap the green <strong>Generate token</strong>.</li>
+            <li>Copy the long code starting <code>ghp_</code> (copy icon).</li>
+            <li>Back here, paste it below. It's checked instantly.</li>
           </ol>
           <label for="ghToken">Your code from GitHub</label>
           <input type="password" id="ghToken" placeholder="Paste the long code here…" autocomplete="off" spellcheck="false" />
           <div class="okbox" id="ghTokenStatus"></div>
           <div class="err" id="ghTokenErr"></div>
-          <p class="small">The code is only ever sent to GitHub itself, from your browser, and is never saved. You can delete it on GitHub the moment setup finishes — your folder stays yours.</p>
+          <p class="small">Sent only to GitHub, from your browser. Never saved. Delete it on GitHub once setup finishes.</p>
         </details>
       </div>
     </details>
@@ -464,7 +477,6 @@ No AI expertise needed.</p>
     <p class="lede" id="step2Lede">Locked away, and only you hold the key.</p>
     <button class="btn" id="sbPrimaryBtn" type="button">Create my private memory</button>
     <p class="why" id="step2Why">So they remember between chats.</p>
-    <p class="why come-back-line">You'll come back to this tab — your place is saved.</p>
     <p class="demo-line hidden" id="sbDemoLine">Demo mode — use a code instead (in Details).</p>
     <button class="text-btn" id="sbSkip" type="button">Skip for now</button>
     <details id="sbDetails">
@@ -512,20 +524,18 @@ No AI expertise needed.</p>
       <div class="okbox" id="sbOk"></div>
       <details id="sbAdvanced">
         <summary>Having trouble? Connect with a code instead</summary>
-        <p class="small" style="margin-top:8px">Only use this if the button above isn't working. Follow the steps exactly:</p>
+        <p class="small" style="margin-top:8px">Only if the button above fails. Make a one-time code on Supabase, paste it here:</p>
         <ol class="small" style="margin:8px 0;padding-left:24px;line-height:1.7">
-          <li><a href="https://supabase.com/dashboard/account/tokens" target="_blank" rel="noopener">Tap here — it opens Supabase in a new tab</a>, on the page where access codes live.</li>
-          <li class="outbound-note">We'll open the right page — just tap Allow/Create, then come back.</li>
-          <li>1. Tap the button above — Supabase opens. 2. Tap Generate, copy the code. 3. Come back here and paste it below — one tap on Paste, no typing.</li>
-          <li>Tap <strong>Generate new token</strong>, name it “agent-home setup”, and tap generate.</li>
-          <li>Supabase shows a long code starting with <code>sbp_</code>. Copy it.</li>
-          <li>Come back to this tab and paste it in the box below. This page checks it straight away, then the “Create my memory store” button above will work.</li>
+          <li><a href="https://supabase.com/dashboard/account/tokens" target="_blank" rel="noopener">Tap here</a> — Supabase opens on the token page.</li>
+          <li>Tap <strong>Generate new token</strong>. Name it “agent-home setup”.</li>
+          <li>Copy the long code starting <code>sbp_</code>.</li>
+          <li>Back here, paste it below. It's checked instantly — then “Create my memory store” above works.</li>
         </ol>
         <label for="sbToken">Your code from Supabase</label>
         <input type="password" id="sbToken" placeholder="Paste the long code here…" autocomplete="off" spellcheck="false" />
         <div class="okbox" id="sbTokenStatus"></div>
         <div class="err" id="sbTokenErr"></div>
-        <p class="small">The code is only ever sent to Supabase itself, from your browser, and is never saved. You can delete it on Supabase the moment setup finishes.</p>
+        <p class="small">Sent only to Supabase, from your browser. Never saved. Delete it once setup finishes.</p>
       </details>
     </details>
   </section>
@@ -553,6 +563,7 @@ No AI expertise needed.</p>
     <p class="state-msg" id="failedLine">Something went wrong. Nothing is lost.</p>
     <button class="btn" id="failedRetryBtn" type="button">Try again</button>
     <button class="text-btn" id="failedBackBtn" type="button">Go back</button>
+    <button class="btn quiet report-btn" id="failedReportBtn" type="button">Copy a problem report</button>
     <details id="failedDetails">
       <summary>Details</summary>
       <pre id="failedTech"></pre>
@@ -890,8 +901,55 @@ function setCheck(listId,key,state,note){
   var st=li.querySelector(".st");
   if(st)st.textContent=note||(state==="done"?"verified":state==="failed"?"failed":"");
 }
-function showErr(id,msg){var e=$(id);e.textContent=msg;e.classList.add("show");}
-function clearErr(id){var e=$(id);e.textContent="";e.classList.remove("show");}
+/* ============ problem report (failed states only) ============
+   One quiet copy button on the full-screen failed state and beside every
+   inline error. It copies a short plain-text summary for the user to send
+   to whoever shared the page with them. No network call, no new screen. */
+var lastFailure={step:"",error:""};
+function stepForErrId(id){
+  if(id==="ghErr"||id==="ghTokenErr")return "Step 2 of 3 — GitHub: create private folder";
+  if(id==="sbErr"||id==="sbTokenErr")return "Step 3 of 3 — Supabase: create private memory";
+  if(id==="wireErr")return "Step 3 of 3 — wiring the folder and database together";
+  if(id==="importErr")return "Extras — importing old memories";
+  return "Setup";
+}
+function stepForContext(context){
+  if(context==="github")return "Step 2 of 3 — GitHub: create private folder";
+  if(context==="supabase")return "Step 3 of 3 — Supabase: create private memory";
+  if(context==="wire")return "Step 3 of 3 — wiring the folder and database together";
+  return "Setup";
+}
+function reportLabel(){ return (typeof tt==="function")?tt("Copy a problem report","문제 보고서 복사","Copiar informe del problema"):"Copy a problem report"; }
+function buildProblemReport(step,error){
+  var rec=null; try{rec=loadAgentHomeStatus();}catch(e){}
+  var steps=(rec&&rec.steps)?rec.steps:null;
+  var repoCreated=steps?!!steps.repoCreated:!!S.repoDone;
+  var dbCreated=steps?!!steps.databaseCreated:!!S.dbDone;
+  var repoUrl=(rec&&rec.repoUrl)||S.repoUrl||"";
+  var dbUrl=(rec&&rec.databaseUrl)||S.projectUrl||"";
+  var langName=(typeof LANG!=="undefined"&&LANG==="ko")?"Korean":((typeof LANG!=="undefined"&&LANG==="es")?"Spanish":"English");
+  return [
+    "PowerUpMyAI — problem report",
+    "Step: "+(step||"Setup"),
+    "Error: "+(error||"—"),
+    "Language: "+((typeof LANG!=="undefined")?LANG:"en")+" ("+langName+")",
+    "Date/time: "+new Date().toISOString(),
+    "Folder (repo) created: "+(repoCreated?("yes"+(repoUrl?" — "+repoUrl:"")):"no"),
+    "Database created: "+(dbCreated?("yes"+(dbUrl?" — "+dbUrl:"")):"no")
+  ].join("\n");
+}
+function reportBtnFor(errEl){
+  var b=document.querySelector('.report-btn-inline[data-for="'+errEl.id+'"]');
+  if(b)return b;
+  b=document.createElement("button");
+  b.type="button"; b.className="btn quiet small-btn report-btn report-btn-inline hidden";
+  b.setAttribute("data-for",errEl.id); b.textContent=reportLabel();
+  b.addEventListener("click",function(){ copyText(buildProblemReport(stepForErrId(errEl.id),errEl.textContent),b); });
+  errEl.parentNode.insertBefore(b,errEl.nextSibling);
+  return b;
+}
+function showErr(id,msg){var e=$(id);e.textContent=msg;e.classList.add("show");lastFailure={step:stepForErrId(id),error:String(msg||"")};reportBtnFor(e).classList.remove("hidden");}
+function clearErr(id){var e=$(id);e.textContent="";e.classList.remove("show");var b=document.querySelector('.report-btn-inline[data-for="'+id+'"]');if(b)b.classList.add("hidden");}
 function showOk(id,html){var e=$(id);e.innerHTML=html;e.classList.add("show");}
 function providerErr(prefix,body,status){
   var m="";
@@ -2209,7 +2267,7 @@ function initConnect(){
     gb.addEventListener("click",function(){ startOAuth("github"); });
   }else{
     gb.textContent="Demo mode: OAuth isn't switched on for this copy of the page yet";
-    gn.textContent="When the person who published this page adds the small sign-in helper, this button connects GitHub in one click. For now, the code option under “Advanced / having trouble?” below does exactly the same job.";
+    gn.textContent="One-click sign-in is coming soon. For now, the code option below does exactly the same job.";
     gb.addEventListener("click",function(){ $("ghAdvanced").open=true; $("ghAdvanced").scrollIntoView({behavior:"smooth",block:"center"}); });
   }
   var sb=$("sbConnectBtn"), sn=$("sbConnectNote");
@@ -2219,7 +2277,7 @@ function initConnect(){
     sb.addEventListener("click",function(){ startOAuth("supabase"); });
   }else{
     sb.textContent="Demo mode: OAuth isn't switched on for this copy of the page yet";
-    sn.textContent="When the person who published this page adds the small sign-in helper, this button connects Supabase in one click. For now, the code option under “Advanced / having trouble?” below does exactly the same job.";
+    sn.textContent="One-click sign-in is coming soon. For now, the code option below does exactly the same job.";
     sb.addEventListener("click",function(){ $("sbAdvanced").open=true; $("sbAdvanced").scrollIntoView({behavior:"smooth",block:"center"}); });
   }
 }
@@ -2706,7 +2764,9 @@ function applyLang(){
   setTextId("choiceLede",tt("If not, we'll show you how.","없으면 알려드릴게요."));
   setTextId("ghHaveBtn",tt("I have GitHub — connect it","GitHub가 있어요 — 연결하기","Ya tengo GitHub — conéctalo"));
   setTextId("wiringHonestLine",tt("Your AIs can't see this by themselves. One paste per AI — this message does the rest.","AI들은 혼자서는 이걸 못 봐요. AI마다 한 번만 붙여넣으면, 이 글이 나머지를 해요.","Tus IA no pueden ver esto por sí mismas. Un pegado por IA — este mensaje hace el resto."));
-  document.querySelectorAll(".come-back-line").forEach(function(el){el.textContent=tt("You'll come back to this tab — your place is saved.","이 탭으로 돌아와요 — 자리는 저장돼 있어요.","Volverás a esta pestaña — tu lugar está guardado.");});
+  setTextId("signupFreeLine",tt("Free — straight from GitHub.","무료예요 — GitHub에서 바로 받아요.","Gratis — directo de GitHub."));
+  (function(){var demoNote=tt("One-click sign-in is coming soon. For now, the code option below does exactly the same job.","원터치 로그인은 곧 와요. 지금은 아래 코드 방법이 똑같이 해줘요.","El inicio con un clic llega pronto. Por ahora, la opción con código de abajo hace exactamente lo mismo.");var gn2=$("ghConnectNote");if(gn2&&!(typeof oauthConfigured==="function"&&oauthConfigured("github")))gn2.textContent=demoNote;var sn2=$("sbConnectNote");if(sn2&&!(typeof oauthConfigured==="function"&&oauthConfigured("supabase")))sn2.textContent=demoNote;})();
+  document.querySelectorAll(".report-btn,.report-btn-inline").forEach(function(b){b.textContent=reportLabel();});
   setTextId("previewPill",tt("Preview — nothing is created","미리보기 — 아무것도 만들어지지 않아요","Vista previa — no se crea nada"));
   setTextId("previewExitBtn",tt("Exit preview","미리보기 나가기","Salir de la vista previa"));
   setTextId("previewPrevBtn",tt("← Prev","← 이전","← Anterior"));
@@ -2945,6 +3005,7 @@ function plainError(tech,context){
 }
 function showFailedState(tech,context,retryFn,backScreen){
   stopWorkPoll();
+  lastFailure={step:stepForContext(context),error:String(tech||"")};
   $("failedLine").textContent=plainError(tech,context);
   $("failedTech").textContent=String(tech||"No technical message was provided.");
   $("failedDetails").open=false;
@@ -3017,6 +3078,7 @@ $("sbSkip").addEventListener("click",function(){ setTimeout(function(){ runWireF
 $("successContinueBtn").addEventListener("click",function(){ if(wizSuccessNext)wizSuccessNext(); });
 $("failedRetryBtn").addEventListener("click",function(){ if(wizRetry)wizRetry(); });
 $("failedBackBtn").addEventListener("click",function(){ showScreen(wizBack); });
+$("failedReportBtn").addEventListener("click",function(){ copyText(buildProblemReport(lastFailure.step||stepForContext(""),$("failedTech").textContent||lastFailure.error),this); });
 $("showPastesBtn").addEventListener("click",function(){
   var w=$("pastesWrap"); var open=!w.open; w.open=open;
   this.textContent=open?tt("Hide my copy-paste messages","붙여넣기 글 숨기기"):tt("Show my copy-paste messages","붙여넣기 글 보기");
