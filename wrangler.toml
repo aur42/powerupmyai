@@ -3,9 +3,13 @@ main = "worker.js"
 compatibility_date = "2024-11-01"
 
 [vars]
-GITHUB_CLIENT_ID = "FILL_FROM_GITHUB_OAUTH_APP"
-SUPABASE_CLIENT_ID = "FILL_FROM_SUPABASE_OAUTH_APP"
+# Public client IDs (not secrets — the page itself fetches these from /config).
+GITHUB_CLIENT_ID = "Ov23liWNLiv4Ntxi7RKE"
+SUPABASE_CLIENT_ID = "0d0f4731-8033-4620-9415-7f0826ac933d"
 ALLOWED_ORIGIN = "https://aur42.github.io"
+# The one exact OAuth callback for both providers; the worker rejects any
+# exchange whose redirect_uri does not match this byte-for-byte.
+EXPECTED_REDIRECT_URI = "https://aur42.github.io/powerupmyai/"
 ADMIN_GITHUB_LOGIN = "aur42"
 
 # After `wrangler kv namespace create SETUPS`, uncomment and fill:

@@ -43,9 +43,12 @@ const PROVIDERS = {
   },
   supabase: {
     // Supabase OAuth 2.0 (platform/integration) token endpoint.
+    // Supabase requires HTTP Basic client authentication (client id + secret
+    // in the Authorization header), NOT credentials in the form body.
     tokenUrl: "https://api.supabase.com/v1/oauth/token",
     clientId: (env) => env.SUPABASE_CLIENT_ID,
     clientSecret: (env) => env.SUPABASE_CLIENT_SECRET,
+    basicAuth: true,
   },
 };
 
@@ -81,16 +84,32 @@ export default {
       const clientId = p.clientId(env), clientSecret = p.clientSecret(env);
       if (!clientId || !clientSecret) return json({ error: "provider_not_configured" }, 501);
 
+      // redirect_uri discipline: when EXPECTED_REDIRECT_URI is configured,
+      // any redirect_uri the page sends must match it byte-for-byte. Supabase
+      // requires the exact redirect_uri from its authorize step, so for
+      // Supabase a missing one is an error, not an omission.
+      if (env.EXPECTED_REDIRECT_URI && body.redirect_uri && body.redirect_uri !== env.EXPECTED_REDIRECT_URI) {
+        return json({ error: "redirect_uri_mismatch" }, 400);
+      }
+      if (p.basicAuth && !body.redirect_uri) return json({ error: "missing_redirect_uri" }, 400);
+
       const form = new URLSearchParams({
-        client_id: clientId,
-        client_secret: clientSecret,
         code: body.code,
         grant_type: "authorization_code",
         ...(body.redirect_uri ? { redirect_uri: body.redirect_uri } : {}),
       });
+      const headers = { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" };
+      if (p.basicAuth) {
+        // Supabase: client credentials travel ONLY in the Basic header.
+        headers.Authorization = "Basic " + btoa(clientId + ":" + clientSecret);
+      } else {
+        // GitHub: credentials in the form body, as GitHub expects.
+        form.set("client_id", clientId);
+        form.set("client_secret", clientSecret);
+      }
       const resp = await fetch(p.tokenUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" },
+        headers,
         body: form,
       });
       const data = await resp.json().catch(() => ({}));
@@ -138,10 +157,16 @@ export default {
       if (!me.login || String(me.login).toLowerCase() !== login) {
         return json({ error: "login_mismatch", detail: "That GitHub token belongs to a different account than the one being registered." }, 403);
       }
+      // Repo links are validated before storage: exactly
+      // https://github.com/<owner>/<repo>, nothing else renders in admin.
+      const repoUrl = typeof body.repo_url === "string" ? body.repo_url.trim() : "";
+      if (repoUrl && !/^https:\/\/github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repoUrl)) {
+        return json({ error: "invalid_repo_url" }, 400);
+      }
       const entry = {
         name: typeof body.name === "string" ? body.name : "",
         github_login: login,
-        repo_url: typeof body.repo_url === "string" ? body.repo_url : "",
+        repo_url: repoUrl,
         has_db: body.has_db === true,
         verified_count: Number.isFinite(body.verified_count) ? Math.trunc(body.verified_count) : 0,
         ts: Date.now(),
