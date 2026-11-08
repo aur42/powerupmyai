@@ -123,6 +123,32 @@ export default {
                     scope: data.scope || null, refresh_token: data.refresh_token || null });
     }
 
+    // Problem reports from the page's failure screens. Sent only when the
+    // user taps "send this report" — the payload is the same short diagnostic
+    // summary the copy-button produces (step, error line, language, what was
+    // already created). No auth exists at that point in the flow and none is
+    // required: fields are length-capped, the timestamp is set here, and the
+    // page's report builder includes no tokens or secrets by construction.
+    // Stored under report:* keys so the admin list can separate them from
+    // setup entries (GitHub logins never contain a colon).
+    if (url.pathname === "/report" && request.method === "POST") {
+      if (!env.SETUPS) return json({ error: "registry_not_configured" }, 501);
+      let body;
+      try { body = await request.json(); } catch { return json({ error: "invalid_json" }, 400); }
+      const clean = (v, n) => (typeof v === "string" ? v.slice(0, n) : "");
+      const entry = {
+        step: clean(body.step, 120),
+        error: clean(body.error, 300),
+        lang: clean(body.lang, 16),
+        repo_created: body.repo_created === true,
+        db_created: body.db_created === true,
+        ts: Date.now(),
+      };
+      const key = "report:" + entry.ts + ":" + Math.random().toString(36).slice(2, 8);
+      await env.SETUPS.put(key, JSON.stringify(entry));
+      return json({ ok: true });
+    }
+
     // Opt-in setup registry. The setup page POSTs here ONLY when the user
     // ticks "let the person who shared this know I'm set up". The entry is
     // public-by-design data (name + repo link) — no tokens, no secrets.
@@ -206,13 +232,18 @@ export default {
         }
       }
       const entries = [];
+      const reports = [];
       let cursor;
       do {
         const page = await env.SETUPS.list(cursor ? { cursor } : {});
         for (const key of page.keys) {
           const raw = await env.SETUPS.get(key.name);
           if (!raw) continue;
-          try { entries.push(JSON.parse(raw)); } catch { /* skip a corrupt entry rather than fail the whole list */ }
+          try {
+            const parsed = JSON.parse(raw);
+            if (key.name.startsWith("report:")) reports.push(parsed);
+            else entries.push(parsed);
+          } catch { /* skip a corrupt entry rather than fail the whole list */ }
         }
         cursor = page.list_complete ? undefined : page.cursor;
       } while (cursor);
@@ -221,7 +252,8 @@ export default {
         return Number.isFinite(n) ? n : 0;
       };
       entries.sort((a, b) => tsValue(b) - tsValue(a));
-      return json({ setups: entries });
+      reports.sort((a, b) => tsValue(b) - tsValue(a));
+      return json({ setups: entries, reports: reports.slice(0, 50) });
     }
 
     return json({ error: "not_found" }, 404);
