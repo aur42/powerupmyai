@@ -9,7 +9,8 @@
 <style>
 :root{
   --bg:#ffffff; --surface:#ffffff; --surface2:#f4f4f1; --ink:#111111; --muted:#3f3f3f;
-  --line:#cfcfc8; --accent:#0a6640; --accent-ink:#ffffff; --accent-soft:#e6f2ec;
+  --line:#cfcfc8; --line-strong:#a9a99f; --accent:#0a6640; --accent-hover:#084f31; --accent-active:#063d26; --accent-ink:#ffffff; --accent-soft:#e6f2ec;
+  --neutral-hover:#e9e9e3; --neutral-active:#deded6;
   --warn-bg:#fff6dd; --warn-line:#d9b84a; --warn-ink:#5c4300;
   --err-bg:#fdecec; --err-line:#d98c8c; --err-ink:#8c1d1d;
   --ok:#0a6640; --code-bg:#111111; --code-ink:#f2f2f2;
@@ -25,7 +26,9 @@ h1{font-size:42px;line-height:1.12;margin:0 0 16px;font-weight:800;letter-spacin
 h2{font-size:32px;line-height:1.2;margin:0 0 10px;font-weight:800}
 h3{font-size:22px;margin:22px 0 8px;font-weight:700}
 p{margin:0 0 14px}
-a{color:var(--accent);text-underline-offset:3px;font-weight:600}
+a{color:var(--accent);text-underline-offset:3px;font-weight:600;transition:color 200ms ease}
+a:hover{color:var(--accent-hover)}
+a:active{color:var(--accent-active)}
 .screen{display:none}
 .screen.active{display:block;animation:slideFade .28s ease}
 @keyframes fade{from{opacity:0}to{opacity:1}}
@@ -53,12 +56,20 @@ img,svg,pre,table{max-width:100%}
   border:0;cursor:pointer;font:inherit;font-weight:700;font-size:23px;line-height:1.25;
   background:var(--accent);color:var(--accent-ink);padding:18px 24px;border-radius:18px;
   margin-top:16px;text-align:center;text-decoration:none}
-.btn:hover{filter:brightness(1.08)}
-.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.btn{transition:background-color 200ms ease,color 200ms ease,border-color 200ms ease,transform 200ms ease,box-shadow 200ms ease}
+.btn:not(:disabled):hover{background:var(--accent-hover)}
+.btn.secondary:not(:disabled):hover{background:var(--neutral-hover)}
+.btn.quiet:not(:disabled):hover{background:var(--neutral-hover)}
+.btn:not(:disabled):active{transform:scale(.98);background:var(--accent-active)}
+.btn.secondary:not(:disabled):active{background:var(--neutral-active)}
+.btn.quiet:not(:disabled):active{background:var(--neutral-active)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
 .btn.secondary{background:#ffffff;color:var(--ink);border:3px solid var(--ink)}
 .btn.quiet{background:var(--surface2);color:var(--ink);border:2px solid var(--line)}
 .btn.small-btn{width:auto;min-height:56px;font-size:19px;padding:12px 20px;margin-top:8px;display:inline-flex}
-.text-btn{display:block;width:100%;min-height:56px;margin-top:10px;padding:12px 20px;background:none;border:0;cursor:pointer;font:inherit;font-size:20px;font-weight:700;color:var(--accent);text-decoration:underline;text-underline-offset:4px;text-align:center}
+.text-btn{display:block;width:100%;min-height:56px;margin-top:10px;padding:12px 20px;background:none;border:0;cursor:pointer;font:inherit;font-size:20px;font-weight:700;color:var(--accent);text-decoration:underline;text-underline-offset:4px;text-align:center;transition:color 200ms ease,transform 200ms ease}
+.text-btn:hover{color:var(--accent-hover)}
+.text-btn:active{color:var(--accent-active);transform:scale(.98)}
 .demo-line{font-size:20px;font-weight:700;color:var(--warn-ink);margin:16px 0 0}
 .why{font-size:20px;color:var(--muted);text-align:center;margin:12px 0 0}
 .visual{margin:36px 0 var(--gap-lg)}
@@ -71,12 +82,16 @@ img,svg,pre,table{max-width:100%}
 .fs-row .btn{margin-top:0;flex:none}
 label{display:block;font-weight:700;font-size:20px;margin:22px 0 8px}
 input[type=text],input[type=password],select,textarea{width:100%;min-height:64px;padding:14px 16px;
-  border:2px solid var(--ink);border-radius:14px;background:#fff;color:var(--ink);font:inherit;font-size:20px}
+  border:2px solid var(--ink);border-radius:14px;background:#fff;color:var(--ink);font:inherit;font-size:20px;transition:border-color 200ms ease,background-color 200ms ease}
+input[type=text]:hover,input[type=password]:hover,select:hover,textarea:hover{border-color:#000000}
 input[type=file]{font:inherit;font-size:18px;width:100%;padding:14px 0}
 textarea{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:16px}
-input:focus,select:focus,textarea:focus,.btn:focus-visible,summary:focus-visible{outline:4px solid var(--accent);outline-offset:2px}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:2px}
 details{margin-top:26px;border-top:2px solid var(--line);padding-top:18px}
-summary{cursor:pointer;font-size:20px;color:var(--accent);font-weight:700;min-height:48px}
+summary{cursor:pointer;font-size:20px;color:var(--accent);font-weight:700;min-height:48px;transition:color 200ms ease}
+summary:hover{color:var(--accent-hover)}
+summary:active{color:var(--accent-active)}
 details p,details li{font-size:18px}
 .small{font-size:18px;color:var(--muted)}
 .honest{background:var(--warn-bg);border:2px solid var(--warn-line);border-radius:14px;padding:18px;margin:18px 0;color:var(--ink);font-size:18px}
@@ -110,12 +125,17 @@ pre{background:var(--code-bg);color:var(--code-ink);border-radius:14px;padding:1
 .inline-err{display:none;color:var(--err-ink);font-weight:700;font-size:20px;margin-top:14px}
 .inline-err.show{display:block}
 .done-links p{font-size:21px;word-break:break-word}
-.footer-line{margin-top:auto;padding-top:40px;font-size:14px;color:var(--muted);text-align:center}
+.footer-line{margin-top:auto;padding-top:40px;font-size:16px;line-height:1.5;color:var(--muted);text-align:center;display:flex;flex-direction:column;gap:8px}
+.footer-line .footer-name{color:var(--ink);font-weight:600}
+.footer-line .footer-l1,.footer-line .footer-l2{display:block}
 table{font-size:18px}
 @media (max-width:560px){h1{font-size:36px}h2{font-size:30px}.btn{font-size:22px}}
 .flagdial{display:flex;gap:14px;justify-content:space-between;margin:4px 0 30px;padding:18px 14px 14px;background:var(--surface2);border-radius:24px}
 .flagopt{flex:1;background:none;border:0;cursor:pointer;font:inherit;display:flex;flex-direction:column;align-items:center;gap:8px;padding:4px 2px;color:var(--ink)}
-.flagopt .flagcircle{width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:44px;line-height:1;background:#fff;border:4px solid var(--line);box-shadow:0 4px 14px rgba(0,0,0,.08);transition:transform .15s ease,border-color .15s ease}
+.flagopt .flagcircle{width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:44px;line-height:1;background:#fff;border:4px solid var(--line);box-shadow:0 4px 14px rgba(0,0,0,.08);transition:transform 200ms ease,border-color 200ms ease,background-color 200ms ease}
+.flagopt{transition:color 200ms ease,transform 200ms ease}
+.flagopt:hover .flagcircle{border-color:var(--line-strong)}
+.flagopt:active{transform:scale(.98)}
 .flagopt .flagword{font-size:20px;font-weight:700;line-height:1.2}
 .flagopt.on .flagcircle{border-color:var(--accent);transform:scale(1.08);box-shadow:0 6px 20px rgba(10,102,64,.22)}
 .flagopt.on .flagword{color:var(--accent)}
@@ -123,13 +143,18 @@ table{font-size:18px}
 .hline{display:block}
 #welcomeH1 .hc{font-size:30px;font-weight:700;margin-top:8px}
 #welcomeH1 .hd{font-size:24px;font-weight:800;color:var(--accent);margin-top:6px}
-#welcomeLede,#welcomeWhy{white-space:pre-line}
+#welcomeLede,#welcomeWhy,#welcomeWhyLine{white-space:pre-line}
+#welcomeLede{margin-bottom:16px}
+.why-line{font-size:20px;line-height:1.45;color:var(--muted);margin:0 0 24px}
 #vignette{width:min(94vw,600px);margin-left:auto;margin-right:auto;overflow:hidden}
 .acc{color:var(--accent)}
 #screen-welcome summary{color:var(--ink)}
+#screen-welcome summary:hover{color:#000000}
+#screen-welcome summary:active{color:#000000}
 #screen-welcome .blist li::before{color:var(--muted)}
-.flagopt:focus-visible,.langfab:focus-visible,.sheetclose:focus-visible{outline:4px solid var(--accent);outline-offset:2px}
-.langfab{position:fixed;top:max(12px,env(safe-area-inset-top));right:14px;z-index:40;width:48px;height:48px;border-radius:50%;border:2px solid var(--line);background:#fff;font-size:26px;line-height:1;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.14);padding:0}
+.langfab{position:fixed;top:max(12px,env(safe-area-inset-top));right:14px;z-index:40;width:48px;height:48px;border-radius:50%;border:2px solid var(--line);background:#fff;font-size:26px;line-height:1;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.14);padding:0;transition:background-color 200ms ease,border-color 200ms ease,transform 200ms ease}
+.langfab:hover{border-color:var(--line-strong);background:var(--surface2)}
+.langfab:active{transform:scale(.98);background:var(--neutral-hover)}
 .langfab.show{display:flex}
 .langsheet-back{position:fixed;inset:0;background:rgba(17,17,17,.44);z-index:50;display:none}
 .langsheet-back.open{display:block}
@@ -138,7 +163,9 @@ table{font-size:18px}
 @keyframes sheetUp{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
 .langsheet h2{font-size:24px;text-align:center;margin-bottom:6px}
 .langsheet .flagdial{margin-bottom:8px}
-.sheetclose{width:100%;min-height:56px;border:0;background:var(--surface2);border-radius:14px;font:inherit;font-size:20px;font-weight:700;cursor:pointer}
+.sheetclose{width:100%;min-height:56px;border:0;background:var(--surface2);border-radius:14px;font:inherit;font-size:20px;font-weight:700;cursor:pointer;transition:background-color 200ms ease,transform 200ms ease}
+.sheetclose:hover{background:var(--neutral-hover)}
+.sheetclose:active{background:var(--neutral-active);transform:scale(.98)}
 /* --- Brand tiles: one uniform mark system everywhere (inline only, zero requests) --- */
 .btile{display:inline-flex;width:42px;height:42px;border-radius:12px;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:19px;line-height:1;flex:none;vertical-align:middle}
 .btile svg{width:25px;height:25px;fill:#fff;display:block}
@@ -153,13 +180,14 @@ details p,details li{line-height:1.55}
 .blist li{position:relative;padding:5px 0 5px 24px}
 .blist li::before{content:"•";position:absolute;left:4px;top:5px;color:var(--accent);font-weight:800}
 /* --- Welcome pain row: captioned mini-vignettes (the problem, in pictures) --- */
-.painrow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0 0}
+.painrow{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:24px 0 0}
 .paincard{background:transparent;padding:8px 4px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
 .painicon{width:52px;height:52px;flex:none;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:26px;line-height:1}
 .paincap{font-size:18px;font-weight:600;line-height:1.35;margin:0;color:var(--muted)}
 /* --- Welcome language pill: one compact control, opens the language sheet --- */
-.langpill{align-self:flex-end;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;margin-bottom:24px;border-radius:999px;border:2px solid var(--line);background:#fff;font:inherit;font-size:17px;font-weight:700;color:var(--ink);cursor:pointer}
-.langpill:focus-visible{outline:4px solid var(--accent);outline-offset:2px}
+.langpill{align-self:flex-end;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;margin-bottom:24px;border-radius:999px;border:2px solid var(--line);background:#fff;font:inherit;font-size:17px;font-weight:700;color:var(--ink);cursor:pointer;transition:background-color 200ms ease,border-color 200ms ease,transform 200ms ease}
+.langpill:hover{border-color:var(--line-strong);background:var(--surface2)}
+.langpill:active{transform:scale(.98);background:var(--neutral-hover)}
 .langpill .chev{color:var(--muted);font-size:14px}
 /* --- Welcome at phone size (390x844 target): compressed stack, primary button fully above the fold --- */
 @media (max-width:640px){
@@ -167,13 +195,14 @@ details p,details li{line-height:1.55}
   #welcomeH1{font-size:32px;margin-bottom:8px}
   #welcomeH1 .hc{font-size:26px;margin-top:4px}
   #welcomeH1 .hd{font-size:22px;margin-top:4px}
-  #screen-welcome .painrow{gap:8px;margin-top:16px}
+  #screen-welcome .painrow{gap:8px;margin-top:8px}
   #screen-welcome .paincard{padding:8px 2px;gap:6px}
   #screen-welcome .painicon{width:40px;height:40px;font-size:20px}
   #screen-welcome .paincap{font-size:14px;line-height:1.3}
   #screen-welcome .visual{margin:16px 0}
   #screen-welcome #vignette{width:min(76vw,296px);margin-left:auto;margin-right:auto}
-  #welcomeLede{font-size:20px;line-height:1.4;margin-bottom:16px}
+  #welcomeLede{font-size:20px;line-height:1.4;margin-bottom:8px}
+  #welcomeWhyLine{font-size:18px;line-height:1.4;margin-bottom:8px}
   #welcomeWhy{font-size:18px}
   #startBtn{margin-top:8px}
   #adminTableWrap{overflow-x:visible}
@@ -224,7 +253,6 @@ details p,details li{line-height:1.55}
     <div class="painrow" id="painRow">
       <div class="paincard"><div class="painicon" aria-hidden="true">🔁</div><p class="paincap" id="painCap1">Tired of repeating yourself?</p></div>
       <div class="paincard"><div class="painicon" aria-hidden="true">🌀</div><p class="paincap" id="painCap2">Your AI forgets your instructions.</p></div>
-      <div class="paincard"><div class="painicon" aria-hidden="true">🧩</div><p class="paincap" id="painCap3">Your AIs don't share a memory.</p></div>
     </div>
     <div class="visual vignette playing" id="vignette" aria-hidden="true">
       <svg viewBox="0 0 560 292" role="img" aria-label="AI apps apart, then drawn to one private hub — a folder and a database together — then back out bright and in sync">
@@ -266,6 +294,9 @@ details p,details li{line-height:1.55}
 private <span class="acc">repository</span> and <span class="acc">database</span> —
 set up for you in one click.
 No surgery yourself.</p>
+    <p class="why-line" id="welcomeWhyLine">Why it works: each AI keeps its own notes
+— that's why they forget, and disagree.
+One shared place to read and write fixes it.</p>
     <button class="btn" id="startBtn" type="button">Set up my agent home</button>
     <p class="why" id="welcomeWhy">One click, once.
 Not an app — a one-time tool.
@@ -282,6 +313,8 @@ No AI expertise needed.</p>
         <li><strong>Your AI tools — one paste each.</strong> No shared sign-in exists across them, so each gets a ready-to-paste block.</li>
         <li><strong>Credentials never go in the repo.</strong> No server of ours touches your keys; pasted codes are checked in your browser, never saved.</li>
         <li><strong>“Done” means read back.</strong> A step counts only after the provider confirms it — and provider errors are shown unedited.</li>
+        <li id="welcomeDetailBest"><strong>You start from everyone's best setups</strong> — one shared register.</li>
+        <li id="welcomeDetailSync"><strong>You never sync anything yourself.</strong> Your AIs do it for you.</li>
       </ul>
       <button class="btn quiet" id="welcomeExtrasBtn" type="button">Just want the template files?</button>
     </details>
@@ -743,7 +776,7 @@ No AI expertise needed.</p>
     <button type="button" class="sheetclose" id="langSheetClose">Close</button>
   </div>
 
-  <p class="footer-line" id="footerLine">PowerUpMyAI · powerupmyai.com · Everything created is yours</p>
+  <p class="footer-line" id="footerLine"><span class="footer-l1"><span class="footer-name">PowerUpMyAI</span> · powerupmyai.com</span><span class="footer-l2" id="footerYours">Everything created is yours</span></p>
 </div>
 
 <script>
@@ -2144,6 +2177,8 @@ var ES_DICT={
 "Set up my agent home":"Crear mi espacio de IA",
 "One click, once.\nNot an app — a one-time tool.\nNeed extras later? Just ask your AI.\nNo AI expertise needed.":"Un clic, una sola vez.\nNo es una app — una herramienta de una sola vez.\n¿Algo más después? Pregúntale a tu IA.\nNo necesitas saber de IA.",
 "PowerUpMyAI · powerupmyai.com · Everything created is yours":"PowerUpMyAI · powerupmyai.com · Todo lo creado es tuyo",
+"Why it works: each AI keeps its own notes\n— that's why they forget, and disagree.\nOne shared place to read and write fixes it.":"Por qué funciona: cada IA guarda sus propias notas\n— por eso olvidan y no coinciden.\nUn solo lugar para leer y escribir lo arregla.",
+"Everything created is yours":"Todo lo creado es tuyo",
 "What's your name?":"¿Cómo te llamas?",
 "This fills your home with your details.":"Esto llena tu espacio con tus datos.",
 "Continue with Google":"Continuar con Google",
@@ -2254,11 +2289,13 @@ function applyLang(){
   setTextId("welcomeH1d",tt("Free.","무료예요.","Gratis."));
   setTextId("painCap1",tt("Tired of repeating yourself?","매번 같은 말, 지치셨죠?","¿Cansado de repetirte?"));
   setTextId("painCap2",tt("Your AI forgets your instructions.","AI가 내 말을 자꾸 잊어요.","Tu IA olvida tus instrucciones."));
-  setTextId("painCap3",tt("Your AIs don't share a memory.","AI들끼리 기억을 나누지 않아요.","Tus IA no comparten una memoria."));
   var wl=$("welcomeLede"); if(wl)wl.innerHTML=tt("We give you your own\nprivate <span class=\"acc\">repository</span> and <span class=\"acc\">database</span> —\nset up for you in one click.\nNo surgery yourself.","나만의\n비밀 <span class=\"acc\">저장소</span>와 <span class=\"acc\">데이터베이스</span>를\n한 번 클릭으로 만들어 드려요.\n직접 할 일은 없어요.","Te damos tu propio\n<span class=\"acc\">repositorio</span> privado y tu <span class=\"acc\">base de datos</span> —\nlistos con un solo clic.\nTú no haces la cirugía.");
+  setTextId("welcomeWhyLine",tt("Why it works: each AI keeps its own notes\n— that's why they forget, and disagree.\nOne shared place to read and write fixes it.","왜 효과가 있나요: AI마다 따로 메모해요\n— 그래서 잊고, 서로 어긋나요.\n읽고 쓸 곳이 하나면 해결돼요.","Por qué funciona: cada IA guarda sus propias notas\n— por eso olvidan y no coinciden.\nUn solo lugar para leer y escribir lo arregla."));
+  var wdb=$("welcomeDetailBest"); if(wdb)wdb.innerHTML=tt("<strong>You start from everyone's best setups</strong> — one shared register.","<strong>모두의 가장 좋은 설정에서 시작해요</strong> — 공유 목록 하나예요.","<strong>Empiezas con las mejores configuraciones de todos</strong> — un solo registro compartido.");
+  var wds=$("welcomeDetailSync"); if(wds)wds.innerHTML=tt("<strong>You never sync anything yourself.</strong> Your AIs do it for you.","<strong>동기화는 직접 하지 않아요.</strong> AI들이 알아서 맞춰줘요.","<strong>Nunca sincronizas nada tú mismo.</strong> Tus IA lo hacen por ti.");
   setTextId("startBtn",tt("Set up my agent home","내 AI 공간 만들기"));
   setTextId("welcomeWhy",tt("One click, once.\nNot an app — a one-time tool.\nNeed extras later? Just ask your AI.\nNo AI expertise needed.","한 번 클릭, 한 번만.\n앱이 아니라, 한 번 쓰는 도구예요.\n나중에 더 필요하면? AI에게 물어보세요.\nAI를 잘 몰라도 돼요."));
-  setTextId("footerLine",tt("PowerUpMyAI · powerupmyai.com · Everything created is yours","PowerUpMyAI · powerupmyai.com · 만든 건 모두 내 거예요"));
+  setTextId("footerYours",tt("Everything created is yours","만든 건 모두 내 거예요","Todo lo creado es tuyo"));
   // Step 0
   setTextId("step0H1",tt("What's your name?","이름이 뭐예요?"));
   setTextId("step0Lede",tt("This fills your home with your details.","내 정보로 공간을 채워요."));
