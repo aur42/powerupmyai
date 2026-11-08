@@ -1,0 +1,14 @@
+name = "powerupmyai-oauth"
+main = "worker.js"
+compatibility_date = "2024-11-01"
+
+[vars]
+GITHUB_CLIENT_ID = "FILL_FROM_GITHUB_OAUTH_APP"
+SUPABASE_CLIENT_ID = "FILL_FROM_SUPABASE_OAUTH_APP"
+ALLOWED_ORIGIN = "https://aur42.github.io"
+ADMIN_GITHUB_LOGIN = "aur42"
+
+# After `wrangler kv namespace create SETUPS`, uncomment and fill:
+# [[kv_namespaces]]
+# binding = "SETUPS"
+# id = "FILL_FROM_KV_CREATE"
