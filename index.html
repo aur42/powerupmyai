@@ -13,6 +13,7 @@
   --warn-bg:#fff6dd; --warn-line:#d9b84a; --warn-ink:#5c4300;
   --err-bg:#fdecec; --err-line:#d98c8c; --err-ink:#8c1d1d;
   --ok:#0a6640; --code-bg:#111111; --code-ink:#f2f2f2;
+  --gap-lg:24px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -36,14 +37,14 @@ a{color:var(--accent);text-underline-offset:3px;font-weight:600}
 html,body{overflow-x:hidden;max-width:100%}
 img,svg,pre,table{max-width:100%}
 @media (max-width:640px){
-  .wrap{padding:22px 18px 34px}
+  .wrap{padding:16px 18px 32px}
   #startBtn,#nameContinueBtn,#ghPrimaryBtn,#sbPrimaryBtn,#fullSetContinueBtn,#successContinueBtn,#failedRetryBtn{position:sticky;bottom:12px;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.14)}
   .fs-row{flex-wrap:wrap}
   input,select,textarea{font-size:20px}
 }
 .lede{font-size:22px;color:var(--ink);margin-bottom:28px}
 .progress{margin-bottom:28px}
-.progress-label{font-size:18px;color:var(--muted);font-weight:600;margin-bottom:10px}
+.progress-label{font-size:20px;color:var(--muted);font-weight:600;margin-bottom:8px}
 .dots{display:flex;gap:10px}
 .dots span{width:14px;height:14px;border-radius:50%;background:#d9d9d2;border:2px solid #bdbdb2}
 .dots span.on{background:var(--accent);border-color:var(--accent)}
@@ -58,14 +59,14 @@ img,svg,pre,table{max-width:100%}
 .btn.quiet{background:var(--surface2);color:var(--ink);border:2px solid var(--line)}
 .btn.small-btn{width:auto;min-height:56px;font-size:19px;padding:12px 20px;margin-top:8px;display:inline-flex}
 .text-btn{display:block;width:100%;min-height:56px;margin-top:10px;padding:12px 20px;background:none;border:0;cursor:pointer;font:inherit;font-size:20px;font-weight:700;color:var(--accent);text-decoration:underline;text-underline-offset:4px;text-align:center}
-.demo-line{font-size:19px;font-weight:700;color:var(--warn-ink);margin:14px 0 0}
-.why{font-size:17px;color:var(--muted);text-align:center;margin:12px 0 0}
-.visual{margin:34px 0 6px}
+.demo-line{font-size:20px;font-weight:700;color:var(--warn-ink);margin:16px 0 0}
+.why{font-size:20px;color:var(--muted);text-align:center;margin:12px 0 0}
+.visual{margin:36px 0 var(--gap-lg)}
 .visual svg{width:100%;height:auto;display:block}
 .bubble{background:var(--accent-soft);border-radius:22px 22px 22px 8px;padding:20px 22px;font-size:21px;line-height:1.45;margin:6px 0 0}
-.bubble-label{font-size:16px;color:var(--muted);margin:10px 0 0}
+.bubble-label{font-size:18px;color:var(--muted);margin:8px 0 0}
 #pastesWrap>summary{display:none}
-.fs-row{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--surface2);border-radius:16px;padding:14px 18px;margin-top:12px}
+.fs-row{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--surface2);border-radius:16px;padding:14px 18px;margin-top:var(--gap-lg)}
 .fs-row .fs-name{font-size:21px;font-weight:700}
 .fs-row .btn{margin-top:0;flex:none}
 label{display:block;font-weight:700;font-size:20px;margin:22px 0 8px}
@@ -75,7 +76,7 @@ input[type=file]{font:inherit;font-size:18px;width:100%;padding:14px 0}
 textarea{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:16px}
 input:focus,select:focus,textarea:focus,.btn:focus-visible,summary:focus-visible{outline:4px solid var(--accent);outline-offset:2px}
 details{margin-top:26px;border-top:2px solid var(--line);padding-top:18px}
-summary{cursor:pointer;font-size:19px;color:var(--accent);font-weight:700;min-height:48px}
+summary{cursor:pointer;font-size:20px;color:var(--accent);font-weight:700;min-height:48px}
 details p,details li{font-size:18px}
 .small{font-size:18px;color:var(--muted)}
 .honest{background:var(--warn-bg);border:2px solid var(--warn-line);border-radius:14px;padding:18px;margin:18px 0;color:var(--ink);font-size:18px}
@@ -96,7 +97,7 @@ li .st{margin-left:auto;font-size:17px;color:var(--muted);white-space:nowrap;pad
 .okbox{display:none;background:var(--accent-soft);border:2px solid var(--line);border-radius:14px;padding:16px;margin-top:14px;font-size:18px}
 .okbox.show{display:block}
 pre{background:var(--code-bg);color:var(--code-ink);border-radius:14px;padding:16px;overflow-x:auto;font-size:16px;line-height:1.55;margin:10px 0;white-space:pre-wrap;word-break:break-word}
-.block-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:22px}
+.block-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:var(--gap-lg)}
 .block-head h3{margin:0}
 .hidden{display:none !important}
 .filelist{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:16px;color:var(--muted);line-height:1.9}
@@ -118,6 +119,12 @@ table{font-size:18px}
 .flagopt .flagword{font-size:20px;font-weight:700;line-height:1.2}
 .flagopt.on .flagcircle{border-color:var(--accent);transform:scale(1.08);box-shadow:0 6px 20px rgba(10,102,64,.22)}
 .flagopt.on .flagword{color:var(--accent)}
+#screen-welcome .flagopt .flagcircle{width:56px;height:56px;font-size:32px}
+.hline{display:block}
+#welcomeH1 .hc{font-size:30px;font-weight:700;margin-top:8px}
+#welcomeH1 .hd{font-size:24px;font-weight:800;color:var(--accent);margin-top:6px}
+#welcomeLede,#welcomeWhy,#welcomeOnce{white-space:pre-line}
+#vignette{width:min(94vw,600px);margin-left:50%;transform:translateX(-50%)}
 .flagopt:focus-visible,.langfab:focus-visible,.sheetclose:focus-visible{outline:4px solid var(--accent);outline-offset:2px}
 .langfab{position:fixed;top:max(12px,env(safe-area-inset-top));right:14px;z-index:40;width:48px;height:48px;border-radius:50%;border:2px solid var(--line);background:#fff;font-size:26px;line-height:1;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.14);padding:0}
 .langfab.show{display:flex}
@@ -142,32 +149,59 @@ details p,details li{line-height:1.55}
 .blist{list-style:none;margin:10px 0;padding:0}
 .blist li{position:relative;padding:5px 0 5px 24px}
 .blist li::before{content:"•";position:absolute;left:4px;top:5px;color:var(--accent);font-weight:800}
-/* --- Welcome pain row: three captioned mini-vignettes (the problem, in pictures) --- */
-.painrow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0 4px}
-.paincard{background:var(--surface2);border-radius:18px;padding:18px 10px 14px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
-.painicon{width:64px;height:64px;flex:none;border-radius:50%;background:#fff;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:32px;line-height:1}
-.paincap{font-size:18px;font-weight:700;line-height:1.3;margin:0}
-@media (max-width:520px){
-  .painrow{grid-template-columns:1fr}
-  .paincard{flex-direction:row;text-align:left;padding:14px 16px}
-  .painicon{width:56px;height:56px;font-size:28px}
+/* --- Welcome pain row: captioned mini-vignettes (the problem, in pictures) --- */
+.painrow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0 0}
+.paincard{background:transparent;padding:8px 4px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.painicon{width:52px;height:52px;flex:none;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:26px;line-height:1}
+.paincap{font-size:18px;font-weight:600;line-height:1.35;margin:0;color:var(--muted)}
+/* --- Welcome language pill: one compact control, opens the language sheet --- */
+.langpill{align-self:flex-end;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;margin-bottom:24px;border-radius:999px;border:2px solid var(--line);background:#fff;font:inherit;font-size:17px;font-weight:700;color:var(--ink);cursor:pointer}
+.langpill:focus-visible{outline:4px solid var(--accent);outline-offset:2px}
+.langpill .chev{color:var(--muted);font-size:14px}
+/* --- Welcome at phone size (390x844 target): compressed stack, primary button fully above the fold --- */
+@media (max-width:640px){
+  #screen-welcome .langpill{margin-bottom:16px}
+  #welcomeH1{font-size:32px;margin-bottom:8px}
+  #welcomeH1 .hc{font-size:26px;margin-top:4px}
+  #welcomeH1 .hd{font-size:22px;margin-top:4px}
+  #screen-welcome .painrow{gap:8px;margin-top:16px}
+  #screen-welcome .paincard{padding:8px 2px;gap:6px}
+  #screen-welcome .painicon{width:40px;height:40px;font-size:20px}
+  #screen-welcome .paincap{font-size:14px;line-height:1.3}
+  #screen-welcome .visual{margin:16px 0}
+  #vignette{width:min(76vw,296px)}
+  #welcomeLede{font-size:20px;line-height:1.4;margin-bottom:16px}
+  #startBtn{margin-top:8px}
+  #adminTableWrap{overflow-x:visible}
+  #adminTableWrap td{word-break:break-word}
 }
-/* --- Animated welcome vignette (pure CSS/SVG, ~6s loop) --- */
-.vignette .pill-in,.vignette .pill-out,.vignette .folder-g,.vignette .spark{transform-box:fill-box;transform-origin:center}
-.vignette .pill-out{opacity:0}
-.vignette .pill-in,.vignette .pill-out,.vignette .folder-g{filter:drop-shadow(0 3px 5px rgba(17,17,17,.14))}
-.vignette.playing .pill-in{animation:vIn 10.5s ease-in-out infinite}
-.vignette.playing .pill-in.d1{animation-delay:.3s}.vignette.playing .pill-in.d2{animation-delay:.6s}
-.vignette.playing .folder-g{animation:vPulse 10.5s cubic-bezier(.34,1.4,.64,1) infinite}
-.vignette.playing .pill-out{animation:vOut 10.5s ease-in-out infinite}
-.vignette.playing .pill-out.d1{animation-delay:.3s}.vignette.playing .pill-out.d2{animation-delay:.6s}
-.vignette.playing .spark{animation:vSpark 10.5s ease-in-out infinite}
-@keyframes vIn{0%{transform:translate(0,0);opacity:.12}4%{transform:translate(0,0);opacity:1}30%{transform:translate(0,0);opacity:1}45%,90%{transform:translate(118px,0) scale(.82);opacity:0}96%{transform:translate(0,0) scale(1);opacity:0}100%{transform:translate(0,0) scale(1);opacity:.12}}
-@keyframes vPulse{0%{transform:scale(1);opacity:.55}30%{transform:scale(1);opacity:1}46%{transform:scale(1)}54%{transform:scale(1.1)}60%{transform:scale(.985)}66%{transform:scale(1.03)}72%,90%{transform:scale(1);opacity:1}100%{transform:scale(1);opacity:.55}}
-@keyframes vOut{0%,54%{transform:translate(-118px,0) scale(.82);opacity:0}72%,88%{transform:translate(0,0) scale(1.05);opacity:1}95%,100%{transform:translate(0,0) scale(1.05);opacity:0}}
-@keyframes vSpark{0%,60%{opacity:0;transform:scale(.6)}72%,86%{opacity:1;transform:scale(1.15)}95%,100%{opacity:0;transform:scale(1.15)}}
-.vignette.paused .pill-in,.vignette.paused .pill-out,.vignette.paused .folder-g,.vignette.paused .spark{animation-play-state:paused !important}
-@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.spinner,li.doing .dot,.big-icon.ok,#screen-working .spinner,.vignette *{animation:none !important}.screen.active{animation:none}.vignette .pill-in{opacity:.28}.vignette .pill-out{opacity:1;transform:scale(1.06)}.langsheet.open{animation:none}}
+/* --- Animated welcome vignette: apart → the hub → together (pure CSS/SVG, 10.5s loop) --- */
+.vignette .tile-move,.vignette .hub{transform-box:fill-box;transform-origin:center}
+.vignette .tile-look{filter:drop-shadow(0 3px 5px rgba(17,17,17,.14))}
+.vignette .hub,.vignette .hub-glow,.vignette .lines,.vignette .ring{opacity:0}
+.vignette.playing .tile-look{animation:vLook 10.5s ease-in-out infinite}
+.vignette.playing .pillbg{animation:vPill 10.5s ease-in-out infinite}
+.vignette.playing .tile-move{animation-duration:10.5s;animation-timing-function:ease-in-out;animation-iteration-count:infinite}
+.vignette.playing .tm1{animation-name:vM1}.vignette.playing .tm2{animation-name:vM2}.vignette.playing .tm3{animation-name:vM3}.vignette.playing .tm4{animation-name:vM4}.vignette.playing .tm5{animation-name:vM5}.vignette.playing .tm6{animation-name:vM6}.vignette.playing .tm7{animation-name:vM7}
+.vignette.playing .hub{animation:vHub 10.5s ease-in-out infinite}
+.vignette.playing .hub-glow{animation:vGlow 10.5s ease-in-out infinite}
+.vignette.playing .lines{animation:vLines 10.5s ease-in-out infinite}
+.vignette.playing .ring{animation:vRing 10.5s ease-in-out infinite}
+@keyframes vLook{0%,27%{opacity:.58;filter:drop-shadow(0 3px 5px rgba(17,17,17,.12)) saturate(.12)}47%,60%{opacity:.92;filter:drop-shadow(0 3px 5px rgba(17,17,17,.14)) saturate(.6)}78%,93%{opacity:1;filter:drop-shadow(0 4px 9px rgba(10,102,64,.22)) saturate(1.1)}100%{opacity:.58;filter:drop-shadow(0 3px 5px rgba(17,17,17,.12)) saturate(.12)}}
+@keyframes vPill{0%,27%{fill:#e9e9e2;stroke-opacity:0}47%,60%{fill:#f2f5ef;stroke-opacity:.3}78%,93%{fill:#e9f7ee;stroke-opacity:.6}100%{fill:#e9e9e2;stroke-opacity:0}}
+@keyframes vM1{0%,27%{transform:translate(0,0)}47%,60%{transform:translate(65px,37px)}78%,100%{transform:translate(0,0)}}
+@keyframes vM2{0%,27%{transform:translate(0,0)}47%,60%{transform:translate(0,46px)}78%,100%{transform:translate(0,0)}}
+@keyframes vM3{0%,27%{transform:translate(0,0)}47%,60%{transform:translate(-65px,37px)}78%,100%{transform:translate(0,0)}}
+@keyframes vM4{0%,27%{transform:translate(0,0)}47%,60%{transform:translate(82px,0)}78%,100%{transform:translate(0,0)}}
+@keyframes vM5{0%,27%{transform:translate(0,0)}47%,60%{transform:translate(-82px,0)}78%,100%{transform:translate(0,0)}}
+@keyframes vM6{0%,27%{transform:translate(0,0)}47%,60%{transform:translate(62px,-42px)}78%,100%{transform:translate(0,0)}}
+@keyframes vM7{0%,27%{transform:translate(0,0)}47%,60%{transform:translate(-62px,-42px)}78%,100%{transform:translate(0,0)}}
+@keyframes vHub{0%,24%{opacity:0;transform:scale(.9)}42%,90%{opacity:1;transform:scale(1)}96%{opacity:.85;transform:scale(1.015)}100%{opacity:0;transform:scale(.92)}}
+@keyframes vGlow{0%,30%{opacity:0}50%{opacity:.5}68%{opacity:.32}84%,93%{opacity:.55}100%{opacity:0}}
+@keyframes vLines{0%,40%{opacity:0}56%,66%{opacity:.8}78%,100%{opacity:0}}
+@keyframes vRing{0%,64%{opacity:0}80%,93%{opacity:.55}100%{opacity:0}}
+.vignette.paused .tile-move,.vignette.paused .tile-look,.vignette.paused .pillbg,.vignette.paused .hub,.vignette.paused .hub-glow,.vignette.paused .lines,.vignette.paused .ring{animation-play-state:paused !important}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.spinner,li.doing .dot,.big-icon.ok,#screen-working .spinner,.vignette *{animation:none !important}.screen.active{animation:none}.vignette .tile-look{opacity:1}.vignette .pillbg{fill:#e9f7ee;stroke-opacity:.6}.vignette .hub{opacity:1}.vignette .hub-glow{opacity:.45}.vignette .lines{opacity:.6}.vignette .ring{opacity:.5}.langsheet.open{animation:none}}
 
 </style>
 </head>
@@ -181,51 +215,61 @@ details p,details li{line-height:1.55}
 
   <!-- WELCOME -->
   <section class="screen active" id="screen-welcome">
-    <div class="flagdial" role="group" aria-label="Language / 언어 / Idioma">
-      <button type="button" id="langEnBtn" class="flagopt" aria-label="English"><span class="flagcircle" aria-hidden="true">🇺🇸</span><span class="flagword">English</span></button>
-      <button type="button" id="langKoBtn" class="flagopt" aria-label="한국어"><span class="flagcircle" aria-hidden="true">🇰🇷</span><span class="flagword">한국어</span></button>
-      <button type="button" id="langEsBtn" class="flagopt" aria-label="Español"><span class="flagcircle" aria-hidden="true">🇪🇸</span><span class="flagword">Español</span></button>
-    </div>
-    <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">👆 ✨</div>
-    <h1 id="welcomeH1">Every AI you use. One memory.</h1>
+    <button type="button" class="langpill" id="welcomeLangPill" aria-label="Language / 언어 / Idioma"><span id="welcomeLangPillText">🇺🇸 English</span><span class="chev" aria-hidden="true">▾</span></button>
+    <h1 id="welcomeH1"><span class="hline ha" id="welcomeH1a">Every AI you use.</span><span class="hline hb" id="welcomeH1b">One memory.</span><span class="hline hc" id="welcomeH1c">Sync them all up.</span><span class="hline hd" id="welcomeH1d">Free.</span></h1>
     <div class="painrow" id="painRow">
       <div class="paincard"><div class="painicon" aria-hidden="true">🔁</div><p class="paincap" id="painCap1">Tired of repeating yourself?</p></div>
       <div class="paincard"><div class="painicon" aria-hidden="true">🌀</div><p class="paincap" id="painCap2">Your AI forgets your instructions.</p></div>
-      <div class="paincard"><div class="painicon" aria-hidden="true">🧩</div><p class="paincap" id="painCap3">Three AIs, three different memories.</p></div>
+      <div class="paincard"><div class="painicon" aria-hidden="true">🧩</div><p class="paincap" id="painCap3">Your AIs don't share a memory.</p></div>
     </div>
     <div class="visual vignette playing" id="vignette" aria-hidden="true">
-      <svg viewBox="0 0 560 220" role="img" aria-label="Claude, ChatGPT and Grok flowing into one folder, and back out smarter">
+      <svg viewBox="0 0 560 292" role="img" aria-label="AI apps apart, then drawn to one private hub — a folder and a database together — then back out bright and in sync">
         <defs>
-          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a90"/></marker>
-          <linearGradient id="brightGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4f8ec"/><stop offset="1" stop-color="#b4e5c7"/></linearGradient>
+          <radialGradient id="hubGlowGrad" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#0a6640" stop-opacity=".38"/><stop offset="1" stop-color="#0a6640" stop-opacity="0"/></radialGradient>
         </defs>
-        <g font-family="inherit" font-size="17" font-weight="600" fill="#6b6b62">
-          <g class="pill-in"><rect x="6" y="18" width="128" height="44" rx="22" fill="#e9e9e2"/><circle cx="28" cy="40" r="12" fill="#D97757"/><text x="28" y="45" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">✦</text><text x="76" y="46" text-anchor="middle">Claude</text></g>
-          <g class="pill-in d1"><rect x="6" y="88" width="128" height="44" rx="22" fill="#e9e9e2"/><circle cx="28" cy="110" r="12" fill="#10A37F"/><text x="28" y="115" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">G</text><text x="76" y="116" text-anchor="middle">ChatGPT</text></g>
-          <g class="pill-in d2"><rect x="6" y="158" width="128" height="44" rx="22" fill="#e9e9e2"/><circle cx="28" cy="180" r="12" fill="#111111"/><text x="28" y="185" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">X</text><text x="76" y="186" text-anchor="middle">Grok</text></g>
+        <ellipse class="hub-glow" cx="280" cy="146" rx="112" ry="80" fill="url(#hubGlowGrad)"/>
+        <g class="lines" stroke="#9db8a8" stroke-width="2">
+          <line x1="280" y1="146" x2="155" y2="84"/><line x1="280" y1="146" x2="280" y2="81"/><line x1="280" y1="146" x2="405" y2="84"/><line x1="280" y1="146" x2="152" y2="146"/><line x1="280" y1="146" x2="408" y2="146"/><line x1="280" y1="146" x2="180" y2="203"/><line x1="280" y1="146" x2="380" y2="203"/>
         </g>
-        <g font-family="inherit" font-size="17" font-weight="700" fill="#0a4d2e">
-          <g class="pill-out"><rect x="420" y="15" width="136" height="48" rx="24" fill="url(#brightGrad)" stroke="#0a6640" stroke-width="2"/><circle cx="448" cy="39" r="13" fill="#D97757"/><text x="448" y="44" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">✦</text><text x="500" y="46" text-anchor="middle">Claude</text></g>
-          <g class="pill-out d1"><rect x="420" y="85" width="136" height="48" rx="24" fill="url(#brightGrad)" stroke="#0a6640" stroke-width="2"/><circle cx="448" cy="109" r="13" fill="#10A37F"/><text x="448" y="114" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">G</text><text x="500" y="116" text-anchor="middle">ChatGPT</text></g>
-          <g class="pill-out d2"><rect x="420" y="155" width="136" height="48" rx="24" fill="url(#brightGrad)" stroke="#0a6640" stroke-width="2"/><circle cx="448" cy="179" r="13" fill="#111111"/><text x="448" y="184" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">X</text><text x="500" y="186" text-anchor="middle">Grok</text></g>
+        <g class="hub">
+          <rect x="214" y="96" width="132" height="100" rx="18" fill="#f3f8f4" stroke="#0a6640" stroke-width="2"/>
+          <path d="M232,124 h13 l5,6 h20 a5,5 0 0 1 5,5 v15 a5,5 0 0 1 -5,5 h-38 a5,5 0 0 1 -5,-5 v-21 a5,5 0 0 1 5,-5 z" fill="#e6f2ec" stroke="#0a6640" stroke-width="2"/>
+          <path d="M244,133 l-6,6 6,6" fill="none" stroke="#0a6640" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M258,133 l6,6 -6,6" fill="none" stroke="#0a6640" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <g fill="#e6f2ec" stroke="#0a6640" stroke-width="2">
+            <path d="M290,126 v24 a15,5.5 0 0 0 30,0 v-24"/>
+            <ellipse cx="305" cy="126" rx="15" ry="5.5" fill="#d9ecdf"/>
+            <path d="M290,138 a15,5.5 0 0 0 30,0" fill="none"/>
+          </g>
+          <line x1="248" y1="178" x2="312" y2="178" stroke="#bcd2c4" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="292" cy="178" r="6.5" fill="#0a6640" stroke="#ffffff" stroke-width="2"/>
+          <circle cx="340" cy="100" r="12" fill="#0a6640" stroke="#ffffff" stroke-width="3"/>
+          <rect x="335.5" y="98.5" width="9" height="7.5" rx="1.6" fill="#ffffff"/>
+          <path d="M337.2,98.5 v-2.2 a2.8,2.8 0 0 1 5.6,0 v2.2" fill="none" stroke="#ffffff" stroke-width="1.8"/>
         </g>
-        <text class="spark" x="356" y="52" font-size="24" fill="#0a6640">✦</text>
-        <text class="spark" x="196" y="176" font-size="20" fill="#0a6640">✦</text>
-        <path d="M140,40 C180,40 190,86 224,98" fill="none" stroke="#9a9a90" stroke-width="2.5" marker-end="url(#arr)"/>
-        <path d="M140,110 L224,110" fill="none" stroke="#9a9a90" stroke-width="2.5" marker-end="url(#arr)"/>
-        <path d="M140,180 C180,180 190,134 224,122" fill="none" stroke="#9a9a90" stroke-width="2.5" marker-end="url(#arr)"/>
-        <path d="M336,98 C370,86 380,40 420,40" fill="none" stroke="#0a6640" stroke-width="2.5" marker-end="url(#arr)"/>
-        <path d="M336,110 L420,110" fill="none" stroke="#0a6640" stroke-width="2.5" marker-end="url(#arr)"/>
-        <path d="M336,122 C370,134 380,180 420,180" fill="none" stroke="#0a6640" stroke-width="2.5" marker-end="url(#arr)"/>
-        <g class="folder-g">
-          <path d="M238,84 h30 l10,14 h58 a10,10 0 0 1 10,10 v56 a10,10 0 0 1 -10,10 h-98 a10,10 0 0 1 -10,-10 v-70 a10,10 0 0 1 10,-10 z" fill="#e6f2ec" stroke="#0a6640" stroke-width="2.5"/>
+        <g font-family="inherit" font-size="15" font-weight="700" fill="#2f2f2a">
+          <g class="tile-move tm1"><g class="tile-look"><rect class="ring" x="23" y="21" width="134" height="52" rx="26" fill="none" stroke="#0a6640" stroke-width="2"/><rect class="pillbg" x="28" y="26" width="124" height="42" rx="21" fill="#e9e9e2" stroke="#0a6640" stroke-width="1.6" stroke-opacity="0"/><circle cx="52" cy="47" r="13" fill="#D97757"/><text x="52" y="52" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">✦</text><text x="72" y="53">Claude</text></g></g>
+          <g class="tile-move tm2"><g class="tile-look"><rect class="ring" x="213" y="9" width="134" height="52" rx="26" fill="none" stroke="#0a6640" stroke-width="2"/><rect class="pillbg" x="218" y="14" width="124" height="42" rx="21" fill="#e9e9e2" stroke="#0a6640" stroke-width="1.6" stroke-opacity="0"/><circle cx="242" cy="35" r="13" fill="#10A37F"/><text x="242" y="40" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">G</text><text x="262" y="41">ChatGPT</text></g></g>
+          <g class="tile-move tm3"><g class="tile-look"><rect class="ring" x="403" y="21" width="134" height="52" rx="26" fill="none" stroke="#0a6640" stroke-width="2"/><rect class="pillbg" x="408" y="26" width="124" height="42" rx="21" fill="#e9e9e2" stroke="#0a6640" stroke-width="1.6" stroke-opacity="0"/><circle cx="432" cy="47" r="13" fill="#111111"/><text x="432" y="52" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">X</text><text x="452" y="53">Grok</text></g></g>
+          <g class="tile-move tm4"><g class="tile-look"><rect class="ring" x="3" y="120" width="134" height="52" rx="26" fill="none" stroke="#0a6640" stroke-width="2"/><rect class="pillbg" x="8" y="125" width="124" height="42" rx="21" fill="#e9e9e2" stroke="#0a6640" stroke-width="1.6" stroke-opacity="0"/><circle cx="32" cy="146" r="13" fill="#0B0D12"/><text x="32" y="151" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">M</text><text x="52" y="152">Muse</text></g></g>
+          <g class="tile-move tm5"><g class="tile-look"><rect class="ring" x="423" y="120" width="134" height="52" rx="26" fill="none" stroke="#0a6640" stroke-width="2"/><rect class="pillbg" x="428" y="125" width="124" height="42" rx="21" fill="#e9e9e2" stroke="#0a6640" stroke-width="1.6" stroke-opacity="0"/><circle cx="452" cy="146" r="13" fill="#55534E"/><text x="452" y="151" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">I</text><text x="472" y="152">Instinct</text></g></g>
+          <g class="tile-move tm6"><g class="tile-look"><rect class="ring" x="51" y="219" width="134" height="52" rx="26" fill="none" stroke="#0a6640" stroke-width="2"/><rect class="pillbg" x="56" y="224" width="124" height="42" rx="21" fill="#e9e9e2" stroke="#0a6640" stroke-width="1.6" stroke-opacity="0"/><circle cx="80" cy="245" r="13" fill="#4664D9"/><text x="80" y="250" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">K</text><text x="100" y="251">Kimi</text></g></g>
+          <g class="tile-move tm7"><g class="tile-look"><rect class="ring" x="375" y="219" width="134" height="52" rx="26" fill="none" stroke="#0a6640" stroke-width="2"/><rect class="pillbg" x="380" y="224" width="124" height="42" rx="21" fill="#e9e9e2" stroke="#0a6640" stroke-width="1.6" stroke-opacity="0"/><circle cx="404" cy="245" r="13" fill="#111111"/><text x="404" y="250" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff" font-family="Georgia,serif">N</text><text x="424" y="251">Notion</text></g></g>
         </g>
       </svg>
     </div>
-    <p class="lede" id="welcomeLede">We give you your own private folder and memory store — set up for you in one click. No surgery yourself.</p>
+    <p class="lede" id="welcomeLede">We give you your own
+private folder and
+memory store —
+set up for you in one click.
+No surgery yourself.</p>
     <button class="btn" id="startBtn" type="button">Set up my agent home</button>
-    <p class="why" id="welcomeWhy">One click. One time. Done.</p>
-    <p class="small" id="welcomeOnce" style="text-align:center;margin-top:8px">Do this once. You never need to come back — extras later? Just ask your AI.</p>
+    <p class="why" id="welcomeWhy">One click.
+Not an app — a one-time tool.
+No AI expertise needed.</p>
+    <p class="small" id="welcomeOnce" style="text-align:center;margin-top:8px">Do this once.
+You never need to come back —
+extras later? Just ask your AI.</p>
     <details>
       <summary>Details</summary>
       <p>Someone shared this with you so your AIs actually remember you.</p>
@@ -613,7 +657,7 @@ details p,details li{line-height:1.55}
     <div id="stepNotion">
       <details id="notionDetails">
       <summary>Notion</summary>
-      <p id="notionIntro"><span class="btile sm" style="background:#111111;font-family:Georgia,serif" aria-hidden="true">N</span> Two honest paths — pick either, both, or neither. Your home stays the original either way.</p>
+      <p id="notionIntro"><span class="btile sm" style="background:#111111;font-family:Georgia,serif" aria-hidden="true">N</span> <span id="notionIntroText">Two honest paths — pick either, both, or neither. Your home stays the original either way.</span></p>
       <h3 id="notionImportPathH">1. Import what Notion already holds</h3>
       <p class="small" id="notionImportPathP">Use “Bring what your tools already know” above: export from Notion (app → Settings → Export all workspace content) and add the .md files. A one-time file import — not a live link.</p>
       <h3 id="notionMirrorPathH">2. Keep a Notion page as a mirror (optional)</h3>
@@ -1284,7 +1328,7 @@ function renderBlocks(containerId,v){
   });
 }
 function copyText(text,btn){
-  function done(){ if(btn){var o=btn.textContent; btn.textContent="Copied"; setTimeout(function(){btn.textContent=o;},1600);} }
+  function done(){ if(btn){var o=btn.textContent; btn.textContent=(typeof tt==="function")?tt("Copied","복사됨","Copiado"):"Copied"; setTimeout(function(){btn.textContent=o;},1600);} }
   if(navigator.clipboard&&navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(done).catch(function(){fallback();});
   } else fallback();
@@ -1333,20 +1377,29 @@ async function ghCreate(){
     setCheck("ghCheck","gh-verify","done","@"+user.login);
 
     setCheck("ghCheck","gh-create","doing","creating…");
-    var repo=await ghFetch("/user/repos",{method:"POST",body:JSON.stringify({
-      name:S.repoName,private:true,auto_init:false,
-      description:"My agent home — private memory and instructions for my AI tools."
-    })});
+    var repo=null;
+    try{
+      repo=await ghFetch("/user/repos",{method:"POST",body:JSON.stringify({
+        name:S.repoName,private:true,auto_init:false,
+        description:"My agent home — private memory and instructions for my AI tools."
+      })});
+    }catch(eCreate){
+      /* Retry-safe: a repo with this name that is already yours and private
+         (e.g. from an earlier attempt that failed halfway) is reused, so
+         "Try again" can finish the job instead of failing on the name. */
+      if(!/422|already exists/i.test(eCreate.message))throw eCreate;
+      repo=await ghFetch("/repos/"+S.ghUser+"/"+S.repoName);
+      if(!repo||repo.private!==true)throw eCreate;
+    }
     S.repoFull=repo.full_name; S.repoUrl=repo.html_url;
     setCheck("ghCheck","gh-create","done",repo.full_name);
 
     var files=templateFiles(currentVars());
     setCheck("ghCheck","gh-upload","doing","0 / "+files.length+" files");
     for(var i=0;i<files.length;i++){
-      await ghFetch("/repos/"+S.repoFull+"/contents/"+files[i].path,{method:"PUT",body:JSON.stringify({
-        message:"Add "+files[i].path+" (Agent Home Setup)",
-        content:b64encode(files[i].content)
-      })});
+      var upPayload={message:"Add "+files[i].path+" (Agent Home Setup)",content:b64encode(files[i].content)};
+      try{ var existing=await ghFetch("/repos/"+S.repoFull+"/contents/"+files[i].path); if(existing&&existing.sha)upPayload.sha=existing.sha; }catch(eSha){}
+      await ghFetch("/repos/"+S.repoFull+"/contents/"+files[i].path,{method:"PUT",body:JSON.stringify(upPayload)});
       setCheck("ghCheck","gh-upload","doing",(i+1)+" / "+files.length+" files");
     }
     setCheck("ghCheck","gh-upload","done",files.length+" files");
@@ -2086,11 +2139,11 @@ var ES_DICT={
 "One private home, so every AI helper knows you.":"Un solo espacio privado, para que cada IA te conozca.",
 "Tired of repeating yourself?":"¿Cansado de repetirte?",
 "Your AI forgets your instructions.":"Tu IA olvida tus instrucciones.",
-"Three AIs, three different memories.":"Cada IA recuerda algo distinto.",
+"Your AIs don't share a memory.":"Tus IA no comparten una memoria.",
 "We give you your own private folder and memory store — set up for you in one click. No surgery yourself.":"Te creamos tu propia carpeta privada y tu memoria — con un solo clic. Tú no haces la cirugía.",
 "Set up my agent home":"Crear mi espacio de IA",
-"One click. One time. Done.":"Un toque. Una sola vez. Listo.",
-"Do this once. You never need to come back — extras later? Just ask your AI.":"Hazlo una sola vez. No tienes que volver — ¿algo más después? Pregúntale a tu IA.",
+"One click.\nNot an app — a one-time tool.\nNo AI expertise needed.":"Un clic.\nNo es una app:\nuna herramienta de una sola vez.\nNo necesitas saber de IA.",
+"Do this once.\nYou never need to come back —\nextras later? Just ask your AI.":"Hazlo una sola vez.\nNo tienes que volver —\n¿algo más después?\nPregúntale a tu IA.",
 "PowerUpMyAI · powerupmyai.com · Free for the first members · Everything created is yours":"PowerUpMyAI · powerupmyai.com · Gratis para los primeros · Todo lo creado es tuyo",
 "What's your name?":"¿Cómo te llamas?",
 "This fills your home with your details.":"Esto llena tu espacio con tus datos.",
@@ -2196,14 +2249,17 @@ function applyLang(){
   document.documentElement.lang=LANG;
   var ko=isKo();
   // Welcome
-  setTextId("welcomeH1",tt("Every AI you use. One memory.","쓰는 AI는 달라도, 기억은 하나예요."));
+  setTextId("welcomeH1a",tt("Every AI you use.","쓰는 AI는 전부.","Cada IA que usas."));
+  setTextId("welcomeH1b",tt("One memory.","기억은 하나예요.","Una memoria."));
+  setTextId("welcomeH1c",tt("Sync them all up.","전부 하나로 맞춰요.","Sincronízalas todas."));
+  setTextId("welcomeH1d",tt("Free.","무료예요.","Gratis."));
   setTextId("painCap1",tt("Tired of repeating yourself?","매번 같은 말, 지치셨죠?","¿Cansado de repetirte?"));
   setTextId("painCap2",tt("Your AI forgets your instructions.","AI가 내 말을 자꾸 잊어요.","Tu IA olvida tus instrucciones."));
-  setTextId("painCap3",tt("Three AIs, three different memories.","AI마다 기억이 달라요.","Cada IA recuerda algo distinto."));
-  setTextId("welcomeLede",tt("We give you your own private folder and memory store — set up for you in one click. No surgery yourself.","나만의 비밀 폴더와 기억 저장소를 만들어 드려요. 한 번만 누르면 끝 — 직접 할 일은 없어요.","Te creamos tu propia carpeta privada y tu memoria — con un solo clic. Tú no haces la cirugía."));
+  setTextId("painCap3",tt("Your AIs don't share a memory.","AI들끼리 기억을 나누지 않아요.","Tus IA no comparten una memoria."));
+  setTextId("welcomeLede",tt("We give you your own\nprivate folder and\nmemory store —\nset up for you in one click.\nNo surgery yourself.","나만의 비밀 폴더와\n기억 저장소를 만들어 드려요.\n한 번만 누르면 끝.\n직접 할 일은 없어요.","Te creamos tu carpeta privada\ny tu memoria, con un solo clic.\nTú no haces la cirugía."));
   setTextId("startBtn",tt("Set up my agent home","내 AI 공간 만들기"));
-  setTextId("welcomeWhy",tt("One click. One time. Done.","한 번만 누르세요. 한 번이면 끝나요."));
-  setTextId("welcomeOnce",tt("Do this once. You never need to come back — extras later? Just ask your AI.","한 번만 하세요. 다시 올 필요 없어요 — 나중에 더 필요하면 AI에게 물어보세요."));
+  setTextId("welcomeWhy",tt("One click.\nNot an app — a one-time tool.\nNo AI expertise needed.","한 번 클릭.\n앱이 아니라, 한 번 쓰는 도구예요.\nAI를 잘 몰라도 돼요."));
+  setTextId("welcomeOnce",tt("Do this once.\nYou never need to come back —\nextras later? Just ask your AI.","한 번만 하세요.\n다시 올 필요 없어요 —\n나중에 더 필요하면\nAI에게 물어보세요."));
   setTextId("footerLine",tt("PowerUpMyAI · powerupmyai.com · Free for the first members · Everything created is yours","PowerUpMyAI · powerupmyai.com · 처음 오신 분은 무료예요 · 만든 건 모두 내 거예요"));
   // Step 0
   setTextId("step0H1",tt("What's your name?","이름이 뭐예요?"));
@@ -2271,7 +2327,7 @@ function applyLang(){
   setTextId("notionMirrorCopyBtn",tt("Copy","복사"));
   setTextId("notionImportH",tt("Notion — bring it in as files","Notion — 파일로 가져오기"));
   setTextId("notionImportNote",tt("Honest label: this is a file import, not a live connection. You export once, and the files join the same reconcile below.","솔직히 말하면, 실시간 연결이 아니라 파일 가져오기예요. 한 번 내보내서 아래에서 함께 맞춰요."));
-  setTextId("notionIntro",tt("Two honest paths — pick either, both, or neither. Your home stays the original either way.","두 가지 방법이에요 — 하나만, 둘 다, 안 해도 돼요. 어느 쪽이든 원본은 내 공간이에요."));
+  setTextId("notionIntroText",tt("Two honest paths — pick either, both, or neither. Your home stays the original either way.","두 가지 방법이에요 — 하나만, 둘 다, 안 해도 돼요. 어느 쪽이든 원본은 내 공간이에요."));
   setTextId("notionImportPathH",tt("1. Import what Notion already holds","1. Notion에 있는 것 가져오기"));
   setTextId("notionImportPathP",tt("Use “Bring what your tools already know” above: export from Notion (app → Settings → Export all workspace content) and add the .md files. A one-time file import — not a live link.","위 “이미 아는 기억 가져오기”를 써요: Notion 앱 → 설정 → 모든 콘텐츠 내보내기에서 받은 .md 파일을 넣어요. 한 번만 하는 파일 가져오기예요 — 실시간 연결은 아니에요."));
   setTextId("notionMirrorPathH",tt("2. Keep a Notion page as a mirror (optional)","2. Notion 페이지를 거울처럼 두기 (선택)"));
@@ -2306,6 +2362,7 @@ function applyLang(){
   // Language toggle emphasis — the active language is unmistakable
   [["langEnBtn","en"],["langKoBtn","ko"],["langEsBtn","es"],["langSheetEnBtn","en"],["langSheetKoBtn","ko"],["langSheetEsBtn","es"]].forEach(function(pair){var b=$(pair[0]); if(b)b.classList.toggle("on",LANG===pair[1]);});
   var fab=$("langFabBtn"); if(fab)fab.textContent=LANG==="ko"?"🇰🇷":(LANG==="es"?"🇪🇸":"🇺🇸");
+  var pill=$("welcomeLangPillText"); if(pill)pill.textContent=LANG==="ko"?"🇰🇷 한국어":(LANG==="es"?"🇪🇸 Español":"🇺🇸 English");
   var sc=$("langSheetClose"); if(sc)sc.textContent=tt("Close","닫기","Cerrar");
   setTextId("howSummaryDone",tt("How this works — as deep as you want","어떻게 돌아가는지 — 원하는 만큼 깊이","Cómo funciona — tan profundo como quieras"));
   setTextId("howSummaryExtras",tt("How this works — as deep as you want","어떻게 돌아가는지 — 원하는 만큼 깊이","Cómo funciona — tan profundo como quieras"));
@@ -2346,6 +2403,7 @@ function renderHow(){
   +li("",tt("Imports are reconciled, never silently overwritten.","가져온 건 맞춰서 합쳐요 — 몰래 덮어쓰지 않아요.","Las importaciones se reconcilian, nunca se sobrescriben en silencio."))
   +li("",tt("Choices you didn't make were set with expert defaults (DECISIONS.md).","내가 안 정한 건 전문가 기본값으로 정해 뒀어요 (DECISIONS.md).","Las decisiones que no tomaste se fijaron con valores expertos (DECISIONS.md)."))
   +li("",tt("Open choices surface later — one at a time, when they matter.","남은 선택은 나중에, 필요할 때 하나씩 물어봐요.","Las decisiones abiertas aparecen después — una por una, cuando importan."))
+  +li("",tt("In one phrase: a shared harness for all your AIs — it coordinates them so you don't have to.","한마디로 말하면, 모든 AI를 잇는 공유 하네스예요 — 직접 조율하지 않아도 알아서 맞춰줘요.","En una frase: un harness compartido para todas tus IA — las coordina para que no tengas que hacerlo tú."))
   +'</ul>';
   var d=$("howDone"); if(d)d.innerHTML=h;
   var x=$("howExtras"); if(x)x.innerHTML=h;
@@ -2375,7 +2433,7 @@ function showScreen(id){
   WIZ_SCREENS.forEach(function(s){var el=$(s); if(el){el.classList.toggle("active",s===id); el.classList.remove("hidden");}});
   var fab=$("langFabBtn"); if(fab)fab.classList.toggle("show",id!=="screen-welcome");
   savePlace(id);
-  var stepMap={"step0":1,"step1":2,"step2":3};
+  var stepMap={"step0":1,"step1choice":2,"step1signup":2,"step1":2,"step2":3};
   var pw=$("progressWrap");
   if(stepMap[id]){
     pw.classList.remove("hidden");
@@ -2568,6 +2626,7 @@ function openLangSheet(){ var s=$("langSheet"),b=$("langSheetBack"); if(s)s.clas
 function closeLangSheet(){ var s=$("langSheet"),b=$("langSheetBack"); if(s)s.classList.remove("open"); if(b)b.classList.remove("open"); }
 [["langEnBtn","en"],["langKoBtn","ko"],["langEsBtn","es"],["langSheetEnBtn","en"],["langSheetKoBtn","ko"],["langSheetEsBtn","es"]].forEach(function(pair){var el=$(pair[0]); if(el)el.addEventListener("click",function(){setLang(pair[1]);});});
 if($("langFabBtn"))$("langFabBtn").addEventListener("click",openLangSheet);
+if($("welcomeLangPill"))$("welcomeLangPill").addEventListener("click",openLangSheet);
 if($("langSheetClose"))$("langSheetClose").addEventListener("click",closeLangSheet);
 if($("langSheetBack"))$("langSheetBack").addEventListener("click",closeLangSheet);
 /* Vignette: pause when off-screen or the tab is hidden */
