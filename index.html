@@ -269,6 +269,22 @@ body.preview .dots span:hover{outline:2px solid var(--accent);outline-offset:2px
 #ghAdvanced>summary:active,#sbAdvanced>summary:active{color:var(--warn-ink)}
 /* --- Problem report (failed states only): quiet secondary copy button --- */
 .report-btn-inline{margin-top:10px}
+/* --- Status screen (returning user): health rows with a green bar + word --- */
+.status-row{display:flex;gap:14px;align-items:flex-start;background:var(--surface2);border:2px solid var(--line);border-radius:16px;padding:16px 18px 16px 24px;margin-top:14px;position:relative;overflow:hidden}
+.status-row::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--line-strong)}
+.status-row.is-done::before{background:#1E9E57}
+.status-main{flex:1;min-width:0}
+.status-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px 14px;flex-wrap:wrap}
+.status-name{font-size:21px;font-weight:700;display:flex;align-items:center;gap:10px;min-width:0}
+.status-state{font-size:20px;font-weight:800;color:var(--muted)}
+.status-row.is-done .status-state{color:#157347}
+.status-link{font-size:20px;margin:6px 0 0;word-break:break-all}
+.status-sub{margin:6px 0 0;font-size:20px}
+.status-badge{flex:none;width:36px;height:36px;border-radius:50%;border:3px solid var(--line-strong);background:#fff;color:transparent;display:inline-flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;line-height:1;margin-top:2px}
+.status-row.is-done .status-badge{background:#1E9E57;border-color:#1E9E57;color:#fff}
+.status-row .btn.small-btn{margin-top:10px}
+#statusHonest{margin-top:24px;font-size:20px}
+#statusStartAgainConfirm p{font-size:20px}
 </style>
 </head>
 <body>
@@ -792,6 +808,23 @@ No AI expertise needed.</p>
       <p class="filelist">README.md · SOUL.md · IDENTITY.md · USER.md · AGENTS.md · MEMORY.md · DECISIONS.md · CONNECT.md · ORCHESTRATION.md · BEST-PRACTICES.md · skills/README.md · skills/memory-hygiene.md · skills/verify-before-claiming.md · skills/import-and-reconcile.md · agent.config.example.json · .env.example · .env.service-role.example · .gitignore · db/001_starter_schema.sql · tools/import_md.py · tools/export_home.py</p>
       <div id="manualBlocks"></div>
       </details>
+    </div>
+  </section>
+
+  <!-- STATUS : returning-user health view, rendered from this device's agentHomeStatus record -->
+  <section class="screen" id="screen-status">
+    <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">🏠</div>
+    <h1 id="statusH1">Your home</h1>
+    <p class="lede" id="statusUpdated"></p>
+    <div id="statusRows"></div>
+    <p class="all-wired" id="statusAllWiredLine" role="status"></p>
+    <button class="btn hidden" id="statusContinueBtn" type="button">Continue setup</button>
+    <p class="small" id="statusHonest">This is this device's record. Your folder and database themselves live in your own accounts.</p>
+    <button class="text-btn" id="statusStartAgainBtn" type="button">Start again</button>
+    <div class="safe hidden" id="statusStartAgainConfirm">
+      <p id="statusStartAgainMsg" style="margin:0 0 6px">This keeps your existing folder and database — it just restarts the checklist on this device.</p>
+      <button class="btn" id="statusStartAgainYes" type="button">Yes — start again</button>
+      <button class="text-btn" id="statusStartAgainCancel" type="button">Cancel</button>
     </div>
   </section>
 
@@ -1695,6 +1728,7 @@ function loadAgentHomeStatus(){
 function saveAgentHomeStatus(){
   if(IS_PREVIEW)return;
   try{
+    var prev=loadAgentHomeStatus();
     var t=getWiredTicks();
     var ticks={};
     wiredTickTools().forEach(function(tool){
@@ -1702,8 +1736,8 @@ function saveAgentHomeStatus(){
     });
     var agentHomeStatus={
       version:1,
-      repoUrl:S.repoUrl||null,
-      databaseUrl:S.projectUrl||null,
+      repoUrl:S.repoUrl||(prev&&prev.repoUrl)||null,
+      databaseUrl:S.projectUrl||(prev&&prev.databaseUrl)||null,
       steps:{
         repoCreated:!!S.repoDone,
         databaseCreated:!!S.dbDone,
@@ -1729,7 +1763,7 @@ function getWiredTicks(){
     if(rec&&rec.ticks){
       wiredTickTools().forEach(function(tool){
         var e=rec.ticks[tool.id];
-        if(e&&e.ticked&&e.tickedAt)wiredTickTimes[tool.id]=e.tickedAt;
+        if(e&&e.ticked){ wiredTicks[tool.id]=true; if(e.tickedAt)wiredTickTimes[tool.id]=e.tickedAt; }
       });
     }
   }catch(e){}
@@ -1806,6 +1840,216 @@ function copyText(text,btn){
 }
 document.querySelectorAll("[data-copy]").forEach(function(b){
   b.addEventListener("click",function(){ copyText($(b.getAttribute("data-copy")).textContent,b); });
+});
+
+/* ============ Status screen (returning user) ============
+   Rendered entirely from this device's agentHomeStatus record. Shown on a
+   normal load (never #preview, never #admin) when the record says the repo
+   was created. Per-app rows reuse the done screen's own pieces — the same
+   makeWiredTick() circle (so ticks stay in sync both ways) and the same
+   connectBlock() generator for the copy button (the paste text lives in
+   exactly one place). */
+var statusResumeScreen=null;
+function fmtWhen(iso){
+  if(!iso)return "";
+  var d=new Date(iso);
+  if(isNaN(d.getTime()))return String(iso);
+  try{return d.toLocaleString();}catch(e){return d.toISOString();}
+}
+function fmtDay(iso){
+  if(!iso)return "";
+  var d=new Date(iso);
+  if(isNaN(d.getTime()))return String(iso);
+  try{return d.toLocaleDateString();}catch(e){return fmtWhen(iso);}
+}
+function hydrateStatusS(rec){
+  if(!rec)return;
+  if(rec.repoUrl){
+    S.repoUrl=rec.repoUrl; S.repoDone=true;
+    var seg=String(rec.repoUrl).replace(/\/+$/,"").split("/");
+    if(seg.length>=2)S.repoFull=seg.slice(seg.length-2).join("/");
+    var rn=seg[seg.length-1];
+    if(rn&&/^[a-z0-9][a-z0-9._-]*$/i.test(rn))S.repoName=rn.toLowerCase();
+  }
+  if(rec.databaseUrl){
+    S.projectUrl=rec.databaseUrl;
+    var mm=String(rec.databaseUrl).match(/https?:\/\/([^.\/]+)\.supabase\.co/i);
+    if(mm)S.projectRef=mm[1];
+  }
+  if(rec.steps){
+    if(rec.steps.databaseCreated)S.dbDone=true;
+    if(rec.steps.databaseSkipped)S.dbSkipped=true;
+    if(rec.steps.wired)S.wired=true;
+    if(rec.steps.doneShown)statusDoneShown=true;
+  }
+}
+function statusVars(rec){
+  var repoName="agent-home";
+  if(rec.repoUrl){
+    var seg=String(rec.repoUrl).replace(/\/+$/,"").split("/");
+    var last=seg[seg.length-1];
+    if(last&&/^[a-z0-9][a-z0-9._-]*$/i.test(last))repoName=last.toLowerCase();
+  }
+  return {name:S.name||"",email:S.email||"",repoName:repoName,repoUrl:rec.repoUrl||"",projectRef:S.projectRef||"",projectUrl:rec.databaseUrl||"",verificationPhrase:S.verificationPhrase||""};
+}
+function buildStatusRow(o){
+  var row=document.createElement("div");
+  row.className="status-row"+(o.done?" is-done":"");
+  var main=document.createElement("div"); main.className="status-main";
+  var top=document.createElement("div"); top.className="status-top";
+  var nm=document.createElement("span"); nm.className="status-name";
+  if(o.tileHtml){ nm.innerHTML=o.tileHtml+"<span>"+esc(o.name)+"</span>"; } else { nm.textContent=o.name; }
+  var st=document.createElement("span"); st.className="status-state"; st.textContent=o.state;
+  top.appendChild(nm); top.appendChild(st); main.appendChild(top);
+  if(o.linkUrl){
+    var lp=document.createElement("p"); lp.className="status-link";
+    var a=document.createElement("a"); a.href=o.linkUrl; a.target="_blank"; a.rel="noopener"; a.textContent=o.linkUrl;
+    lp.appendChild(a); main.appendChild(lp);
+  }
+  if(o.sub){
+    var sp=document.createElement("p"); sp.className="small status-sub"; sp.textContent=o.sub; main.appendChild(sp);
+  }
+  if(o.copyTool){
+    var b=document.createElement("button"); b.className="btn small-btn secondary"; b.type="button";
+    b.textContent=(typeof tt==="function")?tt("Copy","복사","Copiar"):"Copy";
+    (function(tool){
+      b.addEventListener("click",function(){
+        var r=loadAgentHomeStatus()||{};
+        copyText(connectBlock(tool,statusVars(r)),b);
+      });
+    })(o.copyTool);
+    main.appendChild(b);
+  }
+  row.appendChild(main);
+  if(o.tickTool){
+    var tick=makeWiredTick(o.tickTool);
+    tick.addEventListener("click",function(){ renderStatusFromRecord(); });
+    row.appendChild(tick);
+  } else {
+    var badge=document.createElement("span"); badge.className="status-badge"; badge.setAttribute("aria-hidden","true");
+    badge.textContent=o.done?"✓":"";
+    row.appendChild(badge);
+  }
+  return row;
+}
+function renderStatus(rec){
+  if(!rec)return;
+  hydrateStatusS(rec);
+  getWiredTicks();
+  setTextId("statusH1",tt("Your home","내 공간","Tu espacio"));
+  var upd=$("statusUpdated");
+  if(upd){
+    if(rec.updatedAt){ upd.textContent=tt("Last updated ","마지막 업데이트: ","Última actualización: ")+fmtWhen(rec.updatedAt); upd.classList.remove("hidden"); }
+    else upd.classList.add("hidden");
+  }
+  var steps=rec.steps||{};
+  var rows=$("statusRows"); if(!rows)return;
+  rows.innerHTML="";
+  rows.appendChild(buildStatusRow({
+    name:tt("Private folder","비밀 폴더","Carpeta privada"),
+    tileHtml:brandTileHTML("github",true),
+    state:tt("Done","완료","Listo"),
+    done:true,
+    linkUrl:rec.repoUrl||""
+  }));
+  if(steps.databaseCreated){
+    rows.appendChild(buildStatusRow({
+      name:tt("Database","데이터베이스","Base de datos"),
+      tileHtml:brandTileHTML("supabase",true),
+      state:tt("Done","완료","Listo"),
+      done:true,
+      linkUrl:rec.databaseUrl||""
+    }));
+  } else if(steps.databaseSkipped){
+    rows.appendChild(buildStatusRow({
+      name:tt("Database","데이터베이스","Base de datos"),
+      tileHtml:brandTileHTML("supabase",true),
+      state:tt("Skipped — that's fine","건너뜀 — 괜찮아요","Omitida — no pasa nada"),
+      done:false
+    }));
+  } else {
+    rows.appendChild(buildStatusRow({
+      name:tt("Database","데이터베이스","Base de datos"),
+      tileHtml:brandTileHTML("supabase",true),
+      state:tt("Not yet","아직 아니에요","Todavía no"),
+      done:false
+    }));
+  }
+  var ticks=rec.ticks||{};
+  wiredTickTools().forEach(function(tool){
+    var e=ticks[tool.id]||{};
+    var ticked=!!e.ticked;
+    rows.appendChild(buildStatusRow({
+      name:tool.label,
+      tileHtml:brandTileHTML(tool.id,true),
+      state:ticked?tt("Wired ✓","연결됨 ✓","Conectado ✓"):tt("Paste still to send","아직 보낼 붙여넣기가 있어요","Pegado aún por enviar"),
+      done:ticked,
+      sub:(ticked&&e.tickedAt)?fmtDay(e.tickedAt):"",
+      copyTool:ticked?null:tool,
+      tickTool:tool
+    }));
+  });
+  var aw=$("statusAllWiredLine");
+  if(aw){
+    aw.textContent=tt("All wired. You're done — for real this time.","전부 연결됐어요. 이제 정말 끝났어요.","Todo conectado. Ya terminaste — esta vez de verdad.");
+    aw.classList.toggle("show",allWiredTicked());
+  }
+  var cont=$("statusContinueBtn");
+  if(cont){
+    cont.textContent=tt("Continue setup","설정 계속하기","Continuar la configuración");
+    cont.classList.toggle("hidden",!!steps.doneShown);
+  }
+  setTextId("statusHonest",tt("This is this device's record. Your folder and database themselves live in your own accounts.","이건 이 기기에 저장된 기록이에요. 폴더와 데이터베이스 자체는 내 계정 안에 있어요.","Este es el registro de este dispositivo. Tu carpeta y tu base de datos viven en tus propias cuentas."));
+  setTextId("statusStartAgainBtn",tt("Start again","처음부터 다시","Empezar de nuevo"));
+  setTextId("statusStartAgainMsg",tt("This keeps your existing folder and database — it just restarts the checklist on this device.","기존 폴더와 데이터베이스는 그대로 남아요 — 이 기기의 체크리스트만 처음부터 다시 시작해요.","Esto conserva tu carpeta y tu base de datos — solo reinicia la lista en este dispositivo."));
+  setTextId("statusStartAgainYes",tt("Yes — start again","네, 다시 시작해요","Sí, empezar de nuevo"));
+  setTextId("statusStartAgainCancel",tt("Cancel","취소","Cancelar"));
+  var conf=$("statusStartAgainConfirm"); if(conf)conf.classList.add("hidden");
+  var sab=$("statusStartAgainBtn"); if(sab)sab.classList.remove("hidden");
+}
+function renderStatusFromRecord(){
+  if(IS_PREVIEW||(location.hash||"")==="#preview")return;
+  var rec=null; try{rec=loadAgentHomeStatus();}catch(e){}
+  if(rec&&rec.steps&&rec.steps.repoCreated)renderStatus(rec);
+}
+function showStatusScreen(rec){
+  renderStatus(rec);
+  showScreen("screen-status");
+}
+function continueSetupFromStatus(){
+  var target=statusResumeScreen;
+  if(!target){
+    var saved=null; try{saved=JSON.parse(sessionStorage.getItem("ah_state")||"null");}catch(e){}
+    if(saved&&saved.screen)target=saved.screen;
+  }
+  var excluded={"screen-working":1,"screen-success":1,"screen-failed":1,"screen-status":1,"screen-welcome":1,"adminView":1};
+  if(target&&WIZ_SCREENS.indexOf(target)>-1&&!excluded[target]){ showScreen(target); return; }
+  var rec=loadAgentHomeStatus(); var st=(rec&&rec.steps)||{};
+  if(!st.databaseCreated&&!st.databaseSkipped){ showScreen("step2"); return; }
+  if(!st.wired){ showScreen("screen-extras"); return; }
+  showScreen("step4");
+}
+if($("statusContinueBtn"))$("statusContinueBtn").addEventListener("click",continueSetupFromStatus);
+if($("statusStartAgainBtn"))$("statusStartAgainBtn").addEventListener("click",function(){
+  var conf=$("statusStartAgainConfirm"); if(conf)conf.classList.remove("hidden");
+  this.classList.add("hidden");
+});
+if($("statusStartAgainCancel"))$("statusStartAgainCancel").addEventListener("click",function(){
+  var conf=$("statusStartAgainConfirm"); if(conf)conf.classList.add("hidden");
+  var sab=$("statusStartAgainBtn"); if(sab)sab.classList.remove("hidden");
+});
+if($("statusStartAgainYes"))$("statusStartAgainYes").addEventListener("click",function(){
+  /* Local only: clears this device's record + session state. Nothing on
+     GitHub or Supabase is touched — the folder and database stay as they are. */
+  try{localStorage.removeItem("agentHomeStatus");}catch(e){}
+  try{localStorage.removeItem(WIRED_TICK_KEY);}catch(e){}
+  try{sessionStorage.removeItem("ah_state");}catch(e){}
+  wiredTicks={}; wiredTickTimes={}; statusDoneShown=false; statusResumeScreen=null;
+  S.repoUrl=""; S.repoFull=""; S.repoDone=false;
+  S.projectUrl=""; S.projectRef=""; S.dbDone=false; S.dbSkipped=false; S.wired=false;
+  var conf=$("statusStartAgainConfirm"); if(conf)conf.classList.add("hidden");
+  var sab=$("statusStartAgainBtn"); if(sab)sab.classList.remove("hidden");
+  showScreen("screen-welcome");
 });
 
 /* ============ GitHub ============ */
@@ -2868,6 +3112,7 @@ function applyLang(){
   renderFullSet();
   renderFullSetLangOnly();
   try{updateAllWiredLine();}catch(e){}
+  try{renderStatusFromRecord();}catch(e){}
 }
 function renderFullSetLangOnly(){ /* fs buttons already re-texted above; full re-render keeps URLs */ }
 /* ============ layered details: "How this works — as deep as you want" (done + extras mirror) ============ */
@@ -2927,7 +3172,7 @@ var DYN_ES={
 function dyn(t){ if(LANG==="es")return DYN_ES[t]||t; return (isKo()&&DYN_KO[t])?DYN_KO[t]:t; }
 
 /* ============ wizard: one screen at a time, four obvious states ============ */
-var WIZ_SCREENS=["screen-welcome","step0","step1choice","step1signup","step1","step2","screen-working","screen-success","screen-failed","stepFullSet","step4","screen-extras","adminView"];
+var WIZ_SCREENS=["screen-welcome","step0","step1choice","step1signup","step1","step2","screen-working","screen-success","screen-failed","stepFullSet","step4","screen-extras","adminView","screen-status"];
 var wizBack="screen-welcome", wizRetry=null, wizSuccessNext=null, wizPoll=null;
 function showScreen(id){
   WIZ_SCREENS.forEach(function(s){var el=$(s); if(el){el.classList.toggle("active",s===id); el.classList.remove("hidden");}});
@@ -3192,12 +3437,19 @@ if($("previewNextBtn"))$("previewNextBtn").addEventListener("click",function(){p
   var isOAuth=!!(location.search||"").match(/[?&]code=/), isAdmin=!!(location.hash||"").match(/^#admin-/);
   if((location.hash||"")==="#preview"){ enterPreview(); showScreen("screen-welcome"); return; }
   if(isOAuth||isAdmin) return; /* OAuth return / admin already route themselves */
+  var statusRec=null; try{statusRec=loadAgentHomeStatus();}catch(e){}
+  if(statusRec&&statusRec.steps&&statusRec.steps.repoCreated){
+    var preSaved=null; try{preSaved=JSON.parse(sessionStorage.getItem("ah_state")||"null");}catch(e){}
+    if(preSaved&&preSaved.screen)statusResumeScreen=preSaved.screen;
+    showStatusScreen(statusRec);
+    return;
+  }
   var saved=null; try{saved=JSON.parse(sessionStorage.getItem("ah_state")||"null");}catch(e){}
   if(saved){
     if(saved.name&&$("fName")){$("fName").value=saved.name;}
     if(saved.email&&$("fEmail")){$("fEmail").value=saved.email;}
     if(saved.name||saved.email){try{readBasics();suggestRepo();readBasics();updateIdentitySummary();}catch(e){}}
-    if(saved.screen&&WIZ_SCREENS.indexOf(saved.screen)>-1&&saved.screen!=="screen-working"&&saved.screen!=="screen-success"&&saved.screen!=="screen-failed"){showScreen(saved.screen); return;}
+    if(saved.screen&&WIZ_SCREENS.indexOf(saved.screen)>-1&&saved.screen!=="screen-working"&&saved.screen!=="screen-success"&&saved.screen!=="screen-failed"&&saved.screen!=="screen-status"){showScreen(saved.screen); return;}
   }
   showScreen("screen-welcome");
 })();
