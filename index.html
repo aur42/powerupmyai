@@ -114,6 +114,13 @@ li .st{margin-left:auto;font-size:17px;color:var(--muted);white-space:nowrap;pad
 pre{background:var(--code-bg);color:var(--code-ink);border-radius:14px;padding:16px;overflow-x:auto;font-size:16px;line-height:1.55;margin:10px 0;white-space:pre-wrap;word-break:break-word}
 .block-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:var(--gap-lg)}
 .block-head h3{margin:0}
+.block-actions{display:flex;align-items:center;gap:10px;flex:none}
+.wired-tick{flex:none;width:44px;height:44px;border-radius:50%;border:3px solid var(--line-strong);background:#fff;color:transparent;font-size:22px;font-weight:800;line-height:1;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:background-color 200ms ease,border-color 200ms ease,color 200ms ease,transform 200ms ease}
+.wired-tick:hover{border-color:var(--accent)}
+.wired-tick:active{transform:scale(.96)}
+.wired-tick.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.all-wired{display:none;font-size:19px;color:var(--muted);text-align:center;margin:20px 0 4px}
+.all-wired.show{display:block}
 .hidden{display:none !important}
 .filelist{font-family:"Roboto Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:16px;color:var(--muted);line-height:1.9}
 .pw-once{font-family:"Roboto Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:19px;background:var(--code-bg);color:var(--code-ink);padding:16px;border-radius:14px;word-break:break-all;margin:10px 0}
@@ -619,6 +626,7 @@ No AI expertise needed.</p>
       </ul>
       <p class="small">Send the matching message to each AI app you use. It asks the app to reply with: the verification phrase from MEMORY.md (verbatim), your name from USER.md, one fact from MEMORY.md (word for word), and the canonical-store line.</p>
       <div id="confirmBlocks"></div>
+      <p class="all-wired" id="allWiredLine" role="status"></p>
       <button class="text-btn" id="pastesFullSetBtn" type="button">Get more AIs (free)</button>
       <h3>Full setup blocks</h3>
       <p class="small">The longer first-time blocks (also saved as <code>CONNECT.md</code> in your repo). There is no shared one-click sign-in across these tools — a generated paste block is the honest version.</p>
@@ -1595,7 +1603,118 @@ function brandTileHTML(id,sm){
   var m=map[id]||map.other;
   return '<span class="'+cls+'" style="background:'+m.bg+';color:'+(m.fg||"#ffffff")+';font-size:'+m.fs+(m.ff?(";font-family:"+m.ff):"")+'" aria-hidden="true">'+m.g+'</span>';
 }
-function renderBlocks(containerId,v){
+/* ============ Done-screen verification ticks (localStorage, this device only) ============
+   One tappable circle per named AI app (the first five TOOLS — the same apps the
+   confirm blocks cover). Tapping marks that the app answered with the verification
+   phrase. Ticks never gate anything. In preview they start unticked, live only in
+   memory for the preview session, and are never read from or written to storage. */
+var WIRED_TICK_KEY="ah_wired_ticks_v1";
+var wiredTicks=null;
+var wiredTickTimes={};
+var statusDoneShown=false;
+/* agentHomeStatus — the durable setup record (localStorage key "agentHomeStatus",
+   same device-only storage area as the ticks). Data plumbing only: no UI reads it
+   yet; a later pass renders a returning-user status view from it. Shape:
+   {
+     version: 1,
+     repoUrl: string|null,          // S.repoUrl once the repo exists
+     databaseUrl: string|null,      // S.projectUrl once the database exists
+     steps: { repoCreated:boolean, databaseCreated:boolean,
+              databaseSkipped:boolean, wired:boolean, doneShown:boolean },
+     ticks: { muse:{ticked:boolean, tickedAt:string|null}, claude:{...},
+              chatgpt:{...}, grok:{...}, instinct:{...} },  // tickedAt = ISO time of the tick
+     updatedAt: string              // ISO time this record was last written
+   }
+   Written by saveAgentHomeStatus() whenever setup state changes (a step
+   completing, showDone, a tick toggle). Never written in preview mode. */
+function loadAgentHomeStatus(){
+  try{
+    var raw=localStorage.getItem("agentHomeStatus");
+    if(raw){ var p=JSON.parse(raw); if(p&&typeof p==="object")return p; }
+  }catch(e){}
+  return null;
+}
+function saveAgentHomeStatus(){
+  if(IS_PREVIEW)return;
+  try{
+    var t=getWiredTicks();
+    var ticks={};
+    wiredTickTools().forEach(function(tool){
+      ticks[tool.id]={ticked:!!t[tool.id],tickedAt:t[tool.id]?(wiredTickTimes[tool.id]||null):null};
+    });
+    var agentHomeStatus={
+      version:1,
+      repoUrl:S.repoUrl||null,
+      databaseUrl:S.projectUrl||null,
+      steps:{
+        repoCreated:!!S.repoDone,
+        databaseCreated:!!S.dbDone,
+        databaseSkipped:!!S.dbSkipped,
+        wired:!!S.wired,
+        doneShown:statusDoneShown
+      },
+      ticks:ticks,
+      updatedAt:new Date().toISOString()
+    };
+    localStorage.setItem("agentHomeStatus",JSON.stringify(agentHomeStatus));
+  }catch(e){}
+}
+function wiredTickTools(){ return TOOLS.slice(0,5); }
+function getWiredTicks(){
+  if(wiredTicks)return wiredTicks;
+  wiredTicks={};
+  if(IS_PREVIEW)return wiredTicks;
+  try{
+    var raw=localStorage.getItem(WIRED_TICK_KEY);
+    if(raw){ var p=JSON.parse(raw); if(p&&typeof p==="object")wiredTicks=p; }
+    var rec=loadAgentHomeStatus();
+    if(rec&&rec.ticks){
+      wiredTickTools().forEach(function(tool){
+        var e=rec.ticks[tool.id];
+        if(e&&e.ticked&&e.tickedAt)wiredTickTimes[tool.id]=e.tickedAt;
+      });
+    }
+  }catch(e){}
+  return wiredTicks;
+}
+function saveWiredTicks(){
+  if(IS_PREVIEW)return;
+  try{ localStorage.setItem(WIRED_TICK_KEY,JSON.stringify(getWiredTicks())); }catch(e){}
+  saveAgentHomeStatus();
+}
+function allWiredTicked(){
+  var t=getWiredTicks();
+  return wiredTickTools().every(function(tool){ return !!t[tool.id]; });
+}
+function updateAllWiredLine(){
+  var t=getWiredTicks();
+  document.querySelectorAll("[data-wired-tick]").forEach(function(btn){
+    var on=!!t[btn.getAttribute("data-wired-tick")];
+    btn.classList.toggle("on",on);
+    btn.setAttribute("aria-pressed",on?"true":"false");
+  });
+  var el=$("allWiredLine"); if(!el)return;
+  el.textContent=(typeof tt==="function")?tt("All wired. You're done — for real this time.","전부 연결됐어요. 이제 정말 끝났어요.","Todo conectado. Ya terminaste — esta vez de verdad."):"All wired. You're done — for real this time.";
+  el.classList.toggle("show",allWiredTicked());
+}
+function makeWiredTick(tool){
+  var tick=document.createElement("button");
+  tick.className="wired-tick"; tick.type="button"; tick.textContent="✓";
+  tick.setAttribute("data-wired-tick",tool.id);
+  tick.setAttribute("aria-label",tool.label+" — "+((typeof tt==="function")?tt("tap when this app has answered with the verification phrase","이 앱이 확인 문구로 답했을 때 눌러 주세요","toca cuando esta app haya respondido con la frase de verificación"):"tap when this app has answered with the verification phrase"));
+  var on=!!getWiredTicks()[tool.id];
+  tick.classList.toggle("on",on);
+  tick.setAttribute("aria-pressed",on?"true":"false");
+  tick.addEventListener("click",function(){
+    var t=getWiredTicks();
+    if(t[tool.id]){ delete t[tool.id]; delete wiredTickTimes[tool.id]; }
+    else { t[tool.id]=true; wiredTickTimes[tool.id]=new Date().toISOString(); }
+    saveWiredTicks();
+    updateAllWiredLine();
+  });
+  return tick;
+}
+function renderBlocks(containerId,v,withTicks){
   var c=$(containerId); c.innerHTML="";
   TOOLS.forEach(function(t){
     var head=document.createElement("div"); head.className="block-head";
@@ -1605,8 +1724,15 @@ function renderBlocks(containerId,v){
     b.addEventListener("click",function(){
       copyText(pre.textContent,b);
     });
-    head.appendChild(h); head.appendChild(b); c.appendChild(head); c.appendChild(pre);
+    head.appendChild(h);
+    var tickable=withTicks&&wiredTickTools().some(function(wt){return wt.id===t.id;});
+    if(tickable){
+      var actions=document.createElement("span"); actions.className="block-actions";
+      actions.appendChild(makeWiredTick(t)); actions.appendChild(b); head.appendChild(actions);
+    } else head.appendChild(b);
+    c.appendChild(head); c.appendChild(pre);
   });
+  if(withTicks)updateAllWiredLine();
 }
 function copyText(text,btn){
   function done(){ if(btn){var o=btn.textContent; btn.textContent=(typeof tt==="function")?tt("Copied","복사됨","Copiado"):"Copied"; setTimeout(function(){btn.textContent=o;},1600);} }
@@ -1699,6 +1825,7 @@ async function ghCreate(){
     S.verified.repoPrivate="Read back from GitHub after creation — the repo itself reported private: true";
     S.verified.filesPresent="Read back from GitHub — the file list contains README.md, USER.md, AGENTS.md and MEMORY.md";
     S.repoDone=true;
+    saveAgentHomeStatus();
     $("ghToken").value="";
     showOk("ghOk","<strong>Done — verified.</strong> Your private repo is live: <a href=\""+esc(S.repoUrl)+"\" target=\"_blank\" rel=\"noopener\">"+esc(S.repoUrl)+"</a>. The token field has been cleared on this page; you can revoke the token in GitHub settings whenever you like.");
     updateWireBtn();
@@ -1816,6 +1943,7 @@ async function sbCreate(){
     }catch(e){ /* keys can also be copied from the dashboard; not fatal */ }
 
     S.dbDone=true; S.dbSkipped=false;
+    saveAgentHomeStatus();
     $("sbToken").value="";
     showOk("sbOk","<strong>Done — verified by querying your database.</strong> Project <code>"+esc(S.projectRef)+"</code> is live at "+esc(S.projectUrl)+" with all five tables and owner-only row-level security on. Dashboard: <a href=\"https://supabase.com/dashboard/project/"+esc(S.projectRef)+"\" target=\"_blank\" rel=\"noopener\">supabase.com/dashboard/project/"+esc(S.projectRef)+"</a>. Save the database password above now — it is shown only here.");
     updateWireBtn();
@@ -1891,6 +2019,7 @@ async function wire(){
     S.verified.configNoKeys="Read back from GitHub — agent.config.json holds only the project reference and public address, no keys";
     if(S.projectRef)S.verified.dbCanonical="Read back from GitHub — the config every tool reads points at your database as the canonical store";
     S.wired=true;
+    saveAgentHomeStatus();
     $("envPre").textContent=envContents();
     $("envBox").classList.remove("hidden");
     $("envServicePre").textContent=envServiceContents();
@@ -1932,8 +2061,12 @@ function renderConfirm(containerId,v){
     var b=document.createElement("button"); b.className="btn small-btn secondary"; b.type="button"; b.textContent="Copy";
     var pre=document.createElement("pre"); pre.textContent=confirmBlock(t,v);
     b.addEventListener("click",function(){ copyText(pre.textContent,b); });
-    head.appendChild(h); head.appendChild(b); c.appendChild(head); c.appendChild(pre);
+    head.appendChild(h);
+    var actions=document.createElement("span"); actions.className="block-actions";
+    actions.appendChild(makeWiredTick(t)); actions.appendChild(b); head.appendChild(actions);
+    c.appendChild(head); c.appendChild(pre);
   });
+  updateAllWiredLine();
 }
 function renderScoreboard(){
   var rows=[
@@ -1953,6 +2086,8 @@ function renderScoreboard(){
   c.innerHTML=html+"</ul>";
 }
 function showDone(){
+  statusDoneShown=true;
+  saveAgentHomeStatus();
   var v=currentVars();
   var links="";
   if(S.repoUrl)links+="<p><strong>Your repo:</strong> <a href=\""+esc(S.repoUrl)+"\" target=\"_blank\" rel=\"noopener\">"+esc(S.repoUrl)+"</a> (private)</p>";
@@ -1963,7 +2098,7 @@ function showDone(){
   renderScoreboard();
   updateNotionMirror();
   renderConfirm("confirmBlocks",v);
-  renderBlocks("doneBlocks",v);
+  renderBlocks("doneBlocks",v,true);
   loadProofBubble();
   showScreen("step4");
 }
@@ -2384,6 +2519,7 @@ $("sbOrg").addEventListener("change",function(){ S.sbOrgId=this.value; });
 $("sbBtn").addEventListener("click",sbCreate);
 $("sbSkip").addEventListener("click",function(){
   S.dbSkipped=true;
+  saveAgentHomeStatus();
   showOk("sbOk","Skipped — no database yet. Your tools will work from the files alone; run this step later and re-wire (step 3) when you're ready.");
   updateWireBtn();
 });
@@ -2671,6 +2807,7 @@ function applyLang(){
   renderHow();
   renderFullSet();
   renderFullSetLangOnly();
+  try{updateAllWiredLine();}catch(e){}
 }
 function renderFullSetLangOnly(){ /* fs buttons already re-texted above; full re-render keeps URLs */ }
 /* ============ layered details: "How this works — as deep as you want" (done + extras mirror) ============ */
@@ -2951,6 +3088,8 @@ applyLang();
 var PREVIEW_ORDER=["screen-welcome","step0","step1choice","step1signup","step1","step2","screen-working","screen-success","screen-failed","stepFullSet","step4","screen-extras"];
 function enterPreview(){
   IS_PREVIEW=true;
+  wiredTicks={};
+  wiredTickTimes={};
   document.body.classList.add("preview");
   var bar=$("previewBar"); if(bar)bar.classList.remove("hidden");
   S.name="Alex Rivera"; S.email="alex@example.com"; S.repoName="agent-home"; S.repoTouched=true;
@@ -2961,10 +3100,12 @@ function enterPreview(){
   S.projectRef="sampleproject"; S.projectUrl="https://sampleproject.supabase.co";
   S.verificationPhrase="harbor-lantern-42"; S.repoDone=true; S.dbDone=true; S.dbSkipped=false;
   try{readBasics(); S.name="Alex Rivera"; S.repoUrl="https://github.com/alexrivera/agent-home"; S.projectRef="sampleproject"; S.projectUrl="https://sampleproject.supabase.co"; refreshManual();}catch(e){}
-  try{renderConfirm("confirmBlocks",currentVars()); renderBlocks("doneBlocks",currentVars());}catch(e){}
+  try{renderConfirm("confirmBlocks",currentVars()); renderBlocks("doneBlocks",currentVars(),true);}catch(e){}
 }
 function exitPreview(){
   IS_PREVIEW=false;
+  wiredTicks=null;
+  wiredTickTimes={};
   document.body.classList.remove("preview");
   var bar=$("previewBar"); if(bar)bar.classList.add("hidden");
   try{history.replaceState(null,"",location.pathname+location.search);}catch(e){}
