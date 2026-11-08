@@ -93,7 +93,6 @@ summary:hover{color:var(--accent-hover)}
 summary:active{color:var(--accent-active)}
 details p,details li{font-size:18px}
 .small{font-size:18px;color:var(--muted)}
-.honest{background:var(--warn-bg);border:2px solid var(--warn-line);border-radius:14px;padding:18px;margin:18px 0;color:var(--ink);font-size:18px}
 .safe{background:var(--accent-soft);border:2px solid var(--line);border-radius:14px;padding:18px;margin:18px 0;font-size:18px}
 .tag{display:inline-block;font-size:17px;font-weight:700;padding:6px 14px;border-radius:999px;background:var(--accent-soft);color:var(--accent-text);border:2px solid var(--line)}
 .tag.paste{background:var(--warn-bg);color:var(--warn-ink);border-color:var(--warn-line)}
@@ -128,8 +127,6 @@ pre{background:var(--code-bg);color:var(--code-ink);border-radius:14px;padding:1
 .big-icon.ok{background:var(--ok)}
 .big-icon.bad{background:#b3261e}
 .state-msg{font-size:22px}
-.inline-err{display:none;color:var(--err-ink);font-weight:700;font-size:20px;margin-top:14px}
-.inline-err.show{display:block}
 .done-links p{font-size:21px;word-break:break-word}
 .footer-line{margin-top:auto;padding-top:40px;font-size:16px;line-height:1.5;color:var(--muted);text-align:center;display:flex;flex-direction:column;gap:8px}
 .footer-line .footer-name{color:var(--ink);font-weight:600}
@@ -145,7 +142,6 @@ table{font-size:18px}
 .flagopt .flagword{font-size:20px;font-weight:700;line-height:1.2}
 .flagopt.on .flagcircle{border-color:var(--accent);transform:scale(1.08);box-shadow:0 6px 20px rgba(41,112,255,.22)}
 .flagopt.on .flagword{color:var(--accent)}
-#screen-welcome .flagopt .flagcircle{width:56px;height:56px;font-size:32px}
 .hline{display:block}
 #welcomeH1 .hc{font-size:30px;font-weight:700;margin-top:8px}
 #welcomeH1 .hd{font-size:24px;font-weight:800;color:var(--accent);margin-top:6px}
@@ -310,7 +306,6 @@ body.preview .dots span:hover{outline:2px solid var(--accent);outline-offset:2px
     <div class="dots"><span id="dot1"></span><span id="dot2"></span><span id="dot3"></span></div>
   </div>
 
-  <!-- WELCOME -->
   <section class="screen active" id="screen-welcome">
     <button type="button" class="langpill" id="welcomeLangPill" aria-label="Language / 언어 / Idioma"><span id="welcomeLangPillText">🇺🇸 English</span><span class="chev" aria-hidden="true">▾</span></button>
     <h1 id="welcomeH1"><span class="hline ha" id="welcomeH1a">Every AI you use.</span><span class="hline hb" id="welcomeH1b">One memory.</span><span class="hline hc" id="welcomeH1c">Sync them all up.</span><span class="hline hd" id="welcomeH1d">Free.</span></h1>
@@ -384,29 +379,25 @@ No AI expertise needed.</p>
     <button class="btn quiet" id="welcomeExtrasBtn" type="button">Just want the template files?</button>
   </section>
 
-  <!-- STEP 1 OF 3 : NAME -->
   <section class="screen" id="step0">
     <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">👤</div>
     <h1 id="step0H1">What's your name?</h1>
     <p class="lede" id="step0Lede">This fills your home with your details.</p>
-    <div id="googleWrap">
-      <button class="btn secondary" id="googleBtn" type="button">Continue with Google</button>
-      <div id="googleBtnReal" style="margin-top:10px"></div>
-    </div>
+    <p class="lede hidden" id="forGreet" style="font-size:26px;font-weight:700"></p>
+    <button class="text-btn hidden" id="notMyNameBtn" type="button">That's not my name</button>
+    <div id="nameFieldWrap">
     <label for="fName">Your name</label>
     <input type="text" id="fName" placeholder="e.g. Alex Rivera" autocomplete="name" />
-    <label for="fEmail">Your email</label>
-    <input type="text" id="fEmail" placeholder="you@example.com" autocomplete="email" spellcheck="false" />
-    <p class="inline-err" id="nameErr">Please type your name first.</p>
+    </div>
     <button class="btn" id="nameContinueBtn" type="button">Continue</button>
+    <button class="text-btn" id="nameSkipBtn" type="button">Skip for now</button>
     <p class="why">So they know who you are.</p>
     <details>
       <summary>Details</summary>
-      <p class="small" id="googleNote">Continue with Google isn't switched on for this copy — no Google client ID is set.<br/>Use the name and email fields below instead. They do exactly the same job.</p>
       <ul class="blist">
         <li>One identity runs through everything.</li>
         <li>It prefills your USER.md and suggests your repo name.</li>
-        <li>Use the same name and email for GitHub and Supabase — the accounts line up as yours.</li>
+        <li>Use the same name for GitHub and Supabase — the accounts line up as yours.</li>
       </ul>
       <div class="okbox" id="identitySummary"></div>
       <label for="fRepo">Repository name</label>
@@ -415,17 +406,16 @@ No AI expertise needed.</p>
     </details>
   </section>
 
-  <!-- STEP 2 OF 3, PART A : GITHUB CHOICE (this screen's only job is the choice) -->
   <section class="screen" id="step1choice">
     <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">📁</div>
     <h1 id="choiceH1">Do you have GitHub?</h1>
     <p class="lede" id="choiceLede">If not, we'll show you how.</p>
+    <p class="small" id="choiceExplainer">GitHub is a free, private place online that keeps your files — it's where your home lives, so all your AIs can reach it.</p>
     <button class="btn" id="ghHaveBtn" type="button">I have GitHub — connect it</button>
     <button class="btn secondary" id="ghNewBtn" type="button">I don't have GitHub</button>
     <p class="why" id="choiceWhy">Nothing is public, ever.</p>
   </section>
 
-  <!-- STEP 2 OF 3, PART B : GITHUB SIGNUP -->
   <section class="screen" id="step1signup">
     <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">📁</div>
     <h1 id="signupH1">Create a GitHub account</h1>
@@ -437,14 +427,13 @@ No AI expertise needed.</p>
       <summary>Details</summary>
       <ul class="blist">
         <li><strong>Only GitHub can create your account</strong> — nobody else can.</li>
-        <li>Use “Continue with Google” there, with the same name and email as the last screen.</li>
+        <li>Use “Continue with Google” there, with the same name as the last screen.</li>
         <li>Then come back to this tab and tap “I have GitHub now”.</li>
         <li>This page stays here, with everything you typed kept in this tab.</li>
       </ul>
     </details>
   </section>
 
-  <!-- STEP 2 OF 3 : GITHUB -->
   <section class="screen" id="step1">
     <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">📁 🔒</div>
     <h1 id="step1H1">Your private folder</h1>
@@ -472,6 +461,7 @@ No AI expertise needed.</p>
           <li data-k="gh-readback"><span class="dot">✓</span><span>Repo read back — confirmed private, files present</span><span class="st"></span></li>
         </ul>
         <div class="err" id="ghErr"></div>
+        <div class="safe hidden" id="ghCollision"></div>
         <div class="okbox" id="ghOk"></div>
         <details id="ghAdvanced">
           <summary>Having trouble? Connect with a code instead</summary>
@@ -493,7 +483,6 @@ No AI expertise needed.</p>
     </details>
   </section>
 
-  <!-- STEP 3 OF 3 : SUPABASE -->
   <section class="screen" id="step2">
     <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">✨ 🧠</div>
     <h1 id="step2H1">Your private memory</h1>
@@ -563,7 +552,6 @@ No AI expertise needed.</p>
     </details>
   </section>
 
-  <!-- WORKING STATE -->
   <section class="screen" id="screen-working" aria-live="polite">
     <div class="spinner" role="status" aria-label="Working"></div>
     <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">⏳</div>
@@ -571,7 +559,6 @@ No AI expertise needed.</p>
     <p class="state-msg" id="workingMsg">Please keep this page open.</p>
   </section>
 
-  <!-- SUCCESS STATE -->
   <section class="screen" id="screen-success">
     <div class="big-icon ok" aria-hidden="true">✓</div>
     <h1 id="successTitle">Done</h1>
@@ -579,7 +566,6 @@ No AI expertise needed.</p>
     <button class="btn" id="successContinueBtn" type="button">Continue</button>
   </section>
 
-  <!-- FAILED STATE -->
   <section class="screen" id="screen-failed">
     <div class="big-icon bad" aria-hidden="true">✗</div>
     <h1 id="failedH1">That didn't work</h1>
@@ -593,7 +579,6 @@ No AI expertise needed.</p>
     </details>
   </section>
 
-  <!-- GET THE FULL SET (optional, after wiring, before done) -->
   <section class="screen" id="stepFullSet">
     <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">✨</div>
     <h1 id="fullSetH1">Get the full set. Free.</h1>
@@ -608,7 +593,6 @@ No AI expertise needed.</p>
     </details>
   </section>
 
-  <!-- DONE -->
   <section class="screen" id="step4">
     <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">✓</div>
     <h1 id="doneH1">You're done 🎉</h1>
@@ -687,7 +671,6 @@ No AI expertise needed.</p>
     </details>
   </section>
 
-  <!-- EXTRAS : IMPORT + MANUAL + WIRING (post-done, optional) -->
   <section class="screen" id="screen-extras">
     <h1 id="extrasH1">Extras, if you want them</h1>
     <p class="lede" id="extrasLede">Optional, forever. Your setup already works without these — and your AI can do any of them with you, anytime. You never need to come back here for them.</p>
@@ -819,7 +802,6 @@ No AI expertise needed.</p>
     </div>
   </section>
 
-  <!-- STATUS : returning-user health view, rendered from this device's agentHomeStatus record -->
   <section class="screen" id="screen-status">
     <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">🏠</div>
     <h1 id="statusH1">Your home</h1>
@@ -836,7 +818,6 @@ No AI expertise needed.</p>
     </div>
   </section>
 
-  <!-- ADMIN VIEW (owner only, reached via a secret #admin-<key> link) -->
   <section class="screen" id="adminView">
     <h1>Who's set up</h1>
     <p class="lede">Names and repo links only.</p>
@@ -862,20 +843,14 @@ No AI expertise needed.</p>
 
 <script>
 "use strict";
-/* CONFIG — set googleClientId for Continue with Google. Client-side only: the ID token is decoded in the browser just to prefill name + email, never sent anywhere. Empty = name + email fields instead. */
 var CONFIG = {
-  googleClientId: "",
-  /* OAuth (one-click connect). The secret can't live in a public page, so a tiny endpoint swaps code for token: POST {provider, code} -> {access_token}. Empty = demo mode, stated on the button; never simulated. */
-  githubOAuthClientId: "",
-  supabaseOAuthClientId: "",
-  oauthExchangeUrl: "",
-  /* This page's public address (OAuth return). Empty = the page uses its own path. */
-  oauthRedirectUri: "",
-  /* Optional register: the helper worker's /register address. When set, the done screen's tick-box can report a finished setup, and the owner's #admin-<key> link reads the list back. */
-  registryUrl: "",
+  githubClientId: "Ov23liWNLiv4Ntxi7RKE",
+  supabaseClientId: "0d0f4731-8033-4620-9415-7f0826ac933d",
+  oauthExchangeUrl: "https://powerupmyai-oauth.powerupmyai.workers.dev/exchange",
+  oauthRedirectUri: "https://aur42.github.io/powerupmyai/",
+  registryUrl: "https://powerupmyai-oauth.powerupmyai.workers.dev/register",
   MUSE_REFERRAL_CODE: "18GRDY",
   GROK_REFERRAL_CODE: "8RR96PZ7KDNHUD",
-  /* "Get the full set" signup links. Defaults are the official signup pages; the operator may swap in referral links (opening the link carries the code). One Details line mentions referrals. */
   signupUrls: {
     claude: "https://claude.ai/",
     chatgpt: "https://chatgpt.com/",
@@ -883,12 +858,10 @@ var CONFIG = {
     muse: "https://muse.ai/join"
   }
 };
-/* SIGNUP_URLS — the same links, as the flat constant the flow reads. */
 var SIGNUP_URLS = CONFIG.signupUrls;
 
-/* ============ state (memory only — nothing is ever persisted) ============ */
 var S = {
-  name:"", email:"", repoName:"agent-home", repoTouched:false,
+  name:"", repoName:"agent-home", repoTouched:false, nameSkipped:false, sbOrgs:[], databaseId:"",
   verified:{}, importState:null,
   ghToken:"", ghUser:"", repoUrl:"", repoFull:"", repoDone:false,
   sbToken:"", sbOrgId:"", sbRegion:"ap-southeast-1", projectRef:"", projectUrl:"",
@@ -909,7 +882,6 @@ function genPassword(){
   var out=""; for(var i=0;i<arr.length;i++){out+=chars[arr[i]%chars.length];}
   return out;
 }
-/* One random verification phrase per session (e.g. "harbor-lantern-42"). Generated once, cached in S, seeded into MEMORY.md; sync checks ask each app to quote it back verbatim. */
 function verificationPhrase(){
   if(S.verificationPhrase)return S.verificationPhrase;
   var words=["harbor","lantern","meadow","cedar","willow","copper","velvet","ember","orchard","marble","compass","saddle","timber","violet","juniper","maple","beacon","anchor","falcon","glacier","river","summit","tulip","walnut","pearl","onyx","dune","cinder","cobalt","zephyr"];
@@ -927,7 +899,6 @@ function setCheck(listId,key,state,note){
   var st=li.querySelector(".st");
   if(st)st.textContent=note||(state==="done"?"verified":state==="failed"?"failed":"");
 }
-/* Problem report (failed states only): a quiet copy button copying a short plain-text summary to send to whoever shared the page. No network call. */
 var lastFailure={step:"",error:""};
 function stepForErrId(id){
   if(id==="ghErr"||id==="ghTokenErr")return "Step 2 of 3 — GitHub: create private folder";
@@ -942,7 +913,20 @@ function stepForContext(context){
   if(context==="wire")return "Step 3 of 3 — wiring the folder and database together";
   return "Setup";
 }
-function reportLabel(){ return (typeof tt==="function")?tt("Copy a problem report","문제 보고서 복사","Copiar informe del problema"):"Copy a problem report"; }
+function workerBase(){return CONFIG.oauthExchangeUrl.replace(/\/exchange\/?$/,"").replace(/\/+$/,"");}
+function reportMode(){return CONFIG.oauthExchangeUrl?"post":((typeof navigator!=="undefined"&&navigator.share)?"share":"copy");}
+function reportLabel(){var m=reportMode();return (typeof tt==="function")?tt(m==="copy"?"Copy a problem report":"Send a problem report",m==="copy"?"문제 보고서 복사":"문제 보고서 보내기",m==="copy"?"Copiar informe del problema":"Enviar informe del problema"):(m==="copy"?"Copy a problem report":"Send a problem report");}
+function markReportSent(btn){if(!btn||btn._sent)return;btn._sent=1;var s=document.createElement("p");s.className="small report-sent";s.textContent=(typeof tt==="function")?tt("Sent — the person who shared this with you can see it now.","보냈어요 — 공유해 준 사람이 이제 볼 수 있어요.","Enviado — la persona que te lo compartió ya puede verlo."):"Sent — the person who shared this with you can see it now.";btn.parentNode.insertBefore(s,btn.nextSibling);btn.classList.add("hidden");}
+function sendReport(step,error,btn){
+  var text=buildProblemReport(step,error), mode=reportMode();
+  if(mode==="post"){
+    if(IS_PREVIEW){markReportSent(btn);return;}
+    fetch(workerBase()+"/report",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({step:step,error:String(error||""),report:text,ts:new Date().toISOString()})}).then(function(r){if(r.ok)markReportSent(btn);}).catch(function(){});
+    return;
+  }
+  if(mode==="share"){ try{var pr=navigator.share({title:"PowerUpMyAI — problem report",text:text}); if(pr&&pr.catch)pr.catch(function(){});}catch(e){} return; }
+  copyText(text,btn);
+}
 function buildProblemReport(step,error){
   var rec=null; try{rec=loadAgentHomeStatus();}catch(e){}
   var steps=(rec&&rec.steps)?rec.steps:null;
@@ -967,7 +951,7 @@ function reportBtnFor(errEl){
   b=document.createElement("button");
   b.type="button"; b.className="btn quiet small-btn report-btn report-btn-inline hidden";
   b.setAttribute("data-for",errEl.id); b.textContent=reportLabel();
-  b.addEventListener("click",function(){ copyText(buildProblemReport(stepForErrId(errEl.id),errEl.textContent),b); });
+  b.addEventListener("click",function(){ sendReport(stepForErrId(errEl.id),errEl.textContent,b); });
   errEl.parentNode.insertBefore(b,errEl.nextSibling);
   return b;
 }
@@ -982,7 +966,6 @@ function providerErr(prefix,body,status){
   return prefix+" (HTTP "+status+")"+(m?": "+m:"");
 }
 
-/* ============ the template — guided prompts, never blank pages ============ */
 function tplReadme(v){
 return "# "+v.repoName+" — my agent home\n\n"+
 "This repository is the home base for my AI assistants. It holds who I am, how I want to be helped, and what my tools have learned about me — in files I can read, backed by a database I own.\n\n"+
@@ -1022,7 +1005,6 @@ function tplIdentity(v){
 return "# IDENTITY.md — names and handles\n\n"+
 "<!-- Fill in what applies; delete the rest. -->\n\n"+
 "- **My name:** "+(v.name||"<!-- your name -->")+"\n"+
-"- **My email:** "+(v.email||"<!-- the email your accounts run under -->")+"\n"+
 "- **What to call me:** <!-- e.g. first name, nickname -->\n"+
 "- **My assistant's name:** <!-- give it one if you like — it makes the relationship concrete -->\n"+
 "- **Timezone:** <!-- e.g. Asia/Tokyo — your tools need this to reason about your day -->\n"+
@@ -1032,8 +1014,7 @@ function tplUser(v){
 return "# USER.md — who I am\n\n"+
 "<!-- Guided prompts. Short honest answers beat polished ones. Your assistant reads this to stop treating you like a stranger. -->\n\n"+
 "## The basics\n"+
-"- **Name:** "+(v.name||"")+"\n"+
-"- **Email:** "+(v.email||"")+"\n"+
+"- **Name:** "+(v.name||"(my name — ask me and fill this in)")+"\n"+
 "- **Where I'm based / how I move:** <!-- home base, travel pattern -->\n"+
 "- **What I do:** <!-- job, company, what you're building -->\n\n"+
 "## What I'm working on\n"+
@@ -1087,7 +1068,7 @@ return "# ⚠️  IMPORTER-ONLY — THE DANGEROUS KEY. Read this before filling 
 "# job: the local importer (tools/import_md.py) running on YOUR machine.\n"+
 "#\n"+
 "# - NEVER paste it into any AI tool (not Muse, ChatGPT, Grok — none).\n"+
-"# - NEVER put it in the repo, a chat, an email, or GitHub Secrets for a\n"+
+"# - NEVER put it in the repo, a chat, or GitHub Secrets for a\n"+
 "#   third-party service.\n"+
 "# - AI tools only ever get SUPABASE_ANON_KEY (in .env) plus your signed-in\n"+
 "#   session. See CONNECT.md.\n"+
@@ -1102,127 +1083,143 @@ function tplConfig(v){
 return JSON.stringify({repo:v.repoName,supabase:{project_ref:v.projectRef||"",url:v.projectUrl||""},canonical_store:"database",note:"Non-secret values only. Keys live in a local .env, never in this repo."},null,2)+"\n";
 }
 function tplSchema(){
-return "-- 001_starter_schema.sql — agent home starter schema\n"+
-"-- A personal memory store with owner-only row-level security from line one.\n"+
-"-- Principle: what the system learns about the person stays in THEIR database, under THEIR keys.\n"+
-"-- owner_id is the Supabase auth user id (auth.uid()). Every policy below is owner-only:\n"+
-"-- a signed-in user can see and change only rows where owner_id = their own id.\n\n"+
-"create extension if not exists pgcrypto;\n\n"+
-"-- updated_at helper -----------------------------------------------------------\n"+
-"create or replace function public.set_updated_at()\n"+
-"returns trigger language plpgsql as $$\n"+
-"begin new.updated_at = now(); return new; end; $$;\n\n"+
-"-- memories: durable facts and notes about the owner --------------------------\n"+
-"create table if not exists public.memories (\n"+
-"  id uuid primary key default gen_random_uuid(),\n"+
-"  owner_id uuid not null,\n"+
-"  kind text not null default 'fact',          -- fact | preference | decision | note\n"+
-"  content text not null,\n"+
-"  source text,                                 -- where it came from (tool, file, conversation)\n"+
-"  confidence numeric,                          -- 0..1, how sure we are\n"+
-"  superseded_by uuid references public.memories(id),\n"+
-"  tags text[] not null default '{}',\n"+
-"  created_at timestamptz not null default now(),\n"+
-"  updated_at timestamptz not null default now()\n"+
-");\n\n"+
-"-- people ----------------------------------------------------------------------\n"+
-"create table if not exists public.people (\n"+
-"  id uuid primary key default gen_random_uuid(),\n"+
-"  owner_id uuid not null,\n"+
-"  name text not null,\n"+
-"  relationship text,\n"+
-"  notes text,\n"+
-"  created_at timestamptz not null default now(),\n"+
-"  updated_at timestamptz not null default now()\n"+
-");\n\n"+
-"-- goals -----------------------------------------------------------------------\n"+
-"create table if not exists public.goals (\n"+
-"  id uuid primary key default gen_random_uuid(),\n"+
-"  owner_id uuid not null,\n"+
-"  title text not null,\n"+
-"  detail text,\n"+
-"  status text not null default 'active',       -- active | paused | done | dropped\n"+
-"  created_at timestamptz not null default now(),\n"+
-"  updated_at timestamptz not null default now()\n"+
-");\n\n"+
-"-- conversations: a log of what was discussed, with whom/what -------------------\n"+
-"create table if not exists public.conversations (\n"+
-"  id uuid primary key default gen_random_uuid(),\n"+
-"  owner_id uuid not null,\n"+
-"  source text,                                 -- Muse | claude | chatgpt | grok | instinct | other\n"+
-"  summary text,\n"+
-"  raw_ref text,                                -- link or path to the full transcript, if kept\n"+
-"  happened_at timestamptz not null default now(),\n"+
-"  created_at timestamptz not null default now()\n"+
-");\n\n"+
-"-- sources: the tools and feeds connected to this home --------------------------\n"+
-"create table if not exists public.sources (\n"+
-"  id uuid primary key default gen_random_uuid(),\n"+
-"  owner_id uuid not null,\n"+
-"  kind text not null,                          -- ai-tool | file-import | calendar | mail | other\n"+
-"  label text not null,\n"+
-"  detail jsonb not null default '{}'::jsonb,\n"+
-"  created_at timestamptz not null default now(),\n"+
-"  updated_at timestamptz not null default now()\n"+
-");\n\n"+
-"-- indexes -----------------------------------------------------------------------\n"+
-"create index if not exists memories_owner_idx on public.memories(owner_id, created_at desc);\n"+
-"create index if not exists memories_tags_idx on public.memories using gin(tags);\n"+
-"create index if not exists people_owner_idx on public.people(owner_id);\n"+
-"create index if not exists goals_owner_idx on public.goals(owner_id, status);\n"+
-"create index if not exists conversations_owner_idx on public.conversations(owner_id, happened_at desc);\n"+
-"create index if not exists sources_owner_idx on public.sources(owner_id);\n\n"+
-"-- updated_at triggers -----------------------------------------------------------\n"+
-"drop trigger if exists memories_updated on public.memories;\n"+
-"create trigger memories_updated before update on public.memories for each row execute function public.set_updated_at();\n"+
-"drop trigger if exists people_updated on public.people;\n"+
-"create trigger people_updated before update on public.people for each row execute function public.set_updated_at();\n"+
-"drop trigger if exists goals_updated on public.goals;\n"+
-"create trigger goals_updated before update on public.goals for each row execute function public.set_updated_at();\n"+
-"drop trigger if exists sources_updated on public.sources;\n"+
-"create trigger sources_updated before update on public.sources for each row execute function public.set_updated_at();\n\n"+
-"-- row-level security: owner-only, on every table, from line one ------------------\n"+
-"alter table public.memories enable row level security;\n"+
-"alter table public.people enable row level security;\n"+
-"alter table public.goals enable row level security;\n"+
-"alter table public.conversations enable row level security;\n"+
-"alter table public.sources enable row level security;\n\n"+
-"drop policy if exists memories_owner on public.memories;\n"+
-"create policy memories_owner on public.memories for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);\n"+
-"drop policy if exists people_owner on public.people;\n"+
-"create policy people_owner on public.people for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);\n"+
-"drop policy if exists goals_owner on public.goals;\n"+
-"create policy goals_owner on public.goals for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);\n"+
-"drop policy if exists conversations_owner on public.conversations;\n"+
-"create policy conversations_owner on public.conversations for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);\n"+
-"drop policy if exists sources_owner on public.sources;\n"+
-"create policy sources_owner on public.sources for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);\n\n"+
-"-- owners: one row per auth user — the record every import and write relies on --\n"+
-"create table if not exists public.owners (\n"+
-"  id uuid primary key,\n"+
-"  display_name text,\n"+
-"  created_at timestamptz not null default now()\n"+
-");\n\n"+
-"-- owner bootstrap: create the owners row the moment an auth user appears -------\n"+
-"-- Without this, no owners row ever exists and every import / database write that\n"+
-"-- checks it fails. Security definer so the insert is not blocked by row-level\n"+
-"-- security on the owners table itself.\n"+
-"create or replace function public.handle_new_auth_user()\n"+
-"returns trigger language plpgsql security definer set search_path = public as $$\n"+
-"begin\n"+
-"  insert into public.owners (id, display_name)\n"+
-"  values (new.id, coalesce(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name'))\n"+
-"  on conflict (id) do nothing;\n"+
-"  return new;\n"+
-"end; $$;\n\n"+
-"drop trigger if exists on_auth_user_created on auth.users;\n"+
-"create trigger on_auth_user_created\n"+
-"  after insert on auth.users\n"+
-"  for each row execute function public.handle_new_auth_user();\n\n"+
-"-- backfill: owners rows for auth users who already exist -----------------------\n"+
-"insert into public.owners (id, display_name)\n"+
-"select id, coalesce(raw_user_meta_data->>'full_name', raw_user_meta_data->>'name') from auth.users\n"+
-"on conflict (id) do nothing;\n";
+return `-- 001_starter_schema.sql — agent home starter schema
+-- A personal memory store with owner-only row-level security from line one.
+-- Principle: what the system learns about the person stays in THEIR database, under THEIR keys.
+-- owner_id is the Supabase auth user id (auth.uid()). Every policy below is owner-only:
+-- a signed-in user can see and change only rows where owner_id = their own id.
+
+create extension if not exists pgcrypto;
+
+-- updated_at helper -----------------------------------------------------------
+create or replace function public.set_updated_at()
+returns trigger language plpgsql as $$
+begin new.updated_at = now(); return new; end; $$;
+
+-- memories: durable facts and notes about the owner --------------------------
+create table if not exists public.memories (
+  id uuid primary key default gen_random_uuid(),
+  owner_id uuid not null,
+  kind text not null default 'fact',          -- fact | preference | decision | note
+  content text not null,
+  source text,                                 -- where it came from (tool, file, conversation)
+  confidence numeric,                          -- 0..1, how sure we are
+  superseded_by uuid references public.memories(id),
+  tags text[] not null default '{}',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- people ----------------------------------------------------------------------
+create table if not exists public.people (
+  id uuid primary key default gen_random_uuid(),
+  owner_id uuid not null,
+  name text not null,
+  relationship text,
+  notes text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- goals -----------------------------------------------------------------------
+create table if not exists public.goals (
+  id uuid primary key default gen_random_uuid(),
+  owner_id uuid not null,
+  title text not null,
+  detail text,
+  status text not null default 'active',       -- active | paused | done | dropped
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- conversations: a log of what was discussed, with whom/what -------------------
+create table if not exists public.conversations (
+  id uuid primary key default gen_random_uuid(),
+  owner_id uuid not null,
+  source text,                                 -- Muse | claude | chatgpt | grok | instinct | other
+  summary text,
+  raw_ref text,                                -- link or path to the full transcript, if kept
+  happened_at timestamptz not null default now(),
+  created_at timestamptz not null default now()
+);
+
+-- sources: the tools and feeds connected to this home --------------------------
+create table if not exists public.sources (
+  id uuid primary key default gen_random_uuid(),
+  owner_id uuid not null,
+  kind text not null,                          -- ai-tool | file-import | calendar | mail | other
+  label text not null,
+  detail jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- indexes -----------------------------------------------------------------------
+create index if not exists memories_owner_idx on public.memories(owner_id, created_at desc);
+create index if not exists memories_tags_idx on public.memories using gin(tags);
+create index if not exists people_owner_idx on public.people(owner_id);
+create index if not exists goals_owner_idx on public.goals(owner_id, status);
+create index if not exists conversations_owner_idx on public.conversations(owner_id, happened_at desc);
+create index if not exists sources_owner_idx on public.sources(owner_id);
+
+-- updated_at triggers -----------------------------------------------------------
+drop trigger if exists memories_updated on public.memories;
+create trigger memories_updated before update on public.memories for each row execute function public.set_updated_at();
+drop trigger if exists people_updated on public.people;
+create trigger people_updated before update on public.people for each row execute function public.set_updated_at();
+drop trigger if exists goals_updated on public.goals;
+create trigger goals_updated before update on public.goals for each row execute function public.set_updated_at();
+drop trigger if exists sources_updated on public.sources;
+create trigger sources_updated before update on public.sources for each row execute function public.set_updated_at();
+
+-- row-level security: owner-only, on every table, from line one ------------------
+alter table public.memories enable row level security;
+alter table public.people enable row level security;
+alter table public.goals enable row level security;
+alter table public.conversations enable row level security;
+alter table public.sources enable row level security;
+
+drop policy if exists memories_owner on public.memories;
+create policy memories_owner on public.memories for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);
+drop policy if exists people_owner on public.people;
+create policy people_owner on public.people for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);
+drop policy if exists goals_owner on public.goals;
+create policy goals_owner on public.goals for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);
+drop policy if exists conversations_owner on public.conversations;
+create policy conversations_owner on public.conversations for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);
+drop policy if exists sources_owner on public.sources;
+create policy sources_owner on public.sources for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);
+
+-- owners: one row per auth user — the record every import and write relies on --
+create table if not exists public.owners (
+  id uuid primary key,
+  display_name text,
+  created_at timestamptz not null default now()
+);
+
+-- owner bootstrap: create the owners row the moment an auth user appears -------
+-- Without this, no owners row ever exists and every import / database write that
+-- checks it fails. Security definer so the insert is not blocked by row-level
+-- security on the owners table itself.
+create or replace function public.handle_new_auth_user()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  insert into public.owners (id, display_name)
+  values (new.id, coalesce(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name'))
+  on conflict (id) do nothing;
+  return new;
+end; $$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function public.handle_new_auth_user();
+
+-- backfill: owners rows for auth users who already exist -----------------------
+insert into public.owners (id, display_name)
+select id, coalesce(raw_user_meta_data->>'full_name', raw_user_meta_data->>'name') from auth.users
+on conflict (id) do nothing;
+`;
 }
 function tplImportPy(){
 return "#!/usr/bin/env python3\n"+
@@ -1288,240 +1285,240 @@ return "#!/usr/bin/env python3\n"+
 }
 
 function tplExportPy(){
-return "#!/usr/bin/env python3\n"+
-"\"\"\"\n"+
-"export_home.py — export your Agent Home database back out to plain Markdown.\n"+
-"\n"+
-"The way out, whenever you want it: everything your home has learned about you\n"+
-"leaves as ordinary .md files you can read, keep, move to another tool, or feed\n"+
-"into a new home with tools/import_md.py. Your data is yours — leaving must be\n"+
-"as easy as joining was.\n"+
-"\n"+
-"Usage:\n"+
-"    python tools/export_home.py [--out ./home-export] [--dry-run]\n"+
-"\n"+
-"Credentials (all local, git-ignored, never committed — same files the\n"+
-"importer uses):\n"+
-"    .env               SUPABASE_URL, AGENT_HOME_OWNER_ID\n"+
-"    .env.service-role  SUPABASE_SERVICE_ROLE_KEY (read from this file or the\n"+
-"                       environment variable of the same name)\n"+
-"\n"+
-"Safety behaviour:\n"+
-"- --dry-run prints COUNTS ONLY and writes nothing.\n"+
-"- Lines that look like credentials are screened out of the export and only\n"+
-"  COUNTED in the report — never written, never printed.\n"+
-"- Network/API failures print one plain sentence and exit 1 — no tracebacks.\n"+
-"\"\"\"\n"+
-"import json\n"+
-"import os\n"+
-"import re\n"+
-"import sys\n"+
-"import urllib.error\n"+
-"import urllib.request\n"+
-"from pathlib import Path\n"+
-"\n"+
-"CRED_LABEL_RE = re.compile(\n"+
-"    r\"(api[_-]?key|access[_-]?token|auth[_-]?token|token|secret|passwd|password|\"\n"+
-"    r\"service[_-]?role|private[_-]?key|[a-z0-9_]*_key)\\s*[:=]\", re.IGNORECASE)\n"+
-"CRED_PREFIX_RE = re.compile(\n"+
-"    r\"\\b(sk-[A-Za-z0-9_-]{10,}|ghp_[A-Za-z0-9]{10,}|gho_[A-Za-z0-9]{10,}|\"\n"+
-"    r\"sbp_[A-Za-z0-9_-]{10,}|AKIA[A-Z0-9]{12,}|xox[bap]-[A-Za-z0-9-]{10,}|\"\n"+
-"    r\"-----BEGIN [A-Z ]*PRIVATE KEY-----)\")\n"+
-"\n"+
-"TABLES = (\"memories\", \"people\", \"goals\", \"conversations\", \"sources\")\n"+
-"\n"+
-"\n"+
-"def looks_like_credential(line: str) -> bool:\n"+
-"    return bool(CRED_LABEL_RE.search(line) or CRED_PREFIX_RE.search(line))\n"+
-"\n"+
-"\n"+
-"def load_env_file(path: Path) -> dict:\n"+
-"    env = {}\n"+
-"    if path.exists():\n"+
-"        for line in path.read_text(encoding=\"utf-8\").splitlines():\n"+
-"            line = line.strip()\n"+
-"            if line and not line.startswith(\"#\") and \"=\" in line:\n"+
-"                k, v = line.split(\"=\", 1)\n"+
-"                env[k.strip()] = v.strip().strip('\"').strip(\"'\")\n"+
-"    return env\n"+
-"\n"+
-"\n"+
-"def load_config(root: Path):\n"+
-"    env = {}\n"+
-"    env.update(load_env_file(root / \".env\"))\n"+
-"    env.update(load_env_file(root / \".env.service-role\"))\n"+
-"    for key in (\"SUPABASE_URL\", \"AGENT_HOME_OWNER_ID\", \"SUPABASE_SERVICE_ROLE_KEY\"):\n"+
-"        if os.environ.get(key):\n"+
-"            env[key] = os.environ[key]\n"+
-"    missing = [k for k in (\"SUPABASE_URL\", \"AGENT_HOME_OWNER_ID\",\n"+
-"                           \"SUPABASE_SERVICE_ROLE_KEY\") if not env.get(k)]\n"+
-"    return env, missing\n"+
-"\n"+
-"\n"+
-"def fetch_table(base_url: str, key: str, table: str, owner_id: str) -> list:\n"+
-"    rows, offset, page = [], 0, 1000\n"+
-"    while True:\n"+
-"        url = (f\"{base_url}/rest/v1/{table}\"\n"+
-"               f\"?owner_id=eq.{owner_id}&order=created_at.asc\"\n"+
-"               f\"&limit={page}&offset={offset}\")\n"+
-"        req = urllib.request.Request(url, headers={\n"+
-"            \"apikey\": key,\n"+
-"            \"Authorization\": f\"Bearer {key}\",\n"+
-"            \"Accept\": \"application/json\",\n"+
-"        })\n"+
-"        with urllib.request.urlopen(req, timeout=30) as resp:\n"+
-"            batch = json.loads(resp.read().decode(\"utf-8\"))\n"+
-"        rows.extend(batch)\n"+
-"        if len(batch) < page:\n"+
-"            return rows\n"+
-"        offset += page\n"+
-"\n"+
-"\n"+
-"def clean(text: str, stats: dict) -> str:\n"+
-"    \"\"\"Screen credential-looking lines out of exported content.\"\"\"\n"+
-"    kept = []\n"+
-"    for line in str(text).splitlines():\n"+
-"        if looks_like_credential(line):\n"+
-"            stats[\"screened\"] += 1\n"+
-"        else:\n"+
-"            kept.append(line)\n"+
-"    return \"\\n\".join(kept).strip()\n"+
-"\n"+
-"\n"+
-"def render_memories(rows, stats):\n"+
-"    lines = [\"# Memories (exported from your Agent Home database)\", \"\"]\n"+
-"    for r in rows:\n"+
-"        if r.get(\"superseded_by\"):\n"+
-"            continue\n"+
-"        content = clean(r.get(\"content\", \"\"), stats)\n"+
-"        if not content:\n"+
-"            continue\n"+
-"        meta = \" · \".join(x for x in (r.get(\"kind\", \"fact\"),\n"+
-"                                      r.get(\"source\", \"\"),\n"+
-"                                      str(r.get(\"created_at\", \"\"))[:10]) if x)\n"+
-"        lines.append(f\"- {content} ({meta})\")\n"+
-"    return \"\\n\".join(lines) + \"\\n\"\n"+
-"\n"+
-"\n"+
-"def render_people(rows, stats):\n"+
-"    lines = [\"# People\", \"\"]\n"+
-"    for r in rows:\n"+
-"        name = clean(r.get(\"name\", \"\"), stats)\n"+
-"        rel = clean(r.get(\"relationship\", \"\"), stats)\n"+
-"        notes = clean(r.get(\"notes\", \"\"), stats)\n"+
-"        lines.append(f\"- {name}\" + (f\" — {rel}\" if rel else \"\")\n"+
-"                     + (f\": {notes}\" if notes else \"\"))\n"+
-"    return \"\\n\".join(lines) + \"\\n\"\n"+
-"\n"+
-"\n"+
-"def render_goals(rows, stats):\n"+
-"    lines = [\"# Goals\", \"\"]\n"+
-"    for r in rows:\n"+
-"        title = clean(r.get(\"title\", \"\"), stats)\n"+
-"        desc = clean(r.get(\"description\", \"\"), stats)\n"+
-"        due = str(r.get(\"due_at\") or \"\")[:10]\n"+
-"        lines.append(f\"- [{r.get('status', 'active')}] {title}\"\n"+
-"                     + (f\" — {desc}\" if desc else \"\")\n"+
-"                     + (f\" (due {due})\" if due else \"\"))\n"+
-"    return \"\\n\".join(lines) + \"\\n\"\n"+
-"\n"+
-"\n"+
-"def render_conversations(rows, stats):\n"+
-"    lines = [\"# Conversations (log)\", \"\"]\n"+
-"    for r in rows:\n"+
-"        content = clean(r.get(\"content\", \"\"), stats)\n"+
-"        if not content:\n"+
-"            continue\n"+
-"        when = str(r.get(\"occurred_at\", \"\"))[:16].replace(\"T\", \" \")\n"+
-"        lines.append(f\"- [{when}] {r.get('source', '')}/{r.get('role', '')}: {content}\")\n"+
-"    return \"\\n\".join(lines) + \"\\n\"\n"+
-"\n"+
-"\n"+
-"def render_sources(rows, stats):\n"+
-"    lines = [\"# Sources\", \"\"]\n"+
-"    for r in rows:\n"+
-"        name = clean(r.get(\"name\", \"\"), stats)\n"+
-"        notes = clean(r.get(\"notes\", \"\"), stats)\n"+
-"        lines.append(f\"- {name}\" + (f\" ({r.get('kind', '')})\" if r.get(\"kind\") else \"\")\n"+
-"                     + (f\": {notes}\" if notes else \"\"))\n"+
-"    return \"\\n\".join(lines) + \"\\n\"\n"+
-"\n"+
-"\n"+
-"RENDERERS = {\n"+
-"    \"memories\": render_memories,\n"+
-"    \"people\": render_people,\n"+
-"    \"goals\": render_goals,\n"+
-"    \"conversations\": render_conversations,\n"+
-"    \"sources\": render_sources,\n"+
-"}\n"+
-"\n"+
-"EXPORT_README = \"\"\"# Your Agent Home export\n"+
-"\n"+
-"Plain Markdown, exported from your own database by tools/export_home.py.\n"+
-"Read it anywhere, keep it, or move it:\n"+
-"\n"+
-"- Into a NEW Agent Home: run that home's tools/reconcile_import.py on this\n"+
-"  folder first (the usual gate), then tools/import_md.py.\n"+
-"- Into another AI tool: paste or attach the files — they are ordinary\n"+
-"  Markdown with no special format.\n"+
-"- Just for the record: they are yours; nothing here phones home.\n"+
-"\"\"\"\n"+
-"\n"+
-"\n"+
-"def main(argv) -> int:\n"+
-"    out = Path(\"./home-export\")\n"+
-"    dry_run = \"--dry-run\" in argv\n"+
-"    args = [a for a in argv if not a.startswith(\"--\")]\n"+
-"    if \"--out\" in argv:\n"+
-"        out = Path(argv[argv.index(\"--out\") + 1])\n"+
-"    elif args:\n"+
-"        out = Path(args[0])\n"+
-"    root = Path(__file__).resolve().parent.parent\n"+
-"    env, missing = load_config(root)\n"+
-"    if missing:\n"+
-"        print(f\"Cannot export yet: missing {', '.join(missing)} \"\n"+
-"              f\"(expected in .env / .env.service-role next to this repo).\")\n"+
-"        return 1\n"+
-"    try:\n"+
-"        data = {t: fetch_table(env[\"SUPABASE_URL\"], env[\"SUPABASE_SERVICE_ROLE_KEY\"],\n"+
-"                               t, env[\"AGENT_HOME_OWNER_ID\"]) for t in TABLES}\n"+
-"    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, ValueError):\n"+
-"        print(\"Could not reach your database. Check your connection and your \"\n"+
-"              \".env values, then try again.\")\n"+
-"        return 1\n"+
-"    stats = {\"screened\": 0}\n"+
-"    files = {f\"{t}.md\": RENDERERS[t](data[t], stats) for t in TABLES}\n"+
-"    counts = {t: len(data[t]) for t in TABLES}\n"+
-"    if dry_run:\n"+
-"        print(\"Export dry run — counts only, nothing written:\")\n"+
-"        for t in TABLES:\n"+
-"            print(f\"  {t}: {counts[t]} rows\")\n"+
-"        if stats[\"screened\"]:\n"+
-"            print(f\"  ({stats['screened']} credential-looking lines would be screened out)\")\n"+
-"        return 0\n"+
-"    out.mkdir(parents=True, exist_ok=True)\n"+
-"    for name, text in files.items():\n"+
-"        (out / name).write_text(text, encoding=\"utf-8\")\n"+
-"    (out / \"EXPORT-README.md\").write_text(EXPORT_README, encoding=\"utf-8\")\n"+
-"    total = sum(counts.values())\n"+
-"    print(f\"Exported {total} rows to {out}/ \"\n"+
-"          f\"({', '.join(f'{t}: {counts[t]}' for t in TABLES)}).\")\n"+
-"    if stats[\"screened\"]:\n"+
-"        print(f\"{stats['screened']} credential-looking lines were screened out \"\n"+
-"              f\"and not written.\")\n"+
-"    return 0\n"+
-"\n"+
-"\n"+
-"if __name__ == \"__main__\":\n"+
-"    try:\n"+
-"        sys.exit(main(sys.argv[1:]))\n"+
-"    except Exception:\n"+
-"        print(\"The export did not finish. Nothing was written or changed; \"\n"+
-"              \"check your .env values and try again.\")\n"+
-"        sys.exit(1)\n";
+return `#!/usr/bin/env python3
+"""
+export_home.py — export your Agent Home database back out to plain Markdown.
+
+The way out, whenever you want it: everything your home has learned about you
+leaves as ordinary .md files you can read, keep, move to another tool, or feed
+into a new home with tools/import_md.py. Your data is yours — leaving must be
+as easy as joining was.
+
+Usage:
+    python tools/export_home.py [--out ./home-export] [--dry-run]
+
+Credentials (all local, git-ignored, never committed — same files the
+importer uses):
+    .env               SUPABASE_URL, AGENT_HOME_OWNER_ID
+    .env.service-role  SUPABASE_SERVICE_ROLE_KEY (read from this file or the
+                       environment variable of the same name)
+
+Safety behaviour:
+- --dry-run prints COUNTS ONLY and writes nothing.
+- Lines that look like credentials are screened out of the export and only
+  COUNTED in the report — never written, never printed.
+- Network/API failures print one plain sentence and exit 1 — no tracebacks.
+"""
+import json
+import os
+import re
+import sys
+import urllib.error
+import urllib.request
+from pathlib import Path
+
+CRED_LABEL_RE = re.compile(
+    r"(api[_-]?key|access[_-]?token|auth[_-]?token|token|secret|passwd|password|"
+    r"service[_-]?role|private[_-]?key|[a-z0-9_]*_key)\\s*[:=]", re.IGNORECASE)
+CRED_PREFIX_RE = re.compile(
+    r"\\b(sk-[A-Za-z0-9_-]{10,}|ghp_[A-Za-z0-9]{10,}|gho_[A-Za-z0-9]{10,}|"
+    r"sbp_[A-Za-z0-9_-]{10,}|AKIA[A-Z0-9]{12,}|xox[bap]-[A-Za-z0-9-]{10,}|"
+    r"-----BEGIN [A-Z ]*PRIVATE KEY-----)")
+
+TABLES = ("memories", "people", "goals", "conversations", "sources")
+
+
+def looks_like_credential(line: str) -> bool:
+    return bool(CRED_LABEL_RE.search(line) or CRED_PREFIX_RE.search(line))
+
+
+def load_env_file(path: Path) -> dict:
+    env = {}
+    if path.exists():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, v = line.split("=", 1)
+                env[k.strip()] = v.strip().strip('"').strip("'")
+    return env
+
+
+def load_config(root: Path):
+    env = {}
+    env.update(load_env_file(root / ".env"))
+    env.update(load_env_file(root / ".env.service-role"))
+    for key in ("SUPABASE_URL", "AGENT_HOME_OWNER_ID", "SUPABASE_SERVICE_ROLE_KEY"):
+        if os.environ.get(key):
+            env[key] = os.environ[key]
+    missing = [k for k in ("SUPABASE_URL", "AGENT_HOME_OWNER_ID",
+                           "SUPABASE_SERVICE_ROLE_KEY") if not env.get(k)]
+    return env, missing
+
+
+def fetch_table(base_url: str, key: str, table: str, owner_id: str) -> list:
+    rows, offset, page = [], 0, 1000
+    while True:
+        url = (f"{base_url}/rest/v1/{table}"
+               f"?owner_id=eq.{owner_id}&order=created_at.asc"
+               f"&limit={page}&offset={offset}")
+        req = urllib.request.Request(url, headers={
+            "apikey": key,
+            "Authorization": f"Bearer {key}",
+            "Accept": "application/json",
+        })
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            batch = json.loads(resp.read().decode("utf-8"))
+        rows.extend(batch)
+        if len(batch) < page:
+            return rows
+        offset += page
+
+
+def clean(text: str, stats: dict) -> str:
+    """Screen credential-looking lines out of exported content."""
+    kept = []
+    for line in str(text).splitlines():
+        if looks_like_credential(line):
+            stats["screened"] += 1
+        else:
+            kept.append(line)
+    return "\\n".join(kept).strip()
+
+
+def render_memories(rows, stats):
+    lines = ["# Memories (exported from your Agent Home database)", ""]
+    for r in rows:
+        if r.get("superseded_by"):
+            continue
+        content = clean(r.get("content", ""), stats)
+        if not content:
+            continue
+        meta = " · ".join(x for x in (r.get("kind", "fact"),
+                                      r.get("source", ""),
+                                      str(r.get("created_at", ""))[:10]) if x)
+        lines.append(f"- {content} ({meta})")
+    return "\\n".join(lines) + "\\n"
+
+
+def render_people(rows, stats):
+    lines = ["# People", ""]
+    for r in rows:
+        name = clean(r.get("name", ""), stats)
+        rel = clean(r.get("relationship", ""), stats)
+        notes = clean(r.get("notes", ""), stats)
+        lines.append(f"- {name}" + (f" — {rel}" if rel else "")
+                     + (f": {notes}" if notes else ""))
+    return "\\n".join(lines) + "\\n"
+
+
+def render_goals(rows, stats):
+    lines = ["# Goals", ""]
+    for r in rows:
+        title = clean(r.get("title", ""), stats)
+        desc = clean(r.get("description", ""), stats)
+        due = str(r.get("due_at") or "")[:10]
+        lines.append(f"- [{r.get('status', 'active')}] {title}"
+                     + (f" — {desc}" if desc else "")
+                     + (f" (due {due})" if due else ""))
+    return "\\n".join(lines) + "\\n"
+
+
+def render_conversations(rows, stats):
+    lines = ["# Conversations (log)", ""]
+    for r in rows:
+        content = clean(r.get("content", ""), stats)
+        if not content:
+            continue
+        when = str(r.get("occurred_at", ""))[:16].replace("T", " ")
+        lines.append(f"- [{when}] {r.get('source', '')}/{r.get('role', '')}: {content}")
+    return "\\n".join(lines) + "\\n"
+
+
+def render_sources(rows, stats):
+    lines = ["# Sources", ""]
+    for r in rows:
+        name = clean(r.get("name", ""), stats)
+        notes = clean(r.get("notes", ""), stats)
+        lines.append(f"- {name}" + (f" ({r.get('kind', '')})" if r.get("kind") else "")
+                     + (f": {notes}" if notes else ""))
+    return "\\n".join(lines) + "\\n"
+
+
+RENDERERS = {
+    "memories": render_memories,
+    "people": render_people,
+    "goals": render_goals,
+    "conversations": render_conversations,
+    "sources": render_sources,
 }
 
-/* ============ CONNECT blocks ============ */
+EXPORT_README = """# Your Agent Home export
+
+Plain Markdown, exported from your own database by tools/export_home.py.
+Read it anywhere, keep it, or move it:
+
+- Into a NEW Agent Home: run that home's tools/reconcile_import.py on this
+  folder first (the usual gate), then tools/import_md.py.
+- Into another AI tool: paste or attach the files — they are ordinary
+  Markdown with no special format.
+- Just for the record: they are yours; nothing here phones home.
+"""
+
+
+def main(argv) -> int:
+    out = Path("./home-export")
+    dry_run = "--dry-run" in argv
+    args = [a for a in argv if not a.startswith("--")]
+    if "--out" in argv:
+        out = Path(argv[argv.index("--out") + 1])
+    elif args:
+        out = Path(args[0])
+    root = Path(__file__).resolve().parent.parent
+    env, missing = load_config(root)
+    if missing:
+        print(f"Cannot export yet: missing {', '.join(missing)} "
+              f"(expected in .env / .env.service-role next to this repo).")
+        return 1
+    try:
+        data = {t: fetch_table(env["SUPABASE_URL"], env["SUPABASE_SERVICE_ROLE_KEY"],
+                               t, env["AGENT_HOME_OWNER_ID"]) for t in TABLES}
+    except (urllib.error.URLError, urllib.error.HTTPError, TimeoutError, ValueError):
+        print("Could not reach your database. Check your connection and your "
+              ".env values, then try again.")
+        return 1
+    stats = {"screened": 0}
+    files = {f"{t}.md": RENDERERS[t](data[t], stats) for t in TABLES}
+    counts = {t: len(data[t]) for t in TABLES}
+    if dry_run:
+        print("Export dry run — counts only, nothing written:")
+        for t in TABLES:
+            print(f"  {t}: {counts[t]} rows")
+        if stats["screened"]:
+            print(f"  ({stats['screened']} credential-looking lines would be screened out)")
+        return 0
+    out.mkdir(parents=True, exist_ok=True)
+    for name, text in files.items():
+        (out / name).write_text(text, encoding="utf-8")
+    (out / "EXPORT-README.md").write_text(EXPORT_README, encoding="utf-8")
+    total = sum(counts.values())
+    print(f"Exported {total} rows to {out}/ "
+          f"({', '.join(f'{t}: {counts[t]}' for t in TABLES)}).")
+    if stats["screened"]:
+        print(f"{stats['screened']} credential-looking lines were screened out "
+              f"and not written.")
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main(sys.argv[1:]))
+    except Exception:
+        print("The export did not finish. Nothing was written or changed; "
+              "check your .env values and try again.")
+        sys.exit(1)
+`;
+}
+
 var TOOLS=[
   {id:"muse",label:"Muse"},
   {id:"claude",label:"Claude"},
@@ -1530,8 +1527,8 @@ var TOOLS=[
   {id:"instinct",label:"Instinct"},
   {id:"other",label:"Any other AI tool"}
 ];
-var CONNECT_TEMPLATE="# CONNECT.md — Point your AI tools here\n\n_This file is generated per person by the setup page, with your real repo and database URLs filled in. The version in the template repo uses placeholders — replace `YOUR-USERNAME` and `YOUR-PROJECT-REF`, or regenerate it from the setup page._\n\nHonest label: there is no uniform one-click OAuth into every AI tool. The honest version is **one button that generates all the paste blocks below** — you paste each block once, into that tool's custom instructions / project instructions / system prompt.\n\n---\n\n## For every tool — the universal block\n\n```text\nMy agent home is a private GitHub repo: https://github.com/YOUR-USERNAME/agent-home\nMy personal database is: https://YOUR-PROJECT-REF.supabase.co (Supabase, owner-only RLS)\n\nBefore answering, read USER.md, MEMORY.md, AGENTS.md, SOUL.md and IDENTITY.md from that repo.\nThe database is canonical; the Markdown files are the human-readable layer.\nWrite durable facts, preferences, decisions and commitments about me to the database\nand mirror them in MEMORY.md. Never store credentials anywhere. Never share anything\nyou learn about me with anyone else or any other store.\nThis home has a DECISIONS.md. When a situation matches an open decision, ask the owner\nthat one question, record their answer in DECISIONS.md, and apply it — one at a time,\nnever a list.\n\nFirst contact — do these four things once, in this order:\n1. Prove you read it: reply to the owner with the verification phrase seeded in MEMORY.md.\n2. Empty your pockets: list what YOU already hold about the owner — memories, settings,\n   custom instructions, and any skills or procedures you use — so it can be reconciled\n   into this home. Nothing merges silently; conflicts are the owner's call.\n3. Rewire: from now on this home is canonical. Check it before trusting your own\n   memory of the owner, and write what you learn back here, not only in your app.\n4. Contribute: reusable procedures you already have, or develop later, belong in\n   skills/ (note where each came from; duplicates reconcile first, never overwrite).\n   And when the owner asks for the same kind of task a second time, write it up as\n   a new skill there — what to do, step by step — so next time it is automatic.\n   The owner never has to ask for a skill, or know the word.\n\nIf you have a place for standing instructions (custom instructions, project\ninstructions, memory settings), this block belongs there, so it survives new chats —\nnot only in this one conversation.\n```\n\n## Skills and packs from elsewhere\n\nYour home ships with a starter skill pack in `skills/` (memory-hygiene,\nverify-before-claiming, import-and-reconcile). It is not a closed set:\n\n- **Skill packs from anywhere are welcome** — another AI tool's skills, a\n  public repo, a zip a friend sent. Copy the Markdown files into `skills/`,\n  note where each came from at the top of the file, and it works here.\n- **Never overwrite silently.** If an incoming skill duplicates or conflicts\n  with one already here, reconcile first (the import-and-reconcile skill is\n  the procedure) and let the owner pick — same rule as memories.\n- **Templates and files from elsewhere** follow the same path: reconcile,\n  then import (README has the two commands). Nothing outside this repo is\n  second-class.\n\n## Muse\n\nPaste the universal block into Settings → Custom Instructions, and add the repo as a project source if your plan supports it.\n_Capability, honestly: custom instructions alone don't give Muse access to a private repo — it can read your home only when the repo/files are attached as a project source or the tool is connected to your database. Without that, it has the block's snapshot, not live files._\n\n## Claude\n\nCreate a Project named \"Agent Home\", paste the universal block as the project instructions, and upload USER.md / MEMORY.md / AGENTS.md as project knowledge.\n_Capability, honestly: Claude cannot open your private repo from a link by itself — the uploaded files ARE its copy of your home. Re-upload after big edits to MEMORY.md or USER.md._\n\n## ChatGPT\n\nPaste the universal block into Settings → Personalization → Custom Instructions.\n_Capability, honestly: custom instructions don't grant file or database access. ChatGPT works from the pasted block (a snapshot) unless you also give it the files or a connector in the conversation._\n\n## Grok\n\nPaste the universal block at the start of a new conversation, or into its custom instructions where available.\n_Capability, honestly: a block pasted into one conversation is a snapshot for that conversation only._\n\n## Instinct\n\nPaste the universal block into its instructions for you.\n\n## Notion — a source, not a chat tool\n\nMany people keep real knowledge in Notion. Honest label first: there is no consumer one-click API connect that pulls your Notion into this home — anyone who tells you otherwise is selling something. There are two honest paths, and you can use either or both:\n\n**(a) Import (one-way, whenever you want a refresh).** In Notion: Settings → **Export all workspace content**, format **Markdown & CSV**. Unzip it, put the exported `.md` files in a folder named `notion-export/`, and run them through exactly the same gate as every other source:\n\n```bash\npython tools/reconcile_import.py ./notion-export/   # resolve conflicts first\npython tools/import_md.py ./notion-export/\n```\n\nThe tooling credits these files to the source **notion-export** automatically (that's what the folder name does), and conflicts with your other tools are reconciled, never silently overwritten — same rules as everything else.\n\n**(b) Mirror (optional, readable copy in Notion).** If you like reading your memory in Notion, an AI tool with Notion access can keep ONE Notion page as a readable mirror of the summaries in MEMORY.md and USER.md. Paste this into that tool:\n\n```text\nKeep the Notion page titled \"My Agent Home (mirror)\" in sync with the summaries\nin MEMORY.md and USER.md from my agent home repo: when those files change,\nupdate the page to match. This page is a ONE-WAY MIRROR for reading only —\nit is never the canonical copy, and edits made in Notion do not flow back.\nIf the mirror and the home disagree, the home (database, then files) wins.\nPut \"Mirror — canonical copy lives in my agent home\" at the top of the page.\n```\n\n_Capability, honestly: the mirror is only as fresh as the last time a tool ran it, and Notion edits to the mirror go nowhere — correct facts in your home (via any wired tool), not in the mirror._\n\n## Confirm it's wired — the sync check\n\nAfter pasting a block into an app, send it this message. The check is built around your **verification phrase**: at setup, a random phrase (two words + a number) was written as a seed line in MEMORY.md — `Verification phrase: <two words>-<number>`. A tool can only quote it if it can actually read your files, so a correct phrase **plus** a real quoted fact is strong evidence the app is reading your home. It is not absolute proof — treat a wrong, missing, or vague phrase as \"not wired\", even if the other answers sound plausible: plausible is what guessing looks like.\n\n```text\nSync check. Read my agent home (the repo in my instructions) and reply with exactly:\n1. My verification phrase, quoted verbatim from MEMORY.md (the line starting \"Verification phrase:\")\n2. My name, as written in USER.md\n3. One other fact from MEMORY.md, quoted\n4. \"Canonical store: database\" — if that's what my README says\nTwo honest fallbacks, use them instead of guessing:\n- If you can't read the repo at all, say: \"I can't read your agent home yet.\"\n- If you can read it but a field is still blank, name the blank field —\n  that means we're wired, just not filled in yet.\n```\n\nIf the phrase comes back wrong or missing, that app isn't reading your home yet — check its capability note above (it may need the files uploaded, not just the block) and re-paste.\n\n## Any other tool\n\nIf it has a system prompt, custom instructions, or a \"memory\" setting — the universal block goes there. If it can read files, give it this repo. If it can call an API, give it the database URL and the **anon key — the variable named `SUPABASE_ANON_KEY` in your .env** — together with your signed-in session.\n\n**Never give any tool the service-role key** (`SUPABASE_SERVICE_ROLE_KEY`, kept separately in `.env.service-role`). That key bypasses all row-level security over your whole memory store. It exists for one job only: the importer running locally on your own machine. No AI tool ever needs it.\n";
-var UNIVERSAL_BLOCK="My agent home is a private GitHub repo: https://github.com/YOUR-USERNAME/agent-home\nMy personal database is: https://YOUR-PROJECT-REF.supabase.co (Supabase, owner-only RLS)\n\nBefore answering, read USER.md, MEMORY.md, AGENTS.md, SOUL.md and IDENTITY.md from that repo.\nThe database is canonical; the Markdown files are the human-readable layer.\nWrite durable facts, preferences, decisions and commitments about me to the database\nand mirror them in MEMORY.md. Never store credentials anywhere. Never share anything\nyou learn about me with anyone else or any other store.\nThis home has a DECISIONS.md. When a situation matches an open decision, ask the owner\nthat one question, record their answer in DECISIONS.md, and apply it — one at a time,\nnever a list.\n\nFirst contact — do these four things once, in this order:\n1. Prove you read it: reply to the owner with the verification phrase seeded in MEMORY.md.\n2. Empty your pockets: list what YOU already hold about the owner — memories, settings,\n   custom instructions, and any skills or procedures you use — so it can be reconciled\n   into this home. Nothing merges silently; conflicts are the owner's call.\n3. Rewire: from now on this home is canonical. Check it before trusting your own\n   memory of the owner, and write what you learn back here, not only in your app.\n4. Contribute: reusable procedures you already have, or develop later, belong in\n   skills/ (note where each came from; duplicates reconcile first, never overwrite).\n   And when the owner asks for the same kind of task a second time, write it up as\n   a new skill there — what to do, step by step — so next time it is automatic.\n   The owner never has to ask for a skill, or know the word.\n\nIf you have a place for standing instructions (custom instructions, project\ninstructions, memory settings), this block belongs there, so it survives new chats —\nnot only in this one conversation.\n";
+var CONNECT_TEMPLATE="# CONNECT.md — Point your AI tools here\n\n_This file is generated per person by the setup page, with your real repo and database URLs filled in. The version in the template repo uses placeholders — replace `YOUR-USERNAME` and `YOUR-PROJECT-REF`, or regenerate it from the setup page._\n\nHonest label: there is no uniform one-click OAuth into every AI tool. The honest version is **one button that generates all the paste blocks below** — you paste each block once, into that tool's custom instructions / project instructions / system prompt.\n\n---\n\n## For every tool — the universal block\n\n```text\nMy agent home is a private GitHub repo: https://github.com/YOUR-USERNAME/agent-home\nMy personal database is: https://YOUR-PROJECT-REF.supabase.co (Supabase, owner-only RLS)\n\nBefore answering, read USER.md, MEMORY.md, AGENTS.md, SOUL.md and IDENTITY.md from that repo.\nThe database is canonical; the Markdown files are the human-readable layer.\nWrite durable facts, preferences, decisions and commitments about me to the database\nand mirror them in MEMORY.md. Never store credentials anywhere. Never share anything\nyou learn about me with anyone else or any other store.\nThis home has a DECISIONS.md. When a situation matches an open decision, ask the owner\nthat one question, record their answer in DECISIONS.md, and apply it — one at a time,\nnever a list.\n\nFirst contact — do these four things once, in this order:\n1. Prove you read it: reply to the owner with the verification phrase seeded in MEMORY.md.\n2. Empty your pockets: list what YOU already hold about the owner — memories, settings,\n   custom instructions, and any skills or procedures you use — so it can be reconciled\n   into this home. Nothing merges silently; conflicts are the owner's call.\n3. Rewire: from now on this home is canonical. Check it before trusting your own\n   memory of the owner, and write what you learn back here, not only in your app.\n4. Contribute: reusable procedures you already have, or develop later, belong in\n   skills/ (note where each came from; duplicates reconcile first, never overwrite).\n   And when the owner asks for the same kind of task a second time, write it up as\n   a new skill there — what to do, step by step — so next time it is automatic.\n   The owner never has to ask for a skill, or know the word.\n5. Check the name: if USER.md still shows the placeholder \"(my name — ask me and fill this in)\", ask the owner their name once and write the real name into USER.md.\n\nIf you have a place for standing instructions (custom instructions, project\ninstructions, memory settings), this block belongs there, so it survives new chats —\nnot only in this one conversation.\n```\n\n## Skills and packs from elsewhere\n\nYour home ships with a starter skill pack in `skills/` (memory-hygiene,\nverify-before-claiming, import-and-reconcile). It is not a closed set:\n\n- **Skill packs from anywhere are welcome** — another AI tool's skills, a\n  public repo, a zip a friend sent. Copy the Markdown files into `skills/`,\n  note where each came from at the top of the file, and it works here.\n- **Never overwrite silently.** If an incoming skill duplicates or conflicts\n  with one already here, reconcile first (the import-and-reconcile skill is\n  the procedure) and let the owner pick — same rule as memories.\n- **Templates and files from elsewhere** follow the same path: reconcile,\n  then import (README has the two commands). Nothing outside this repo is\n  second-class.\n\n## Muse\n\nPaste the universal block into Settings → Custom Instructions, and add the repo as a project source if your plan supports it.\n_Capability, honestly: custom instructions alone don't give Muse access to a private repo — it can read your home only when the repo/files are attached as a project source or the tool is connected to your database. Without that, it has the block's snapshot, not live files._\n\n## Claude\n\nCreate a Project named \"Agent Home\", paste the universal block as the project instructions, and upload USER.md / MEMORY.md / AGENTS.md as project knowledge.\n_Capability, honestly: Claude cannot open your private repo from a link by itself — the uploaded files ARE its copy of your home. Re-upload after big edits to MEMORY.md or USER.md._\n\n## ChatGPT\n\nPaste the universal block into Settings → Personalization → Custom Instructions.\n_Capability, honestly: custom instructions don't grant file or database access. ChatGPT works from the pasted block (a snapshot) unless you also give it the files or a connector in the conversation._\n\n## Grok\n\nPaste the universal block at the start of a new conversation, or into its custom instructions where available.\n_Capability, honestly: a block pasted into one conversation is a snapshot for that conversation only._\n\n## Instinct\n\nPaste the universal block into its instructions for you.\n\n## Notion — a source, not a chat tool\n\nMany people keep real knowledge in Notion. Honest label first: there is no consumer one-click API connect that pulls your Notion into this home — anyone who tells you otherwise is selling something. There are two honest paths, and you can use either or both:\n\n**(a) Import (one-way, whenever you want a refresh).** In Notion: Settings → **Export all workspace content**, format **Markdown & CSV**. Unzip it, put the exported `.md` files in a folder named `notion-export/`, and run them through exactly the same gate as every other source:\n\n```bash\npython tools/reconcile_import.py ./notion-export/   # resolve conflicts first\npython tools/import_md.py ./notion-export/\n```\n\nThe tooling credits these files to the source **notion-export** automatically (that's what the folder name does), and conflicts with your other tools are reconciled, never silently overwritten — same rules as everything else.\n\n**(b) Mirror (optional, readable copy in Notion).** If you like reading your memory in Notion, an AI tool with Notion access can keep ONE Notion page as a readable mirror of the summaries in MEMORY.md and USER.md. Paste this into that tool:\n\n```text\nKeep the Notion page titled \"My Agent Home (mirror)\" in sync with the summaries\nin MEMORY.md and USER.md from my agent home repo: when those files change,\nupdate the page to match. This page is a ONE-WAY MIRROR for reading only —\nit is never the canonical copy, and edits made in Notion do not flow back.\nIf the mirror and the home disagree, the home (database, then files) wins.\nPut \"Mirror — canonical copy lives in my agent home\" at the top of the page.\n```\n\n_Capability, honestly: the mirror is only as fresh as the last time a tool ran it, and Notion edits to the mirror go nowhere — correct facts in your home (via any wired tool), not in the mirror._\n\n## Confirm it's wired — the sync check\n\nAfter pasting a block into an app, send it this message. The check is built around your **verification phrase**: at setup, a random phrase (two words + a number) was written as a seed line in MEMORY.md — `Verification phrase: <two words>-<number>`. A tool can only quote it if it can actually read your files, so a correct phrase **plus** a real quoted fact is strong evidence the app is reading your home. It is not absolute proof — treat a wrong, missing, or vague phrase as \"not wired\", even if the other answers sound plausible: plausible is what guessing looks like.\n\n```text\nSync check. Read my agent home (the repo in my instructions) and reply with exactly:\n1. My verification phrase, quoted verbatim from MEMORY.md (the line starting \"Verification phrase:\")\n2. My name, as written in USER.md\n3. One other fact from MEMORY.md, quoted\n4. \"Canonical store: database\" — if that's what my README says\nTwo honest fallbacks, use them instead of guessing:\n- If you can't read the repo at all, say: \"I can't read your agent home yet.\"\n- If you can read it but a field is still blank, name the blank field —\n  that means we're wired, just not filled in yet.\n```\n\nIf the phrase comes back wrong or missing, that app isn't reading your home yet — check its capability note above (it may need the files uploaded, not just the block) and re-paste.\n\n## Any other tool\n\nIf it has a system prompt, custom instructions, or a \"memory\" setting — the universal block goes there. If it can read files, give it this repo. If it can call an API, give it the database URL and the **anon key — the variable named `SUPABASE_ANON_KEY` in your .env** — together with your signed-in session.\n\n**Never give any tool the service-role key** (`SUPABASE_SERVICE_ROLE_KEY`, kept separately in `.env.service-role`). That key bypasses all row-level security over your whole memory store. It exists for one job only: the importer running locally on your own machine. No AI tool ever needs it.\n";
+var UNIVERSAL_BLOCK=CONNECT_TEMPLATE.split("```text\n")[1].split("\n```")[0];
 function connectBlock(tool,v){
   var repo=v.repoUrl||"https://github.com/YOUR-USERNAME/"+v.repoName;
   var hasDb=/^https?:\/\//.test(v.projectUrl||"");
@@ -1663,9 +1660,8 @@ function templateFiles(v){
   return files;
 }
 function currentVars(){
-  return {name:S.name,email:S.email,repoName:S.repoName,repoUrl:S.repoUrl,projectRef:S.projectRef,projectUrl:S.projectUrl,verificationPhrase:verificationPhrase()};
+  return {name:S.name,repoName:S.repoName,repoUrl:S.repoUrl,projectRef:S.projectRef,projectUrl:S.projectUrl,verificationPhrase:verificationPhrase()};
 }
-/* Brand marks: GitHub is a true inline SVG (octocat); every other service is the same rounded tile in its brand colour with its glyph/initial. Inline only. */
 function brandTileHTML(id,sm){
   var cls="btile"+(sm?" sm":"");
   if(id==="github")return '<span class="'+cls+'" style="background:#111111" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></span>';
@@ -1682,12 +1678,10 @@ function brandTileHTML(id,sm){
   var m=map[id]||map.other;
   return '<span class="'+cls+'" style="background:'+m.bg+';color:'+(m.fg||"#ffffff")+';font-size:'+m.fs+(m.ff?(";font-family:"+m.ff):"")+'" aria-hidden="true">'+m.g+'</span>';
 }
-/* Done-screen verification ticks (localStorage, this device only). One tappable circle per AI app; a tick marks that the app answered with the verification phrase. Ticks never gate anything. Preview: memory-only, never stored. */
 var WIRED_TICK_KEY="ah_wired_ticks_v1";
 var wiredTicks=null;
 var wiredTickTimes={};
 var statusDoneShown=false;
-/* agentHomeStatus — durable setup record (localStorage key "agentHomeStatus"). Shape: {version:1, repoUrl, databaseUrl, steps:{repoCreated, databaseCreated, databaseSkipped, wired, doneShown}, ticks:{app:{ticked, tickedAt ISO}}, updatedAt ISO}. Written by saveAgentHomeStatus() on setup changes; never in preview. */
 function loadAgentHomeStatus(){
   try{
     var raw=localStorage.getItem("agentHomeStatus");
@@ -1708,6 +1702,9 @@ function saveAgentHomeStatus(){
       version:1,
       repoUrl:S.repoUrl||(prev&&prev.repoUrl)||null,
       databaseUrl:S.projectUrl||(prev&&prev.databaseUrl)||null,
+      databaseId:S.databaseId||(prev&&prev.databaseId)||null,
+      verificationPhrase:S.verificationPhrase||(prev&&prev.verificationPhrase)||null,
+      ghLogin:S.ghUser||(prev&&prev.ghLogin)||null,
       steps:{
         repoCreated:!!S.repoDone,
         databaseCreated:!!S.dbDone,
@@ -1812,7 +1809,6 @@ document.querySelectorAll("[data-copy]").forEach(function(b){
   b.addEventListener("click",function(){ copyText($(b.getAttribute("data-copy")).textContent,b); });
 });
 
-/* Status screen (returning user): rendered from this device's agentHomeStatus record, on a normal load when the repo exists. Per-app rows reuse makeWiredTick() and connectBlock() so ticks and paste text stay in sync with the done screen. */
 var statusResumeScreen=null;
 function fmtWhen(iso){
   if(!iso)return "";
@@ -1840,6 +1836,7 @@ function hydrateStatusS(rec){
     var mm=String(rec.databaseUrl).match(/https?:\/\/([^.\/]+)\.supabase\.co/i);
     if(mm)S.projectRef=mm[1];
   }
+  if(rec.databaseId)S.databaseId=rec.databaseId;
   if(rec.steps){
     if(rec.steps.databaseCreated)S.dbDone=true;
     if(rec.steps.databaseSkipped)S.dbSkipped=true;
@@ -1854,7 +1851,7 @@ function statusVars(rec){
     var last=seg[seg.length-1];
     if(last&&/^[a-z0-9][a-z0-9._-]*$/i.test(last))repoName=last.toLowerCase();
   }
-  return {name:S.name||"",email:S.email||"",repoName:repoName,repoUrl:rec.repoUrl||"",projectRef:S.projectRef||"",projectUrl:rec.databaseUrl||"",verificationPhrase:S.verificationPhrase||""};
+  return {name:S.name||"",repoName:repoName,repoUrl:rec.repoUrl||"",projectRef:S.projectRef||"",projectUrl:rec.databaseUrl||"",verificationPhrase:S.verificationPhrase||""};
 }
 function buildStatusRow(o){
   var row=document.createElement("div");
@@ -2003,7 +2000,6 @@ if($("statusStartAgainCancel"))$("statusStartAgainCancel").addEventListener("cli
   var sab=$("statusStartAgainBtn"); if(sab)sab.classList.remove("hidden");
 });
 if($("statusStartAgainYes"))$("statusStartAgainYes").addEventListener("click",function(){
-  /* Local only: clears this device's record + session. GitHub/Supabase untouched. */
   try{localStorage.removeItem("agentHomeStatus");}catch(e){}
   try{localStorage.removeItem(WIRED_TICK_KEY);}catch(e){}
   try{sessionStorage.removeItem("ah_state");}catch(e){}
@@ -2015,10 +2011,44 @@ if($("statusStartAgainYes"))$("statusStartAgainYes").addEventListener("click",fu
   showScreen("screen-welcome");
 });
 
-/* ============ GitHub ============ */
+async function ghCollision(repo){
+  setCheck("ghCheck","gh-create","failed","already there");
+  S.repoFull=repo.full_name; var url=repo.html_url||("https://github.com/"+repo.full_name);
+  var rec=null; try{rec=loadAgentHomeStatus();}catch(e){}
+  var sess=null; try{sess=JSON.parse(sessionStorage.getItem("ah_state")||"null");}catch(e){}
+  var phrase=(rec&&rec.verificationPhrase)||(sess&&sess.verificationPhrase)||"";
+  var own=false;
+  if(phrase&&rec&&rec.repoUrl===url){
+    try{
+      var mf=await ghFetch("/repos/"+repo.full_name+"/contents/MEMORY.md");
+      if(mf&&mf.content){ var txt=decodeURIComponent(escape(atob(mf.content.replace(/\n/g,"")))); if(txt.indexOf(phrase)!==-1)own=true; }
+    }catch(e){}
+  }
+  var box=$("ghCollision");
+  if(!box){ showErr("ghErr",tt("A folder with this name already exists, so setup stopped — nothing was added to it. Pick a different name.","이 이름의 폴더가 이미 있어서 설정을 멈췄어요 — 아무것도 추가하지 않았어요. 다른 이름을 골라 주세요.","Ya existe una carpeta con este nombre, así que la configuración se detuvo — no se agregó nada. Elige otro nombre.")); return; }
+  box.innerHTML="";
+  var p=document.createElement("p"); p.style.margin="0 0 6px";
+  p.textContent=own?tt("This looks like a home this device set up earlier. Nothing was added to it. You can continue with it, or pick a different name.","이 기기가 예전에 만든 공간 같아요. 아무것도 추가하지 않았어요. 이 폴더로 계속하거나, 다른 이름을 골라 주세요.","Parece un espacio que este dispositivo creó antes. No se agregó nada. Puedes continuar con esta carpeta o elegir otro nombre."):tt("A folder with this name already exists, so setup stopped. Nothing was added to it — pick a different name to continue.","이 이름의 폴더가 이미 있어서 설정을 멈췄어요. 아무것도 추가하지 않았어요 — 계속하려면 다른 이름을 골라 주세요.","Ya existe una carpeta con este nombre, así que la configuración se detuvo. No se agregó nada — elige otro nombre para continuar.");
+  box.appendChild(p);
+  if(own){
+    var rb=document.createElement("button"); rb.type="button"; rb.className="btn"; rb.id="ghRecoverBtn";
+    rb.textContent=tt("Continue with this folder","이 폴더로 계속하기","Continuar con esta carpeta");
+    rb.addEventListener("click",function(){
+      S.repoUrl=url; S.repoDone=true; box.classList.add("hidden"); clearErr("ghErr");
+      setCheck("ghCheck","gh-create","done",repo.full_name); saveAgentHomeStatus(); updateWireBtn();
+      showSuccessState("✓ Your folder is private","Checked on GitHub just now.","Continue",function(){showScreen("step2");});
+    });
+    box.appendChild(rb);
+  }
+  var nb=document.createElement("button"); nb.type="button"; nb.className="btn secondary"; nb.id="ghRenameBtn";
+  nb.textContent=tt("Pick a different name","다른 이름 고르기","Elegir otro nombre");
+  nb.addEventListener("click",function(){ showScreen("step0"); var d=document.querySelector("#step0 details"); if(d)d.open=true; var f=$("fRepo"); if(f){f.focus(); if(f.select)f.select();} });
+  box.appendChild(nb);
+  box.classList.remove("hidden");
+  if(!own)showErr("ghErr",tt("That name is already taken — setup stopped and nothing was uploaded.","그 이름은 이미 쓰이고 있어요 — 설정을 멈췄고 아무것도 올리지 않았어요.","Ese nombre ya está en uso — la configuración se detuvo y no se subió nada."));
+}
 function readBasics(){
   S.name=$("fName").value.trim();
-  S.email=$("fEmail").value.trim();
   var rn=$("fRepo").value.trim().toLowerCase();
   S.repoName=/^[a-z0-9][a-z0-9._-]*$/.test(rn)?rn:"agent-home";
   return S.repoName;
@@ -2048,20 +2078,27 @@ async function ghCreate(){
     setCheck("ghCheck","gh-verify","doing","checking…");
     var user=await ghFetch("/user");
     S.ghUser=user.login;
+    var recLogin=""; try{var ss2=JSON.parse(sessionStorage.getItem("ah_state")||"null"); recLogin=(ss2&&ss2.ghLogin)||"";}catch(e){}
+    if(!recLogin){var rr2=loadAgentHomeStatus(); if(rr2)recLogin=rr2.ghLogin||"";}
+    if(recLogin&&user.login!==recLogin)throw new Error(ghIdErr(recLogin,user.login));
+    adoptGhName(user);
     setCheck("ghCheck","gh-verify","done","@"+user.login);
 
     setCheck("ghCheck","gh-create","doing","creating…");
-    var repo=null;
+    var repo=null, existing=null;
+    try{ existing=await ghFetch("/repos/"+S.ghUser+"/"+S.repoName); }catch(ePre){}
+    if(existing&&existing.id){ await ghCollision(existing); return; }
     try{
       repo=await ghFetch("/user/repos",{method:"POST",body:JSON.stringify({
         name:S.repoName,private:true,auto_init:false,
         description:"My agent home — private memory and instructions for my AI tools."
       })});
     }catch(eCreate){
-      /* Retry-safe: a repo with this name that is already yours and private is reused, so "Try again" can finish instead of failing on the name. */
-      if(!/422|already exists/i.test(eCreate.message))throw eCreate;
-      repo=await ghFetch("/repos/"+S.ghUser+"/"+S.repoName);
-      if(!repo||repo.private!==true)throw eCreate;
+      if(/422|already exists/i.test(eCreate.message)){
+        var again=null; try{ again=await ghFetch("/repos/"+S.ghUser+"/"+S.repoName); }catch(e2){}
+        if(again&&again.id){ await ghCollision(again); return; }
+      }
+      throw eCreate;
     }
     S.repoFull=repo.full_name; S.repoUrl=repo.html_url;
     setCheck("ghCheck","gh-create","done",repo.full_name);
@@ -2103,7 +2140,15 @@ async function ghCreate(){
   }
 }
 
-/* ============ Supabase ============ */
+function sbOrgNorm(o){var pl=o.plan; if(pl&&typeof pl==="object")pl=pl.name||pl.tier||pl.id||"Free"; pl=String(pl||o.subscription_tier||"Free"); pl=pl.charAt(0).toUpperCase()+pl.slice(1); return {id:o.id,name:o.name,plan:pl};}
+function sbOrgById(id){for(var i=0;i<(S.sbOrgs||[]).length;i++)if(S.sbOrgs[i].id===id)return S.sbOrgs[i]; return null;}
+function sbFillOrgs(orgs){
+  S.sbOrgs=(orgs||[]).map(sbOrgNorm);
+  var sel=$("sbOrg"); sel.innerHTML="";
+  var ph=document.createElement("option"); ph.value=""; ph.textContent=tt("Choose your organisation…","그룹을 골라 주세요…","Elige tu organización…"); sel.appendChild(ph);
+  S.sbOrgs.forEach(function(o){ var op=document.createElement("option"); op.value=o.id; op.textContent=o.name+" — "+o.plan; sel.appendChild(op); });
+  sel.value=""; S.sbOrgId="";
+}
 async function sbFetch(path,opts){
   if(IS_PREVIEW) throw new Error("Preview — nothing is created");
   opts=opts||{};
@@ -2123,13 +2168,9 @@ async function sbLoadOrgs(){
   try{
     var orgs=await sbFetch("/organizations");
     if(!orgs||!orgs.length) throw new Error("Supabase returned no organisations for this token. Create one in the Supabase dashboard first, then try again.");
-    var sel=$("sbOrg"); sel.innerHTML="";
-    orgs.forEach(function(o){
-      var op=document.createElement("option"); op.value=o.id; op.textContent=o.name; sel.appendChild(op);
-    });
-    S.sbOrgId=sel.value;
+    sbFillOrgs(orgs);
     setCheck("sbCheck","sb-verify","done",orgs.length+" org"+(orgs.length>1?"s":""));
-    showOk("sbOk","Token verified — "+orgs.length+" organisation"+(orgs.length>1?"s":"")+" found. Pick one (if you have several), check the region, then create the database.");
+    showOk("sbOk","Token verified — "+orgs.length+" organisation"+(orgs.length>1?"s":"")+" found. Tap the one to use — its plan is shown next to it. Nothing is picked for you. Then check the region and create the database.");
   }catch(e){ showErr("sbErr",e.message); }
 }
 async function sbQuery(ref,sql){
@@ -2145,21 +2186,34 @@ async function sbCreate(){
   if(!S.sbToken){showErr("sbErr","Connect Supabase first — use the Connect button, or the code under “Advanced / having trouble?” below.");return;}
   var btn=$("sbBtn"); btn.disabled=true; btn.textContent="Working — this can take a couple of minutes…";
   try{
-    if(!S.sbOrgId){
-      var orgs=await sbFetch("/organizations");
-      if(!orgs||!orgs.length) throw new Error("Supabase returned no organisations for this token.");
-      var sel=$("sbOrg"); sel.innerHTML="";
-      orgs.forEach(function(o){var op=document.createElement("option");op.value=o.id;op.textContent=o.name;sel.appendChild(op);});
-      S.sbOrgId=sel.value;
+    if(S.ghToken)await verifyGhIdentity();
+    if(!S.sbOrgs.length){ var orgs0=await sbFetch("/organizations"); if(orgs0&&orgs0.length)S.sbOrgs=orgs0.map(sbOrgNorm); }
+    if(!S.sbOrgId)throw new Error(tt("Pick your organisation first — tap it in the list above. Nothing is picked for you.","먼저 위 목록에서 그룹을 눌러 골라 주세요. 자동으로 골라주지 않아요.","Primero elige tu organización — tócala en la lista de arriba. Nada se elige por ti."));
+    var org=sbOrgById(S.sbOrgId);
+    if(org&&!/^free$/i.test(org.plan)){
+      setCheck("sbCheck","sb-create","failed","paid plan");
+      throw new Error(tt("That organisation is on the "+org.plan+" plan, and this setup only creates on Free — nothing was created. Choose a different organisation above.","그 그룹은 "+org.plan+" 요금제라서, 이 설정은 Free에서만 만들어요 — 아무것도 만들지 않았어요. 위에서 다른 그룹을 골라 주세요.","Esa organización está en el plan "+org.plan+" y esta configuración solo crea en Free — no se creó nada. Elige otra organización arriba."));
     }
     setCheck("sbCheck","sb-verify","done","org ready");
 
     S.dbPassword=genPassword();
     setCheck("sbCheck","sb-create","doing","creating…");
-    var proj=await sbFetch("/projects",{method:"POST",body:JSON.stringify({
-      name:S.repoName,organization_id:S.sbOrgId,region:S.sbRegion,plan:"free",db_pass:S.dbPassword
-    })});
-    S.projectRef=proj.id||proj.ref;
+    var proj=null, resumedId=S.databaseId||null;
+    if(!resumedId){ try{var srec=loadAgentHomeStatus(); if(srec)resumedId=srec.databaseId;}catch(e){} }
+    if(resumedId){
+      try{ proj=await sbFetch("/projects/"+resumedId); }catch(eRes){ proj=null; }
+      if(proj)S.projectRef=proj.id||proj.ref||resumedId;
+    }
+    if(!proj){
+      var plist=[]; try{ plist=await sbFetch("/projects"); }catch(eList){}
+      var clash=(plist||[]).some(function(pp){return pp.name===S.repoName&&(!pp.organization_id||pp.organization_id===S.sbOrgId);});
+      if(clash)throw new Error(tt("A project with this name already exists in that organisation, so setup stopped — it was not reused. Pick a different name or organisation.","그 그룹에 이 이름의 프로젝트가 이미 있어서 설정을 멈췄어요 — 재사용하지 않았어요. 다른 이름이나 그룹을 골라 주세요.","Ya existe un proyecto con este nombre en esa organización, así que la configuración se detuvo — no se reutilizó. Elige otro nombre u organización."));
+      proj=await sbFetch("/projects",{method:"POST",body:JSON.stringify({
+        name:S.repoName,organization_id:S.sbOrgId,region:S.sbRegion,plan:"free",db_pass:S.dbPassword
+      })});
+      S.projectRef=proj.id||proj.ref;
+      if(S.projectRef){ S.databaseId=S.projectRef; saveAgentHomeStatus(); }
+    }
     if(!S.projectRef) throw new Error("Supabase created something but returned no project reference — check your Supabase dashboard before retrying.");
     S.projectUrl="https://"+S.projectRef+".supabase.co";
     setCheck("sbCheck","sb-create","done",S.projectRef);
@@ -2199,7 +2253,6 @@ async function sbCreate(){
       var keys=await sbFetch("/projects/"+S.projectRef+"/api-keys");
       (keys||[]).forEach(function(k){
         if(k.name==="anon")S.anonKey=k.api_key;
-        /* The service_role key is never read into this page (it bypasses row-level security); it stays in the owner's dashboard until pasted into their LOCAL .env.service-role. */
       });
     }catch(e){ /* keys can also be copied from the dashboard; not fatal */ }
 
@@ -2219,15 +2272,24 @@ async function sbCreate(){
   }
 }
 
-/* ============ Wiring + done screen ============ */
 function updateWireBtn(){
   $("wireBtn").disabled=!(S.repoDone&&(S.dbDone||S.dbSkipped));
   if(S.repoDone&&!S.dbDone&&!S.dbSkipped){
-    /* repo only: allow wiring too — config will carry an empty db section */
     $("wireBtn").disabled=false;
   }
 }
+function ghIdErr(rec,login){return tt("You're signed in to GitHub as @"+login+", but this setup was started as @"+rec+". Reconnect GitHub with the right account before anything is written.","GitHub에 @"+login+"(으)로 로그인돼 있지만, 이 설정은 @"+rec+"(으)로 시작했어요. 쓰기 전에 맞는 계정으로 GitHub를 다시 연결해 주세요.","Iniciaste sesión en GitHub como @"+login+", pero esta configuración empezó como @"+rec+". Vuelve a conectar GitHub con la cuenta correcta antes de escribir nada.");}
+async function verifyGhIdentity(){
+  if(!S.ghToken)return true;
+  var rec=""; try{var ss=JSON.parse(sessionStorage.getItem("ah_state")||"null"); rec=(ss&&ss.ghLogin)||"";}catch(e){}
+  if(!rec){var rr=null; try{rr=loadAgentHomeStatus();}catch(e){} if(rr)rec=rr.ghLogin||"";}
+  if(!rec||S._ghCheckedFor===S.ghToken+":"+rec)return true;
+  var u=await ghFetch("/user");
+  if(u.login!==rec)throw new Error(ghIdErr(rec,u.login));
+  S._ghCheckedFor=S.ghToken+":"+rec; return true;
+}
 async function putFile(path,content,msg){
+  await verifyGhIdentity();
   var sha=null;
   try{ var ex=await ghFetch("/repos/"+S.repoFull+"/contents/"+path); sha=ex.sha; }catch(e){}
   var payload={message:msg,content:b64encode(content)};
@@ -2267,7 +2329,6 @@ async function wire(){
     await putFile("agent.config.json",tplConfig(v),"Wire agent home config (ref + URL only, no keys)");
     setCheck("wireCheck","wire-config","done","committed");
     setCheck("wireCheck","wire-connect","doing","committing…");
-    /* Only these three non-secret files are committed. Keys never are: .env / .env.service-role are local-only, saved from the done screen. */
     await putFile("CONNECT.md",tplConnect(v),"Personalise CONNECT.md for "+(S.name||"owner"));
     await putFile(".env.example",tplEnvExample(v),".env.example with project URL");
     setCheck("wireCheck","wire-connect","done","committed");
@@ -2364,7 +2425,6 @@ function showDone(){
   showScreen("step4");
 }
 
-/* ============ manual / download path ============ */
 function manualVars(){
   readBasics();
   return {name:S.name,repoName:S.repoName,repoUrl:$("mRepo").value.trim(),projectRef:"",projectUrl:$("mDb").value.trim(),verificationPhrase:verificationPhrase()};
@@ -2385,18 +2445,17 @@ function downloadAll(){
   });
 }
 
-/* ============ OAuth — the primary, one-click connect path ============ */
 function pageUrl(){ return CONFIG.oauthRedirectUri || ""; }
 function oauthConfigured(provider){
-  if(provider==="github")return !!(CONFIG.githubOAuthClientId&&CONFIG.oauthExchangeUrl);
-  return !!(CONFIG.supabaseOAuthClientId&&CONFIG.oauthExchangeUrl);
+  if(provider==="github")return !!(CONFIG.githubClientId&&CONFIG.oauthExchangeUrl);
+  return !!(CONFIG.supabaseClientId&&CONFIG.oauthExchangeUrl);
 }
 function startOAuth(provider){
   if(!pageUrl()){
     showErr(provider==="supabase"?"sbErr":"ghErr","This copy is missing its return address (CONFIG.oauthRedirectUri) — the person who published it needs to set that before one-click sign-in can work. The code option under “Advanced / having trouble?” works meanwhile.");
     return;
   }
-  var clientId=provider==="github"?CONFIG.githubOAuthClientId:CONFIG.supabaseOAuthClientId;
+  var clientId=provider==="github"?CONFIG.githubClientId:CONFIG.supabaseClientId;
   var arr=new Uint32Array(8); crypto.getRandomValues(arr); var state="";
   for(var i=0;i<arr.length;i++)state+=arr[i].toString(16);
   try{sessionStorage.setItem("ah_oauth",JSON.stringify({state:state,provider:provider}));}catch(e){}
@@ -2412,7 +2471,7 @@ function startOAuth(provider){
 }
 async function exchangeCode(provider,code){
   var res=await fetch(CONFIG.oauthExchangeUrl,{method:"POST",headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({provider:provider,code:code})});
+    body:JSON.stringify({provider:provider,code:code,redirect_uri:pageUrl()})});
   var body=null; try{body=await res.json();}catch(e){}
   if(!res.ok||!body||!body.access_token)
     throw new Error("The sign-in helper couldn't finish connecting"+(body&&body.error?": "+body.error:"")+". Try again, or use the code option under “Advanced / having trouble?”");
@@ -2420,11 +2479,7 @@ async function exchangeCode(provider,code){
 }
 async function sbAfterConnect(){
   var orgs=await sbFetch("/organizations");
-  if(orgs&&orgs.length){
-    var sel=$("sbOrg"); sel.innerHTML="";
-    orgs.forEach(function(o){var op=document.createElement("option");op.value=o.id;op.textContent=o.name;sel.appendChild(op);});
-    S.sbOrgId=sel.value;
-  }
+  if(orgs&&orgs.length)sbFillOrgs(orgs);
   setCheck("sbCheck","sb-verify","done","connected");
 }
 async function handleOAuthReturn(){
@@ -2443,7 +2498,7 @@ async function handleOAuthReturn(){
     var token=await exchangeCode(saved.provider,code);
     if(saved.provider==="github"){
       S.ghToken=token;
-      var u=await ghFetch("/user"); S.ghUser=u.login;
+      var u=await ghFetch("/user"); S.ghUser=u.login; adoptGhName(u);
       setCheck("ghCheck","gh-verify","done","@"+u.login);
       showOk("ghConnected","✓ You're connected as <strong>@"+esc(u.login)+"</strong>. Your folder is being created now.");
       showScreen("step1"); setTimeout(function(){runGithubFlow();},400);
@@ -2457,35 +2512,31 @@ async function handleOAuthReturn(){
     showErr(saved.provider==="supabase"?"sbErr":"ghErr",e.message);
   }
 }
-function initConnect(){
+function syncOAuthUI(){
   var ghPill=$("ghPill"), sbPill=$("sbPill");
-  if(ghPill){ if(oauthConfigured("github")){ghPill.textContent="One click";} else {ghPill.textContent="Demo mode — code fallback"; ghPill.classList.add("paste");} }
-  if(sbPill){ if(oauthConfigured("supabase")){sbPill.textContent="One click";} else {sbPill.textContent="Demo mode — code fallback"; sbPill.classList.add("paste");} }
-  var gdl=$("ghDemoLine"); if(gdl){ if(oauthConfigured("github"))gdl.classList.add("hidden"); else gdl.classList.remove("hidden"); }
-  var sdl=$("sbDemoLine"); if(sdl){ if(oauthConfigured("supabase"))sdl.classList.add("hidden"); else sdl.classList.remove("hidden"); }
+  if(ghPill){ if(oauthConfigured("github")){ghPill.textContent="One click";ghPill.classList.remove("paste");} else {ghPill.textContent="Demo mode — code fallback"; ghPill.classList.add("paste");} }
+  if(sbPill){ if(oauthConfigured("supabase")){sbPill.textContent="One click";sbPill.classList.remove("paste");} else {sbPill.textContent="Demo mode — code fallback"; sbPill.classList.add("paste");} }
+  var gdl=$("ghDemoLine"); if(gdl)gdl.classList.toggle("hidden",oauthConfigured("github"));
+  var sdl=$("sbDemoLine"); if(sdl)sdl.classList.toggle("hidden",oauthConfigured("supabase"));
   var gb=$("ghConnectBtn"), gn=$("ghConnectNote");
-  if(oauthConfigured("github")){
-    gb.textContent="Connect GitHub";
-    gn.textContent="This opens GitHub's own sign-in screen. You approve there — this page never sees your password.";
-    gb.addEventListener("click",function(){ startOAuth("github"); });
-  }else{
-    gb.textContent="Demo mode: OAuth isn't switched on for this copy of the page yet";
-    gn.textContent="One-click sign-in is coming soon. For now, the code option below does exactly the same job.";
-    gb.addEventListener("click",function(){ $("ghAdvanced").open=true; $("ghAdvanced").scrollIntoView({behavior:"smooth",block:"center"}); });
-  }
+  if(gb){ if(oauthConfigured("github")){gb.textContent="Connect GitHub"; gn.textContent="This opens GitHub's own sign-in screen. You approve there — this page never sees your password.";} else {gb.textContent="Demo mode: OAuth isn't switched on for this copy of the page yet"; gn.textContent="One-click sign-in is coming soon. For now, the code option below does exactly the same job.";} }
   var sb=$("sbConnectBtn"), sn=$("sbConnectNote");
-  if(oauthConfigured("supabase")){
-    sb.textContent="Connect Supabase";
-    sn.textContent="This opens Supabase's own sign-in screen. You approve there — this page never sees your password.";
-    sb.addEventListener("click",function(){ startOAuth("supabase"); });
-  }else{
-    sb.textContent="Demo mode: OAuth isn't switched on for this copy of the page yet";
-    sn.textContent="One-click sign-in is coming soon. For now, the code option below does exactly the same job.";
-    sb.addEventListener("click",function(){ $("sbAdvanced").open=true; $("sbAdvanced").scrollIntoView({behavior:"smooth",block:"center"}); });
+  if(sb){ if(oauthConfigured("supabase")){sb.textContent="Connect Supabase"; sn.textContent="This opens Supabase's own sign-in screen. You approve there — this page never sees your password.";} else {sb.textContent="Demo mode: OAuth isn't switched on for this copy of the page yet"; sn.textContent="One-click sign-in is coming soon. For now, the code option below does exactly the same job.";} }
+}
+function initConnect(){
+  syncOAuthUI();
+  $("ghConnectBtn").addEventListener("click",function(){ if(oauthConfigured("github"))startOAuth("github"); else { $("ghAdvanced").open=true; $("ghAdvanced").scrollIntoView({behavior:"smooth",block:"center"}); } });
+  $("sbConnectBtn").addEventListener("click",function(){ if(oauthConfigured("supabase"))startOAuth("supabase"); else { $("sbAdvanced").open=true; $("sbAdvanced").scrollIntoView({behavior:"smooth",block:"center"}); } });
+  if(CONFIG.oauthExchangeUrl){
+    fetch(workerBase()+"/config").then(function(r){return r.json();}).then(function(c){
+      if(!c)return;
+      CONFIG.githubClientId=c.githubClientId||c.github_client_id||CONFIG.githubClientId;
+      CONFIG.supabaseClientId=c.supabaseClientId||c.supabase_client_id||CONFIG.supabaseClientId;
+      syncOAuthUI();
+    }).catch(function(){});
   }
 }
 
-/* ============ code fallback: checked the moment it's pasted ============ */
 function debounce(fn,ms){var t;return function(){clearTimeout(t);var self=this,args=arguments;t=setTimeout(function(){fn.apply(self,args);},ms);};}
 async function verifyGhToken(){
   var v=$("ghToken").value.trim();
@@ -2493,7 +2544,7 @@ async function verifyGhToken(){
   if(v.length<10)return;
   S.ghToken=v;
   try{
-    var u=await ghFetch("/user"); S.ghUser=u.login;
+    var u=await ghFetch("/user"); S.ghUser=u.login; adoptGhName(u);
     setCheck("ghCheck","gh-verify","done","@"+u.login);
     showOk("ghTokenStatus","✓ This works — you're connected as <strong>@"+esc(u.login)+"</strong>. Now click “Create my private folder” above.");
   }catch(e){
@@ -2515,7 +2566,6 @@ async function verifySbToken(){
   }
 }
 
-/* ============ identity: Google + name/email prefill ============ */
 function suggestRepo(){
   if(S.repoTouched)return;
   var first=(S.name||"").trim().split(/\s+/)[0].toLowerCase().replace(/[^a-z0-9-]/g,"");
@@ -2523,39 +2573,10 @@ function suggestRepo(){
 }
 function updateIdentitySummary(){
   readBasics();
-  if(!S.name&&!S.email){$("identitySummary").classList.remove("show");return;}
-  showOk("identitySummary","Setting up for <strong>"+esc(S.name||"")+"</strong>"+(S.email?" ("+esc(S.email)+")":"")+" — use this same name and email when you sign up for GitHub and Supabase, so all the accounts line up as yours.");
+  if(!S.name){$("identitySummary").classList.remove("show");return;}
+  showOk("identitySummary","Setting up for <strong>"+esc(S.name)+"</strong> — use this same name when you sign up for GitHub and Supabase, so all the accounts line up as yours.");
 }
-function applyIdentity(name,email){
-  if(name)$("fName").value=name;
-  if(email)$("fEmail").value=email;
-  readBasics(); suggestRepo(); readBasics(); updateIdentitySummary(); refreshManual();
-}
-function decodeJwt(t){
-  var p=t.split(".")[1].replace(/-/g,"+").replace(/_/g,"/");
-  return JSON.parse(decodeURIComponent(escape(atob(p))));
-}
-function initGoogle(){
-  if(!CONFIG.googleClientId){
-    $("googleWrap").classList.add("hidden");
-    return;
-  }
-  $("googleNote").textContent="Opens Google's own sign-in. This page reads only your name and email from it, to fill in the boxes below — they are never sent anywhere else.";
-  var s=document.createElement("script");
-  s.src="https://accounts.google.com/gsi/client"; s.async=true; s.defer=true;
-  s.onload=function(){
-    try{
-      google.accounts.id.initialize({client_id:CONFIG.googleClientId,callback:function(resp){
-        try{var p=decodeJwt(resp.credential); applyIdentity(p.name||"",p.email||"");}catch(e){}
-      }});
-      google.accounts.id.renderButton($("googleBtnReal"),{theme:"outline",size:"large",text:"continue_with"});
-      $("googleBtn").classList.add("hidden");
-    }catch(e){}
-  };
-  document.head.appendChild(s);
-}
-
-/* ============ import & reconcile ============ */
+function adoptGhName(u){if(u&&u.name&&!S.name){S.name=String(u.name).trim();var f=$("fName");if(f)f.value=S.name;}}
 function candidateFromLine(raw,file){
   var t=raw.replace(/^[-*#>\s]+/,"").trim();
   if(t.length<8||t.length>400)return null;
@@ -2696,7 +2717,6 @@ async function writeImportToRepo(){
   }catch(e){ showErr("importErr",e.message); }
 }
 
-/* ============ optional registration (only if the register is configured) ============ */
 function maybeRegister(){
   var note=$("regNote"); if(!note)return;
   if(!CONFIG.registryUrl){
@@ -2707,9 +2727,15 @@ function maybeRegister(){
   if(S.registered)return;
   var tick=$("regTick");
   if(tick&&!tick.checked){ note.textContent="Unticked — nothing will be sent."; return; }
+  var rec2=null; try{rec2=loadAgentHomeStatus();}catch(e){}
   var payload={name:S.name,github_login:S.ghUser,repo_url:S.repoUrl,has_db:!!S.dbDone,
-    verified_count:Object.keys(S.verified).length,ts:new Date().toISOString()};
-  fetch(CONFIG.registryUrl,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
+    verified_count:Object.keys(S.verified).length,ts:new Date().toISOString(),
+    ref:(function(){try{return sessionStorage.getItem("ah_ref")||"";}catch(e){return "";}})(),
+    steps:(rec2&&rec2.steps)||{repoCreated:!!S.repoDone,databaseCreated:!!S.dbDone,databaseSkipped:!!S.dbSkipped,wired:!!S.wired,doneShown:statusDoneShown},
+    ticks:getWiredTicks()};
+  var regHeaders={"Content-Type":"application/json"};
+  if(S.ghToken)regHeaders["Authorization"]="Bearer "+S.ghToken;
+  fetch(CONFIG.registryUrl,{method:"POST",headers:regHeaders,body:JSON.stringify(payload)})
     .then(function(r){
       if(r.ok){ S.registered=true; note.textContent="Sent — the person who shared this with you can now see you're set up (your name and repo link only)."; }
       else note.textContent="The note couldn't be sent (the register replied "+r.status+"). Your setup itself is complete and yours either way.";
@@ -2717,7 +2743,6 @@ function maybeRegister(){
     .catch(function(){ note.textContent="The note couldn't be sent (couldn't reach the register). Your setup itself is complete and yours either way."; });
 }
 
-/* ============ admin view (the owner's list, protected by the server) ============ */
 async function loadAdmin(){
   var note=$("adminNote"), wrap=$("adminTableWrap");
   if(!CONFIG.registryUrl){
@@ -2732,15 +2757,15 @@ async function loadAdmin(){
     var body=null; try{body=await res.json();}catch(e){}
     if(res.status===403||res.status===401){ note.textContent="That admin link isn't right."; wrap.innerHTML=""; return; }
     if(!res.ok)throw new Error("the register replied "+res.status);
-    var rows=Array.isArray(body)?body:(body.registrations||body.items||body.rows||[]);
-    if(!rows.length){ note.textContent="Nobody has registered a setup yet — setups appear here when someone finishes and leaves the tick-box on."; wrap.innerHTML=""; return; }
+    var rows=Array.isArray(body)?body:(body.setups||body.registrations||body.items||body.rows||[]); var reports=(body&&body.reports)||[];
+    if(!rows.length&&!reports.length){ note.textContent="Nobody has registered a setup yet — setups appear here when someone finishes and leaves the tick-box on."; wrap.innerHTML=""; return; }
     note.textContent="";
-    var html="<table style=\"width:100%;border-collapse:collapse;font-size:18px\"><tr>"+
+    var html=rows.length?"<table style=\"width:100%;border-collapse:collapse;font-size:18px\"><tr>"+
       "<th style=\"text-align:left;padding:8px;border-bottom:1px solid var(--line)\">Name</th>"+
       "<th style=\"text-align:left;padding:8px;border-bottom:1px solid var(--line)\">Repo</th>"+
       "<th style=\"text-align:left;padding:8px;border-bottom:1px solid var(--line)\">Database</th>"+
       "<th style=\"text-align:left;padding:8px;border-bottom:1px solid var(--line)\">Best practices checked</th>"+
-      "<th style=\"text-align:left;padding:8px;border-bottom:1px solid var(--line)\">When</th></tr>";
+      "<th style=\"text-align:left;padding:8px;border-bottom:1px solid var(--line)\">When</th></tr>":"";
     rows.forEach(function(r){
       html+="<tr><td style=\"padding:8px;border-bottom:1px solid var(--line)\">"+esc(r.name||"")+"</td>"+
         "<td style=\"padding:8px;border-bottom:1px solid var(--line)\">"+(r.repo_url?"<a href=\""+esc(r.repo_url)+"\" target=\"_blank\" rel=\"noopener\">"+esc(r.repo_url.replace("https://github.com/",""))+"</a>":"")+"</td>"+
@@ -2748,7 +2773,12 @@ async function loadAdmin(){
         "<td style=\"padding:8px;border-bottom:1px solid var(--line)\">"+(r.verified_count!=null?r.verified_count:0)+" of 10</td>"+
         "<td style=\"padding:8px;border-bottom:1px solid var(--line)\">"+esc(r.ts?new Date(r.ts).toLocaleString():"")+"</td></tr>";
     });
-    wrap.innerHTML=html+"</table>";
+    wrap.innerHTML=html+(rows.length?"</table>":"");
+    if(reports.length){
+      var rh="<h3 style=\"margin-top:26px\">Problem reports</h3><ul class=\"blist\">";
+      reports.forEach(function(r){ rh+="<li>"+esc(r.step||"")+" — "+esc(r.error||"")+" <span class=\"small\">"+esc((r.ts||r.date)?new Date(r.ts||r.date).toLocaleString():"")+"</span></li>"; });
+      wrap.innerHTML+=rh+"</ul>";
+    }
   }catch(e){ note.textContent="Couldn't load the list: "+e.message+"."; }
 }
 function showAdmin(){
@@ -2772,7 +2802,6 @@ function updateNotionMirror(){
   "3. Mirror only: never edit my home based on the Notion page, and if the two disagree, my home wins.\n"+
   "4. Tell me in one line what changed.";
 }
-/* ============ wiring of controls ============ */
 $("startBtn").addEventListener("click",function(){ showScreen("step0"); $("fName").focus({preventScroll:true}); });
 $("ghBtn").addEventListener("click",ghCreate);
 $("sbOrgBtn").addEventListener("click",sbLoadOrgs);
@@ -2791,7 +2820,6 @@ $("dlBtn").addEventListener("click",downloadAll);
   $(id).addEventListener("input",function(){ if(id==="fName"||id==="fRepo")readBasics(); refreshManual(); });
 });
 $("fName").addEventListener("input",function(){ readBasics(); suggestRepo(); readBasics(); updateIdentitySummary(); });
-$("fEmail").addEventListener("input",function(){ updateIdentitySummary(); refreshManual(); });
 $("fRepo").addEventListener("input",function(){ S.repoTouched=true; });
 $("ghHaveBtn").addEventListener("click",function(){ showScreen("step1"); });
 $("ghNewBtn").addEventListener("click",function(){ showScreen("step1signup"); });
@@ -2811,39 +2839,28 @@ var dcb=$("decisionsCopyBtn"); if(dcb)dcb.addEventListener("click",function(){ c
 var ncb=$("notionMirrorCopyBtn"); if(ncb)ncb.addEventListener("click",function(){ updateNotionMirror(); copyText($("notionMirrorPre").textContent,this); });
 $("regTick").addEventListener("change",function(){ if(this.checked)maybeRegister(); else {var n=$("regNote"); if(n&&CONFIG.registryUrl)n.textContent="Unticked — nothing will be sent.";} });
 initConnect();
-initGoogle();
 handleOAuthReturn();
 checkAdminHash();
 refreshManual();
 
-/* Language (EN / KO / ES) + session restore. Priority: ?lang= in the link, then the saved toggle, then the browser language. */
 var LANG="en";
 var ES_DICT={
 "I have GitHub — connect it":"Ya tengo GitHub — conéctalo",
-"You'll come back to this tab — your place is saved.":"Volverás a esta pestaña — tu lugar está guardado.",
 "Preview — nothing is created":"Vista previa — no se crea nada",
 "Exit preview":"Salir de la vista previa",
-"Skills are included — little instruction cards your AIs learn from. New ones get written automatically when a task repeats.":"También hay skills — pequeñas tarjetas de instrucciones de las que aprenden tus IA. Las nuevas se escriben automáticamente cuando una tarea se repite.",
-"Every AI you use. One memory.":"Todos los IA que usas. Una sola memoria.",
-"One private home, so every AI helper knows you.":"Un solo espacio privado, para que cada IA te conozca.",
 "Tired of repeating yourself?":"¿Cansado de repetirte?",
 "Your AI forgets your instructions.":"Tu IA olvida tus instrucciones.",
-"Your AIs don't share a memory.":"Tus IA no comparten una memoria.",
 "Set up my agent home":"Crear mi espacio de IA",
 "One click, once.\nNot an app — a one-time tool.\nNeed extras later? Just ask your AI.\nNo AI expertise needed.":"Un clic, una sola vez.\nNo es una app — una herramienta de una sola vez.\n¿Algo más después? Pregúntale a tu IA.\nNo necesitas saber de IA.",
-"PowerUpMyAI · powerupmyai.com · Everything created is yours":"PowerUpMyAI · powerupmyai.com · Todo lo creado es tuyo",
 "Why it works: each AI keeps its own notes\n— that's why they forget, and disagree.\nOne shared place to read and write fixes it.":"Por qué funciona: cada IA guarda sus propias notas\n— por eso olvidan y no coinciden.\nUn solo lugar para leer y escribir lo arregla.",
 "Everything created is yours":"Todo lo creado es tuyo",
 "What's your name?":"¿Cómo te llamas?",
 "This fills your home with your details.":"Esto llena tu espacio con tus datos.",
 "Continue with Google":"Continuar con Google",
 "Continue":"Continuar",
-"Please type your name first.":"Escribe tu nombre primero, por favor.",
 "Your name":"Tu nombre",
-"Your email":"Tu correo",
 "Do you have GitHub?":"¿Tienes GitHub?",
 "If not, we'll show you how.":"Si no, te mostramos cómo.",
-"I have GitHub":"Sí, tengo",
 "I don't have GitHub":"No tengo",
 "Nothing is public, ever.":"Nada es público, nunca.",
 "Create a GitHub account":"Crear una cuenta de GitHub",
@@ -2906,8 +2923,6 @@ var ES_DICT={
 "Just want the template?":"¿Solo quieres los archivos?",
 "Save this database password now":"Guarda esta contraseña ahora",
 "Choices we made for you":"Decisiones que tomamos por ti",
-"Someone shared this page with you so your AI helpers can actually remember you. It sets up two things in your own name, both private: a folder for your files, and a safe store for what your helpers learn about you — instead of every app forgetting you between chats.":"Alguien te compartió esta página para que tus IA te recuerden de verdad. Crea dos cosas a tu nombre, ambas privadas: una carpeta para tus archivos y un lugar seguro para lo que aprenden de ti — en vez de que cada app te olvide entre chats.",
-"<strong>Use this page once.</strong> After that, your AIs just work better — there is nothing here to come back to, no account with us, no app to download.":"<strong>Usa esta página una sola vez.</strong> Después, tus IA simplemente funcionan mejor — no hay nada a lo que volver, ni cuenta con nosotros, ni app que descargar.",
 "We'll open the right page — just tap Allow/Create, then come back.":"Abriremos la página correcta — toca Permitir/Crear y vuelve aquí.",
 "Read back from your home just now.":"Leído de tu espacio hace un momento.",
 "Done":"Listo",
@@ -2928,7 +2943,8 @@ function tt(en,ko,es){ if(LANG==="es")return es||((typeof ES_DICT!=="undefined"&
 function savePlace(screenId){
   try{var cur={}; try{cur=JSON.parse(sessionStorage.getItem("ah_state")||"{}");}catch(e){}
     if(screenId)cur.screen=screenId;
-    var fn=$("fName"), fe=$("fEmail"); if(fn&&fn.value)cur.name=fn.value; if(fe&&fe.value)cur.email=fe.value;
+    var fn=$("fName"); if(fn&&fn.value)cur.name=fn.value;
+    if(S.ghUser)cur.ghLogin=S.ghUser; if(S.verificationPhrase)cur.verificationPhrase=S.verificationPhrase;
     cur.lang=LANG; sessionStorage.setItem("ah_state",JSON.stringify(cur)); sessionStorage.setItem("ah_lang",LANG);
   }catch(e){}
 }
@@ -2956,9 +2972,9 @@ function applyLang(){
   setTextId("step0Lede",tt("This fills your home with your details.","내 정보로 공간을 채워요."));
   setTextId("googleBtn",tt("Continue with Google","Google로 계속하기"));
   setTextId("nameContinueBtn",tt("Continue","계속하기"));
-  setTextId("nameErr",tt("Please type your name first.","이름을 먼저 써 주세요."));
   var ln=document.querySelector("label[for='fName']"); if(ln)ln.textContent=tt("Your name","이름");
-  var le=document.querySelector("label[for='fEmail']"); if(le)le.textContent=tt("Your email","이메일");
+  setTextId("notMyNameBtn",tt("That's not my name","제 이름이 아니에요","Ese no es mi nombre"));
+  setTextId("nameSkipBtn",tt("Skip for now","지금은 건너뛰기","Saltar por ahora"));
   // Choice + signup
   setTextId("choiceH1",tt("Do you have GitHub?","GitHub가 있어요?"));
   setTextId("choiceLede",tt("If not, we'll show you how.","없으면 알려드릴게요."));
@@ -2973,6 +2989,7 @@ function applyLang(){
   setTextId("previewNextBtn",tt("Next →","다음 →","Siguiente →"));
   setTextId("ghNewBtn",tt("I don't have GitHub","없어요"));
   setTextId("choiceWhy",tt("Nothing is public, ever.","절대 공개 안 돼요."));
+  setTextId("choiceExplainer",tt("GitHub is a free, private place online that keeps your files — it's where your home lives, so all your AIs can reach it.","GitHub는 파일을 보관해 주는 무료의 비공개 온라인 공간이에요 — 내 공간이 사는 곳이라, 모든 AI가 닿을 수 있어요.","GitHub es un lugar en línea gratuito y privado que guarda tus archivos — es donde vive tu espacio, para que todas tus IA puedan llegar a él."));
   setTextId("signupH1",tt("Create a GitHub account","GitHub 계정 만들기"));
   setTextId("signupLede",tt("It's free and takes two minutes.","무료예요. 2분이면 돼요."));
   var sLink=document.querySelector("#step1signup a.btn"); if(sLink)sLink.textContent=tt("Open GitHub signup","GitHub 가입 열기");
@@ -3067,12 +3084,9 @@ function applyLang(){
   renderHow();
   renderFirstWeek();
   renderFullSet();
-  renderFullSetLangOnly();
   try{updateAllWiredLine();}catch(e){}
   try{renderStatusFromRecord();}catch(e){}
 }
-function renderFullSetLangOnly(){ /* fs buttons already re-texted above; full re-render keeps URLs */ }
-/* Layered details: "How this works" (done + extras mirror) */
 function renderFirstWeek(){
   var el=$("firstWeek"); if(!el)return;
   function step(n,g,html){return '<div class="fw-step"><span class="fw-num" aria-hidden="true">'+n+'</span><span class="btile sm" style="background:var(--accent-soft);font-size:20px" aria-hidden="true">'+g+'</span><span>'+html+'</span></div>';}
@@ -3137,7 +3151,6 @@ var DYN_ES={
 };
 function dyn(t){ if(LANG==="es")return DYN_ES[t]||t; return (isKo()&&DYN_KO[t])?DYN_KO[t]:t; }
 
-/* ============ wizard: one screen at a time, four obvious states ============ */
 var WIZ_SCREENS=["screen-welcome","step0","step1choice","step1signup","step1","step2","screen-working","screen-success","screen-failed","stepFullSet","step4","screen-extras","adminView","screen-status"];
 var wizBack="screen-welcome", wizRetry=null, wizSuccessNext=null, wizPoll=null;
 function showScreen(id){
@@ -3272,24 +3285,24 @@ async function runWireFlow(){
   await wire();
   stopWorkPoll();
   if(S.wired){
-    /* wire() already called showDone(), which shows the done screen */
   }else{
     showFailedState($("wireErr").textContent||"The wiring could not be read back from GitHub.","wire",runWireFlow,"step2");
   }
 }
 $("nameContinueBtn").addEventListener("click",function(){
   readBasics();
-  if(!S.name){ $("nameErr").classList.add("show"); $("fName").focus(); return; }
-  $("nameErr").classList.remove("show");
+  if(!S.name)S.nameSkipped=true;
   showScreen("step1choice");
 });
+if($("nameSkipBtn"))$("nameSkipBtn").addEventListener("click",function(){ S.name=""; S.nameSkipped=true; var f=$("fName"); if(f)f.value=""; showScreen("step1choice"); });
+if($("notMyNameBtn"))$("notMyNameBtn").addEventListener("click",function(){ var w=$("nameFieldWrap"); if(w)w.classList.remove("hidden"); this.classList.add("hidden"); var f=$("fName"); if(f){f.value=""; f.focus();} });
 $("ghPrimaryBtn").addEventListener("click",function(){ runGithubFlow(); });
 $("sbPrimaryBtn").addEventListener("click",function(){ runSupabaseFlow(); });
 $("sbSkip").addEventListener("click",function(){ setTimeout(function(){ runWireFlow(); },50); });
 $("successContinueBtn").addEventListener("click",function(){ if(wizSuccessNext)wizSuccessNext(); });
 $("failedRetryBtn").addEventListener("click",function(){ if(wizRetry)wizRetry(); });
 $("failedBackBtn").addEventListener("click",function(){ showScreen(wizBack); });
-$("failedReportBtn").addEventListener("click",function(){ copyText(buildProblemReport(lastFailure.step||stepForContext(""),$("failedTech").textContent||lastFailure.error),this); });
+$("failedReportBtn").addEventListener("click",function(){ sendReport(lastFailure.step||stepForContext(""),$("failedTech").textContent||lastFailure.error,this); });
 $("showPastesBtn").addEventListener("click",function(){
   var w=$("pastesWrap"); var open=!w.open; w.open=open;
   this.textContent=open?tt("Hide my copy-paste messages","붙여넣기 글 숨기기"):tt("Show my copy-paste messages","붙여넣기 글 보기");
@@ -3337,7 +3350,6 @@ updateNotionMirror();
 $("doneExtrasBtn").addEventListener("click",function(){ showScreen("screen-extras"); });
 $("welcomeExtrasBtn").addEventListener("click",function(){ showScreen("screen-extras"); });
 $("backToDoneBtn").addEventListener("click",function(){ showScreen(S.repoDone||S.wired?"step4":"screen-welcome"); });
-/* Language toggle + never-lose-your-place restore */
 function setLang(l){ LANG=l; try{sessionStorage.setItem("ah_lang",l);}catch(e){} savePlace(); applyLang(); closeLangSheet(); }
 function openLangSheet(){ var s=$("langSheet"),b=$("langSheetBack"); if(s)s.classList.add("open"); if(b)b.classList.add("open"); }
 function closeLangSheet(){ var s=$("langSheet"),b=$("langSheetBack"); if(s)s.classList.remove("open"); if(b)b.classList.remove("open"); }
@@ -3346,18 +3358,16 @@ if($("langFabBtn"))$("langFabBtn").addEventListener("click",openLangSheet);
 if($("welcomeLangPill"))$("welcomeLangPill").addEventListener("click",openLangSheet);
 if($("langSheetClose"))$("langSheetClose").addEventListener("click",closeLangSheet);
 if($("langSheetBack"))$("langSheetBack").addEventListener("click",closeLangSheet);
-/* Vignette: pause when off-screen or the tab is hidden */
 (function(){
   var v=$("vignette"); if(!v)return;
   function sync(){ var hidden=document.hidden; v.classList.toggle("paused",hidden); if(!hidden&&v._ioPaused)v.classList.add("paused"); }
   document.addEventListener("visibilitychange",sync);
   if("IntersectionObserver" in window){ new IntersectionObserver(function(es){ es.forEach(function(e){ v._ioPaused=!e.isIntersecting; v.classList.toggle("paused",!e.isIntersecting||document.hidden); }); },{threshold:.15}).observe(v); }
 })();
-["fName","fEmail"].forEach(function(id){var el=$(id); if(el)el.addEventListener("input",function(){savePlace();});});
+["fName"].forEach(function(id){var el=$(id); if(el)el.addEventListener("input",function(){savePlace();});});
 document.addEventListener("click",function(e){var a=e.target&&e.target.closest?e.target.closest("a[target='_blank']"):null; if(a)savePlace();},true);
 applyLang();
 
-/* ============ OPERATOR PREVIEW MODE (#preview only; never linked in normal UI) ============ */
 var PREVIEW_ORDER=["screen-welcome","step0","step1choice","step1signup","step1","step2","screen-working","screen-success","screen-failed","stepFullSet","step4","screen-extras"];
 function enterPreview(){
   IS_PREVIEW=true;
@@ -3365,9 +3375,8 @@ function enterPreview(){
   wiredTickTimes={};
   document.body.classList.add("preview");
   var bar=$("previewBar"); if(bar)bar.classList.remove("hidden");
-  S.name="Alex Rivera"; S.email="alex@example.com"; S.repoName="agent-home"; S.repoTouched=true;
+  S.name="Alex Rivera"; S.repoName="agent-home"; S.repoTouched=true;
   if($("fName"))$("fName").value="Alex Rivera";
-  if($("fEmail"))$("fEmail").value="alex@example.com";
   if($("fRepo"))$("fRepo").value="agent-home";
   S.ghUser="alexrivera"; S.repoFull="alexrivera/agent-home"; S.repoUrl="https://github.com/alexrivera/agent-home";
   S.projectRef="sampleproject"; S.projectUrl="https://sampleproject.supabase.co";
@@ -3399,6 +3408,21 @@ if($("previewNextBtn"))$("previewNextBtn").addEventListener("click",function(){p
 [["dot1","step0"],["dot2","step1choice"],["dot3","step2"]].forEach(function(pair){
   var d=$(pair[0]); if(d){ d.setAttribute("role","button"); d.addEventListener("click",function(){ if(IS_PREVIEW)showScreen(pair[1]); }); }
 });
+(function captureInvite(){
+  try{
+    var qs=new URLSearchParams(location.search);
+    var ref=qs.get("ref"); if(ref)sessionStorage.setItem("ah_ref",ref.slice(0,64));
+    var forName=(qs.get("for")||"").trim().slice(0,80);
+    if(forName){
+      var st={}; try{st=JSON.parse(sessionStorage.getItem("ah_state")||"{}");}catch(e){}
+      st.name=forName; sessionStorage.setItem("ah_state",JSON.stringify(st));
+      S.name=forName; var fn=$("fName"); if(fn)fn.value=forName;
+      var g=$("forGreet"); if(g){g.textContent=tt("Hi, ","안녕, ","Hola, ")+forName; g.classList.remove("hidden");}
+      var w=$("nameFieldWrap"); if(w)w.classList.add("hidden");
+      var nb=$("notMyNameBtn"); if(nb)nb.classList.remove("hidden");
+    }
+  }catch(e){}
+})();
 (function restorePlace(){
   var isOAuth=!!(location.search||"").match(/[?&]code=/), isAdmin=!!(location.hash||"").match(/^#admin-/);
   if((location.hash||"")==="#preview"){ enterPreview(); showScreen("screen-welcome"); return; }
@@ -3413,8 +3437,7 @@ if($("previewNextBtn"))$("previewNextBtn").addEventListener("click",function(){p
   var saved=null; try{saved=JSON.parse(sessionStorage.getItem("ah_state")||"null");}catch(e){}
   if(saved){
     if(saved.name&&$("fName")){$("fName").value=saved.name;}
-    if(saved.email&&$("fEmail")){$("fEmail").value=saved.email;}
-    if(saved.name||saved.email){try{readBasics();suggestRepo();readBasics();updateIdentitySummary();}catch(e){}}
+    if(saved.name){try{readBasics();suggestRepo();readBasics();updateIdentitySummary();}catch(e){}}
     if(saved.screen&&WIZ_SCREENS.indexOf(saved.screen)>-1&&saved.screen!=="screen-working"&&saved.screen!=="screen-success"&&saved.screen!=="screen-failed"&&saved.screen!=="screen-status"){showScreen(saved.screen); return;}
   }
   showScreen("screen-welcome");
