@@ -129,19 +129,43 @@ table{font-size:18px}
 .langsheet h2{font-size:24px;text-align:center;margin-bottom:6px}
 .langsheet .flagdial{margin-bottom:8px}
 .sheetclose{width:100%;min-height:56px;border:0;background:var(--surface2);border-radius:14px;font:inherit;font-size:20px;font-weight:700;cursor:pointer}
+/* --- Brand tiles: one uniform mark system everywhere (inline only, zero requests) --- */
+.btile{display:inline-flex;width:42px;height:42px;border-radius:12px;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:19px;line-height:1;flex:none;vertical-align:middle}
+.btile svg{width:25px;height:25px;fill:#fff;display:block}
+.btile.sm{width:34px;height:34px;border-radius:10px;font-size:15px}
+.btile.sm svg{width:20px;height:20px}
+.fs-name{display:flex;align-items:center;gap:12px}
+.block-head h3{display:flex;align-items:center;gap:10px}
+/* --- Textual design: bullets over prose inside folds, left-aligned, even rhythm --- */
+details{text-align:left}
+details p,details li{line-height:1.55}
+.blist{list-style:none;margin:10px 0;padding:0}
+.blist li{position:relative;padding:5px 0 5px 24px}
+.blist li::before{content:"•";position:absolute;left:4px;top:5px;color:var(--accent);font-weight:800}
+/* --- Welcome pain row: three captioned mini-vignettes (the problem, in pictures) --- */
+.painrow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0 4px}
+.paincard{background:var(--surface2);border-radius:18px;padding:18px 10px 14px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+.painicon{width:64px;height:64px;flex:none;border-radius:50%;background:#fff;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:32px;line-height:1}
+.paincap{font-size:18px;font-weight:700;line-height:1.3;margin:0}
+@media (max-width:520px){
+  .painrow{grid-template-columns:1fr}
+  .paincard{flex-direction:row;text-align:left;padding:14px 16px}
+  .painicon{width:56px;height:56px;font-size:28px}
+}
 /* --- Animated welcome vignette (pure CSS/SVG, ~6s loop) --- */
 .vignette .pill-in,.vignette .pill-out,.vignette .folder-g,.vignette .spark{transform-box:fill-box;transform-origin:center}
 .vignette .pill-out{opacity:0}
-.vignette.playing .pill-in{animation:vIn 6s ease-in-out infinite}
-.vignette.playing .pill-in.d1{animation-delay:.18s}.vignette.playing .pill-in.d2{animation-delay:.36s}
-.vignette.playing .folder-g{animation:vPulse 6s ease-in-out infinite}
-.vignette.playing .pill-out{animation:vOut 6s ease-in-out infinite}
-.vignette.playing .pill-out.d1{animation-delay:.18s}.vignette.playing .pill-out.d2{animation-delay:.36s}
-.vignette.playing .spark{animation:vSpark 6s ease-in-out infinite}
-@keyframes vIn{0%,12%{transform:translate(0,0);opacity:1}34%,100%{transform:translate(118px,0) scale(.82);opacity:0}}
-@keyframes vPulse{0%,34%{transform:scale(1)}46%{transform:scale(1.09)}58%,100%{transform:scale(1)}}
-@keyframes vOut{0%,48%{transform:translate(-118px,0) scale(.82);opacity:0}72%,92%{transform:translate(0,0) scale(1.06);opacity:1}100%{transform:translate(0,0) scale(1.06);opacity:0}}
-@keyframes vSpark{0%,52%{opacity:0;transform:scale(.6)}68%,88%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(1.15)}}
+.vignette .pill-in,.vignette .pill-out,.vignette .folder-g{filter:drop-shadow(0 3px 5px rgba(17,17,17,.14))}
+.vignette.playing .pill-in{animation:vIn 10.5s ease-in-out infinite}
+.vignette.playing .pill-in.d1{animation-delay:.3s}.vignette.playing .pill-in.d2{animation-delay:.6s}
+.vignette.playing .folder-g{animation:vPulse 10.5s cubic-bezier(.34,1.4,.64,1) infinite}
+.vignette.playing .pill-out{animation:vOut 10.5s ease-in-out infinite}
+.vignette.playing .pill-out.d1{animation-delay:.3s}.vignette.playing .pill-out.d2{animation-delay:.6s}
+.vignette.playing .spark{animation:vSpark 10.5s ease-in-out infinite}
+@keyframes vIn{0%{transform:translate(0,0);opacity:.12}4%{transform:translate(0,0);opacity:1}30%{transform:translate(0,0);opacity:1}45%,90%{transform:translate(118px,0) scale(.82);opacity:0}96%{transform:translate(0,0) scale(1);opacity:0}100%{transform:translate(0,0) scale(1);opacity:.12}}
+@keyframes vPulse{0%{transform:scale(1);opacity:.55}30%{transform:scale(1);opacity:1}46%{transform:scale(1)}54%{transform:scale(1.1)}60%{transform:scale(.985)}66%{transform:scale(1.03)}72%,90%{transform:scale(1);opacity:1}100%{transform:scale(1);opacity:.55}}
+@keyframes vOut{0%,54%{transform:translate(-118px,0) scale(.82);opacity:0}72%,88%{transform:translate(0,0) scale(1.05);opacity:1}95%,100%{transform:translate(0,0) scale(1.05);opacity:0}}
+@keyframes vSpark{0%,60%{opacity:0;transform:scale(.6)}72%,86%{opacity:1;transform:scale(1.15)}95%,100%{opacity:0;transform:scale(1.15)}}
 .vignette.paused .pill-in,.vignette.paused .pill-out,.vignette.paused .folder-g,.vignette.paused .spark{animation-play-state:paused !important}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.spinner,li.doing .dot,.big-icon.ok,#screen-working .spinner,.vignette *{animation:none !important}.screen.active{animation:none}.vignette .pill-in{opacity:.28}.vignette .pill-out{opacity:1;transform:scale(1.06)}.langsheet.open{animation:none}}
 
@@ -164,20 +188,26 @@ table{font-size:18px}
     </div>
     <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">👆 ✨</div>
     <h1 id="welcomeH1">Every AI you use. One memory.</h1>
+    <div class="painrow" id="painRow">
+      <div class="paincard"><div class="painicon" aria-hidden="true">🔁</div><p class="paincap" id="painCap1">Tired of repeating yourself?</p></div>
+      <div class="paincard"><div class="painicon" aria-hidden="true">🌀</div><p class="paincap" id="painCap2">Your AI forgets your instructions.</p></div>
+      <div class="paincard"><div class="painicon" aria-hidden="true">🧩</div><p class="paincap" id="painCap3">Three AIs, three different memories.</p></div>
+    </div>
     <div class="visual vignette playing" id="vignette" aria-hidden="true">
       <svg viewBox="0 0 560 220" role="img" aria-label="Claude, ChatGPT and Grok flowing into one folder, and back out smarter">
         <defs>
           <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a90"/></marker>
+          <linearGradient id="brightGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4f8ec"/><stop offset="1" stop-color="#b4e5c7"/></linearGradient>
         </defs>
         <g font-family="inherit" font-size="17" font-weight="600" fill="#6b6b62">
-          <g class="pill-in"><rect x="6" y="18" width="128" height="44" rx="22" fill="#e9e9e2"/><text x="70" y="46" text-anchor="middle">Claude</text></g>
-          <g class="pill-in d1"><rect x="6" y="88" width="128" height="44" rx="22" fill="#e9e9e2"/><text x="70" y="116" text-anchor="middle">ChatGPT</text></g>
-          <g class="pill-in d2"><rect x="6" y="158" width="128" height="44" rx="22" fill="#e9e9e2"/><text x="70" y="186" text-anchor="middle">Grok</text></g>
+          <g class="pill-in"><rect x="6" y="18" width="128" height="44" rx="22" fill="#e9e9e2"/><circle cx="28" cy="40" r="12" fill="#D97757"/><text x="28" y="45" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">✦</text><text x="76" y="46" text-anchor="middle">Claude</text></g>
+          <g class="pill-in d1"><rect x="6" y="88" width="128" height="44" rx="22" fill="#e9e9e2"/><circle cx="28" cy="110" r="12" fill="#10A37F"/><text x="28" y="115" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">G</text><text x="76" y="116" text-anchor="middle">ChatGPT</text></g>
+          <g class="pill-in d2"><rect x="6" y="158" width="128" height="44" rx="22" fill="#e9e9e2"/><circle cx="28" cy="180" r="12" fill="#111111"/><text x="28" y="185" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">X</text><text x="76" y="186" text-anchor="middle">Grok</text></g>
         </g>
         <g font-family="inherit" font-size="17" font-weight="700" fill="#0a4d2e">
-          <g class="pill-out"><rect x="420" y="15" width="136" height="48" rx="24" fill="#cdeeda" stroke="#0a6640" stroke-width="2"/><text x="488" y="46" text-anchor="middle">Claude ✦</text></g>
-          <g class="pill-out d1"><rect x="420" y="85" width="136" height="48" rx="24" fill="#cdeeda" stroke="#0a6640" stroke-width="2"/><text x="488" y="116" text-anchor="middle">ChatGPT ✦</text></g>
-          <g class="pill-out d2"><rect x="420" y="155" width="136" height="48" rx="24" fill="#cdeeda" stroke="#0a6640" stroke-width="2"/><text x="488" y="186" text-anchor="middle">Grok ✦</text></g>
+          <g class="pill-out"><rect x="420" y="15" width="136" height="48" rx="24" fill="url(#brightGrad)" stroke="#0a6640" stroke-width="2"/><circle cx="448" cy="39" r="13" fill="#D97757"/><text x="448" y="44" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">✦</text><text x="500" y="46" text-anchor="middle">Claude</text></g>
+          <g class="pill-out d1"><rect x="420" y="85" width="136" height="48" rx="24" fill="url(#brightGrad)" stroke="#0a6640" stroke-width="2"/><circle cx="448" cy="109" r="13" fill="#10A37F"/><text x="448" y="114" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">G</text><text x="500" y="116" text-anchor="middle">ChatGPT</text></g>
+          <g class="pill-out d2"><rect x="420" y="155" width="136" height="48" rx="24" fill="url(#brightGrad)" stroke="#0a6640" stroke-width="2"/><circle cx="448" cy="179" r="13" fill="#111111"/><text x="448" y="184" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">X</text><text x="500" y="186" text-anchor="middle">Grok</text></g>
         </g>
         <text class="spark" x="356" y="52" font-size="24" fill="#0a6640">✦</text>
         <text class="spark" x="196" y="176" font-size="20" fill="#0a6640">✦</text>
@@ -189,30 +219,27 @@ table{font-size:18px}
         <path d="M336,122 C370,134 380,180 420,180" fill="none" stroke="#0a6640" stroke-width="2.5" marker-end="url(#arr)"/>
         <g class="folder-g">
           <path d="M238,84 h30 l10,14 h58 a10,10 0 0 1 10,10 v56 a10,10 0 0 1 -10,10 h-98 a10,10 0 0 1 -10,-10 v-70 a10,10 0 0 1 10,-10 z" fill="#e6f2ec" stroke="#0a6640" stroke-width="2.5"/>
-          <text x="287" y="140" text-anchor="middle" font-size="21" font-weight="700" fill="#0a6640">One home</text>
         </g>
       </svg>
     </div>
-    <p class="lede" id="welcomeLede">One private home, so every AI helper knows you.</p>
+    <p class="lede" id="welcomeLede">We give you your own private folder and memory store — set up for you in one click. No surgery yourself.</p>
     <button class="btn" id="startBtn" type="button">Set up my agent home</button>
     <p class="why" id="welcomeWhy">One click. One time. Done.</p>
     <p class="small" id="welcomeOnce" style="text-align:center;margin-top:8px">Do this once. You never need to come back — extras later? Just ask your AI.</p>
     <details>
       <summary>Details</summary>
-      <p>Someone shared this page with you so your AI helpers can actually remember you. It sets up two things in your own name, both private: a folder for your files, and a safe store for what your helpers learn about you — instead of every app forgetting you between chats.</p>
-      <p><strong>Use this page once.</strong> After that, your AIs just work better — there is nothing here to come back to, no account with us, no app to download.</p>
-      <p><strong>Free — no payment and no account with us.</strong> Everything created is yours, under your own accounts. GitHub's and Supabase's free plans cover everything it creates, so it costs us nothing per person either.</p>
-      <p><strong>Honest labels.</strong> Each step says what it really takes:</p>
-      <ul>
-        <li><strong>GitHub — one click, when switched on.</strong> The “Connect GitHub” button uses GitHub's own sign-in screen. That needs a small registered app behind it; if this copy of the page doesn't have one yet, the button says so plainly (“Demo mode”) and offers a copy-a-code fallback under Details on that step — it will never pretend to be connected when it isn't.</li>
-        <li><strong>Supabase — one click, when switched on.</strong> Same deal: a “Connect Supabase” button, an honest demo-mode label when it isn't configured, and the same code fallback under Details.</li>
-        <li><strong>Your AI tools — one paste each.</strong> There is no shared one-click sign-in across Muse, Claude, ChatGPT, Grok and others. This page generates a ready-to-paste block for each tool instead.</li>
-        <li><strong>Credentials never go in the repo.</strong> The repo only ever receives a project reference and a public URL. Keys live in a local <code>.env</code> file you keep, or in GitHub Secrets.</li>
+      <p>Someone shared this with you so your AIs actually remember you.</p>
+      <p><strong>Use this page once.</strong> No account with us. No app to download.</p>
+      <ul class="blist">
+        <li><strong>Free.</strong> No payment. Everything created is yours, under your own accounts: a private folder and a memory store.</li>
+        <li><strong>GitHub — one click, when switched on.</strong> If it isn't, the button says “Demo mode” and offers a code instead. Never a fake “connected”.</li>
+        <li><strong>Supabase — one click, when switched on.</strong> Same deal: honest demo label, same code fallback.</li>
+        <li><strong>Your AI tools — one paste each.</strong> No shared sign-in exists across them, so each gets a ready-to-paste block.</li>
+        <li><strong>Credentials never go in the repo.</strong> No server of ours touches your keys; pasted codes are checked in your browser, never saved.</li>
+        <li><strong>“Done” means read back.</strong> A step counts only after the provider confirms it — and provider errors are shown unedited.</li>
       </ul>
-      <p>No server of ours touches your keys. Everything runs in your browser: you sign in on GitHub's and Supabase's own screens (a tiny helper swaps the sign-in reply for a key only GitHub or Supabase ever sees used), and anything you paste under a code fallback is checked in your browser and never saved — it is held in memory only, and sent nowhere except the company it belongs to.</p>
-      <p>A checklist item only counts as done after this page has read the result back from GitHub or Supabase itself — “created” means the provider confirmed it on a fresh request, not that a request was sent. If a provider refuses something, its own error message is shown, unedited, in the Details for that step.</p>
-      <button class="btn quiet" id="welcomeExtrasBtn" type="button">Just want the template files?</button>
     </details>
+    <button class="btn quiet" id="welcomeExtrasBtn" type="button">Just want the template files?</button>
   </section>
 
   <!-- STEP 1 OF 3 : NAME -->
@@ -233,8 +260,12 @@ table{font-size:18px}
     <p class="why">So they know who you are.</p>
     <details>
       <summary>Details</summary>
-      <p class="small" id="googleNote">Continue with Google is not switched on for this copy of the page — it needs a Google client ID configured by whoever published it, and none is set. Use the name and email fields below instead: they do exactly the same job, and nothing about the rest of setup changes.</p>
-      <p>One identity runs through everything: it prefills your USER.md, suggests your repo name, and is the name and email to use when you sign up for GitHub and Supabase, so the accounts line up as yours.</p>
+      <p class="small" id="googleNote">Continue with Google isn't switched on for this copy — no Google client ID is set.<br/>Use the name and email fields below instead. They do exactly the same job.</p>
+      <ul class="blist">
+        <li>One identity runs through everything.</li>
+        <li>It prefills your USER.md and suggests your repo name.</li>
+        <li>Use the same name and email for GitHub and Supabase — the accounts line up as yours.</li>
+      </ul>
       <div class="okbox" id="identitySummary"></div>
       <label for="fRepo">Repository name</label>
       <input type="text" id="fRepo" value="agent-home" autocomplete="off" spellcheck="false" />
@@ -263,8 +294,12 @@ table{font-size:18px}
     <button class="text-btn" id="ghSignupHaveBtn" type="button">I have GitHub now</button>
     <details>
       <summary>Details</summary>
-      <p><strong>We can't create a GitHub account for you — nobody can.</strong> GitHub's own signup is the path: it offers “Continue with Google”, so sign up there with the same name and email from the last screen and everything lines up. Then come back to this tab and tap “I have GitHub now”.</p>
-      <p>This page will still be here, with everything you typed kept in this tab. We will never claim your account was created by us — GitHub created it, with you.</p>
+      <ul class="blist">
+        <li><strong>Only GitHub can create your account</strong> — nobody else can.</li>
+        <li>Use “Continue with Google” there, with the same name and email as the last screen.</li>
+        <li>Then come back to this tab and tap “I have GitHub now”.</li>
+        <li>This page stays here, with everything you typed kept in this tab.</li>
+      </ul>
     </details>
   </section>
 
@@ -278,12 +313,16 @@ table{font-size:18px}
     <p class="demo-line hidden" id="ghDemoLine">Demo mode — use a code instead (in Details).</p>
     <details id="ghDetails">
       <summary>Details</summary>
-      <p>A “repo” is a private folder online that keeps every version of your files — only you can see it. GitHub is where that folder will live. <span class="tag" id="ghPill">Checking…</span></p>
+      <p><span class="btile sm" style="background:#111111" aria-hidden="true"><svg viewBox="0 0 16 16" style="width:20px;height:20px;fill:#fff"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></span> A “repo” is a private folder online.<br/>It keeps every version of your files. Only you can see it. <span class="tag" id="ghPill">Checking…</span></p>
       <div id="ghHavePanel">
         <button class="btn" id="ghConnectBtn" type="button">Connect GitHub</button>
         <p class="small" id="ghConnectNote" style="margin-top:8px"></p>
         <div class="okbox" id="ghConnected"></div>
-        <p style="margin-top:14px">Once you're connected, this button creates your private folder, fills it with the full starter set, then reads it back to prove it is really there and really private.</p>
+        <ul class="blist" style="margin-top:14px">
+          <li>Creates your private folder.</li>
+          <li>Fills it with the full starter set.</li>
+          <li>Reads it back — proof it's really there, and really private.</li>
+        </ul>
         <button class="btn" id="ghBtn" type="button">Create my private folder</button>
         <ul class="check" id="ghCheck">
           <li data-k="gh-verify"><span class="dot">✓</span><span>Token verified against GitHub (reads back your username)</span><span class="st"></span></li>
@@ -325,12 +364,18 @@ table{font-size:18px}
     <button class="text-btn" id="sbSkip" type="button">Skip for now</button>
     <details id="sbDetails">
       <summary>Details</summary>
-      <p>A “database” is where your agent's memory is stored safely — organised, searchable, and locked so only you can open it. Supabase is the company that will hold yours, in your own account, on their free plan. <span class="tag" id="sbPill">Checking…</span></p>
+      <p><span class="btile sm" style="background:#3ECF8E;color:#04331F" aria-hidden="true">S</span> A “database” is where your memory is stored safely.<br/>Organised, searchable, locked so only you can open it. <span class="tag" id="sbPill">Checking…</span></p>
       <button class="btn" id="sbConnectBtn" type="button">Connect Supabase</button>
       <p class="small" id="sbConnectNote" style="margin-top:8px"></p>
       <div class="okbox" id="sbConnected"></div>
-      <p style="margin-top:12px">Once you're connected, this creates your memory store, sets it up with only-you-can-see-it locking from the first minute, then checks it to prove everything is really there.</p>
-      <p class="small">The project is created <strong>under your Supabase account, hooked to your identity</strong> — Supabase signup itself works with your GitHub account or email, so use the same identity from step 1 and everything lines up. The link between the two halves is the wiring at the end: <code>agent.config.json</code> in your repo carries the project's reference and public URL. That's the whole connection — no shared account, nothing of yours on anyone else's infrastructure.</p>
+      <ul class="blist" style="margin-top:12px">
+        <li>Creates your memory store.</li>
+        <li>Locks it to only-you from the first minute.</li>
+        <li>Checks it — proof everything is really there.</li>
+        <li>Created <strong>under your own Supabase account</strong>. Sign up with the same identity as step 1.</li>
+        <li>The two halves link at the end: <code>agent.config.json</code> carries only the project reference and public URL.</li>
+        <li>No shared account. Nothing of yours on anyone else's infrastructure.</li>
+      </ul>
       <p class="small">No Supabase account yet? <a href="https://supabase.com/dashboard/sign-up" target="_blank" rel="noopener">Create one free</a> (it offers GitHub sign-in — use the same account as step 1 so everything lines up).</p>
       <label for="sbOrg">Your Supabase group (“organisation”)</label>
       <select id="sbOrg"><option value="">Connect above, then load your groups →</option></select>
@@ -435,6 +480,10 @@ table{font-size:18px}
       <p class="bubble-label">Read back from your home just now.</p>
     </div>
     <div class="done-links" id="doneLinks"></div>
+    <details id="howDetailsDone">
+      <summary id="howSummaryDone">How this works — as deep as you want</summary>
+      <div id="howDone"></div>
+    </details>
     <details id="sbPwBox" class="hidden">
       <summary>Save this database password now</summary>
       <p class="small">Generated in your browser for the new project. Shown once here, never committed anywhere. You need it only for direct database connections — most tools use the API keys in your <code>.env</code> instead.</p>
@@ -446,7 +495,13 @@ table{font-size:18px}
     <details id="pastesWrap">
       <summary>Copy-paste messages</summary>
       <div class="safe">
-        <p style="margin:0"><strong>The one safety rule:</strong> everything created here is private and yours — the repo under your GitHub account, the database under your Supabase account. Nothing on this page keeps a copy of your tokens or keys. If you ever want to cut access, revoke the token from the provider's own settings (GitHub → Settings → Developer settings; Supabase → Account → Access Tokens) and delete the keys from your local <code>.env</code>. Now revoke the two setup tokens you pasted — setup is done, they have served their purpose.</p>
+        <p style="margin:0"><strong>The one safety rule:</strong></p>
+        <ul class="blist" style="margin:4px 0 0">
+          <li>Everything created is private and yours — repo under your GitHub, database under your Supabase.</li>
+          <li>This page keeps no copy of your tokens or keys.</li>
+          <li>To cut access: revoke the token in the provider's settings, delete keys from your local <code>.env</code>.</li>
+          <li><strong>Now revoke the two setup tokens you pasted</strong> — setup is done, they've served their purpose.</li>
+        </ul>
       </div>
       <div class="safe">
         <label style="display:flex;gap:12px;align-items:flex-start;font-weight:400;margin:0;cursor:pointer">
@@ -456,8 +511,14 @@ table{font-size:18px}
         <p class="small" id="regNote" style="margin:8px 0 0"></p>
       </div>
       <h3>Confirm each app is wired: paste it this message</h3>
-      <p><strong>How to read the reply:</strong> a correct verification phrase plus correct facts are strong evidence the app is wired — not proof. A wrong or missing verification phrase means <strong>not wired</strong>, even if the other answers sound plausible.</p>
-      <p class="small">Send the matching message to each AI app you use. It tells the app to read your repo and reply, first, with the verification phrase written in MEMORY.md when your home was set up — quoted verbatim — then your name from USER.md, one fact from MEMORY.md quoted word for word, and the canonical-store line. If it names a blank field instead, you're connected — you just haven't filled that part in yet; that's “wired, just not filled in yet”, not a failure. If it instead says “I can't read your agent home yet”, that app isn't wired; paste it the full setup block from <code>CONNECT.md</code> in your repo first.</p>
+      <p><strong>How to read the reply:</strong></p>
+      <ul class="blist">
+        <li>Correct verification phrase + correct facts = strong evidence it's wired. Not proof.</li>
+        <li>Wrong or missing phrase = <strong>not wired</strong> — even if the rest sounds plausible.</li>
+        <li>It names a blank field = wired, just not filled in yet. Not a failure.</li>
+        <li>It says “I can't read your agent home yet” = not wired. Paste the full setup block from <code>CONNECT.md</code> first.</li>
+      </ul>
+      <p class="small">Send the matching message to each AI app you use. It asks the app to reply with: the verification phrase from MEMORY.md (verbatim), your name from USER.md, one fact from MEMORY.md (word for word), and the canonical-store line.</p>
       <div id="confirmBlocks"></div>
       <button class="text-btn" id="pastesFullSetBtn" type="button">Get more AIs (free)</button>
       <h3>Full setup blocks</h3>
@@ -490,6 +551,11 @@ table{font-size:18px}
     <p class="lede" id="extrasLede">Optional, forever. Your setup already works without these — and your AI can do any of them with you, anytime. You never need to come back here for them.</p>
     <button class="btn secondary" id="backToDoneBtn" type="button">Back</button>
     <button class="btn" id="extrasFullSetBtn" type="button">Get more AIs (free)</button>
+    <details id="howDetailsExtras">
+      <summary id="howSummaryExtras">How this works — as deep as you want</summary>
+      <div id="howExtras"></div>
+    </details>
+
         <details id="decisionsDetails">
       <summary>Choices we made for you</summary>
       <p id="decisionsSentence">Your home starts with expert defaults, saved in DECISIONS.md, plus a few open choices. You can change any of them anytime — just ask your AI.</p>
@@ -507,7 +573,13 @@ table{font-size:18px}
     <div id="stepImport">
       <details>
       <summary>Bring what your tools already know</summary>
-      <p>Already have memory files — a Claude or Muse export, ChatGPT or Grok notes, plain local files? Add them here. This page reads them <em>in your browser only</em>, pulls out candidate memories, drops exact duplicates, and shows you every conflict to settle yourself. <strong>Nothing is silently overwritten, ever</strong> — where two files disagree, you pick.</p>
+      <p>Already have memory files? An export, notes, plain local files — add them here.</p>
+      <ul class="blist">
+        <li>Read <em>in your browser only</em>.</li>
+        <li>Exact duplicates dropped.</li>
+        <li>Every conflict shown to you — you pick.</li>
+        <li><strong>Nothing is silently overwritten. Ever.</strong></li>
+      </ul>
             <h3 id="notionImportH">Notion — bring it in as files</h3>
       <p class="small" id="notionImportNote">Honest label: this is a <strong>file import</strong>, not a live connection. You export once, and the files join the same reconcile below.</p>
       <ol class="small" id="notionImportSteps" style="margin:8px 0;padding-left:24px;line-height:1.7">
@@ -522,7 +594,11 @@ table{font-size:18px}
       <div class="err" id="importErr"></div>
       <div id="importActions" class="hidden">
         <button class="btn" id="importRepoBtn" type="button">Write the reconciled import to my repo</button>
-        <p class="small" style="margin-top:8px">Commits two things: your reconciled memories appended to <code>MEMORY.md</code>, and an <code>IMPORT-REPORT.md</code> listing what came from where, which duplicates were dropped, and how each conflict was resolved. Needs the repo from setup (if you import before creating the repo, the import rides along automatically when the repo is created).</p>
+        <ul class="blist small" style="margin-top:8px">
+          <li>Appends reconciled memories to <code>MEMORY.md</code>.</li>
+          <li>Writes an <code>IMPORT-REPORT.md</code>: sources, dropped duplicates, conflict resolutions.</li>
+          <li>Needs the repo from setup — import earlier and it rides along when the repo is created.</li>
+        </ul>
         <button class="btn secondary" id="importRowsBtn" type="button">Show the database rows this prepares</button>
         <div id="importRowsBox" class="hidden">
           <div class="block-head"><h3>Rows prepared for the <code>memories</code> table</h3>
@@ -537,7 +613,7 @@ table{font-size:18px}
     <div id="stepNotion">
       <details id="notionDetails">
       <summary>Notion</summary>
-      <p id="notionIntro">Two honest paths — pick either, both, or neither. Your home stays the original either way.</p>
+      <p id="notionIntro"><span class="btile sm" style="background:#111111;font-family:Georgia,serif" aria-hidden="true">N</span> Two honest paths — pick either, both, or neither. Your home stays the original either way.</p>
       <h3 id="notionImportPathH">1. Import what Notion already holds</h3>
       <p class="small" id="notionImportPathP">Use “Bring what your tools already know” above: export from Notion (app → Settings → Export all workspace content) and add the .md files. A one-time file import — not a live link.</p>
       <h3 id="notionMirrorPathH">2. Keep a Notion page as a mirror (optional)</h3>
@@ -557,7 +633,13 @@ table{font-size:18px}
     <div id="step3">
       <details>
       <summary>Wire the two together</summary>
-      <p>This commits three safe files to your repo: <code>agent.config.json</code> (project reference + public URL only — <strong>no keys, ever</strong>), a personalised <code>CONNECT.md</code>, and <code>.env.example</code>. Your real keys appear only in the <code>.env</code> boxes on the done screen, for local files that <code>.gitignore</code> keeps out of the repo. If an app needs database access, the exact variable it may receive is <code>SUPABASE_ANON_KEY</code> — never the service-role key, which stays in a separate importer-only file. Wiring normally runs by itself at the end of setup — this button is here if you ever need to run it again.</p>
+      <ul class="blist">
+        <li>Commits three safe files: <code>agent.config.json</code>, <code>CONNECT.md</code>, <code>.env.example</code>.</li>
+        <li>Config carries reference + public URL only — <strong>no keys, ever</strong>.</li>
+        <li>Real keys live only in the <code>.env</code> boxes on the done screen, kept out of the repo by <code>.gitignore</code>.</li>
+        <li>An app may receive only <code>SUPABASE_ANON_KEY</code> — never the service-role key.</li>
+        <li>Wiring runs by itself at the end of setup. This button is here if you ever need it again.</li>
+      </ul>
       <button class="btn" id="wireBtn" type="button" disabled>Wire it together</button>
       <ul class="check" id="wireCheck">
         <li data-k="wire-config"><span class="dot">✓</span><span><code>agent.config.json</code> committed (ref + URL only)</span><span class="st"></span></li>
@@ -568,7 +650,13 @@ table{font-size:18px}
       <div class="okbox" id="wireOk"></div>
       <details>
         <summary>Optional: GitHub Secrets (manual — this page does not do this for you)</summary>
-        <p class="small" style="margin-top:8px">If you later run GitHub Actions against your database, the keys belong in repo secrets. Adding them properly needs GitHub's public-key encryption flow, which this page does not perform — so here is the exact manual click-path instead of a fake button: open your repo → <strong>Settings → Secrets and variables → Actions → New repository secret</strong>, and add <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> from your local <code>.env</code>, one at a time. Add <code>SUPABASE_SERVICE_ROLE_KEY</code> only if an Action truly needs it — it has full access to your database. Takes about two minutes; most people never need it.</p>
+        <ul class="blist small" style="margin-top:8px">
+          <li>Only needed if you later run GitHub Actions against your database. Most people never need it.</li>
+          <li>This page doesn't do it for you — adding secrets needs GitHub's encryption flow.</li>
+          <li>Manual path: your repo → <strong>Settings → Secrets and variables → Actions → New repository secret</strong>.</li>
+          <li>Add <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> from your local <code>.env</code>, one at a time.</li>
+          <li>Add <code>SUPABASE_SERVICE_ROLE_KEY</code> only if an Action truly needs it — it has full access.</li>
+        </ul>
       </details>
       </details>
     </div>
@@ -1163,11 +1251,30 @@ function templateFiles(v){
 function currentVars(){
   return {name:S.name,email:S.email,repoName:S.repoName,repoUrl:S.repoUrl,projectRef:S.projectRef,projectUrl:S.projectUrl,verificationPhrase:verificationPhrase()};
 }
+/* Brand marks: GitHub is a true inline SVG path (octocat). Every other service uses
+   the same uniform rounded tile in its brand colour with its glyph/initial, so the
+   set reads as one designed system. Inline only — zero external requests. */
+function brandTileHTML(id,sm){
+  var cls="btile"+(sm?" sm":"");
+  if(id==="github")return '<span class="'+cls+'" style="background:#111111" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></span>';
+  var map={
+    claude:{bg:"#D97757",g:"✦",fs:"20px"},
+    chatgpt:{bg:"#10A37F",g:"G",fs:"19px"},
+    grok:{bg:"#111111",g:"X",fs:"19px"},
+    muse:{bg:"#0B0D12",g:"M",fs:"19px"},
+    supabase:{bg:"#3ECF8E",g:"S",fs:"19px",fg:"#04331F"},
+    notion:{bg:"#111111",g:"N",fs:"20px",ff:"Georgia,serif"},
+    instinct:{bg:"#55534E",g:"I",fs:"19px"},
+    other:{bg:"#8A8A80",g:"AI",fs:"13px"}
+  };
+  var m=map[id]||map.other;
+  return '<span class="'+cls+'" style="background:'+m.bg+';color:'+(m.fg||"#ffffff")+';font-size:'+m.fs+(m.ff?(";font-family:"+m.ff):"")+'" aria-hidden="true">'+m.g+'</span>';
+}
 function renderBlocks(containerId,v){
   var c=$(containerId); c.innerHTML="";
   TOOLS.forEach(function(t){
     var head=document.createElement("div"); head.className="block-head";
-    var h=document.createElement("h3"); h.textContent=t.label;
+    var h=document.createElement("h3"); h.innerHTML=brandTileHTML(t.id,true)+"<span>"+esc(t.label)+"</span>";
     var b=document.createElement("button"); b.className="btn small-btn secondary"; b.type="button"; b.textContent="Copy";
     var pre=document.createElement("pre"); pre.textContent=connectBlock(t,v);
     b.addEventListener("click",function(){
@@ -1977,6 +2084,10 @@ var LANG="en";
 var ES_DICT={
 "Every AI you use. One memory.":"Todos los IA que usas. Una sola memoria.",
 "One private home, so every AI helper knows you.":"Un solo espacio privado, para que cada IA te conozca.",
+"Tired of repeating yourself?":"¿Cansado de repetirte?",
+"Your AI forgets your instructions.":"Tu IA olvida tus instrucciones.",
+"Three AIs, three different memories.":"Cada IA recuerda algo distinto.",
+"We give you your own private folder and memory store — set up for you in one click. No surgery yourself.":"Te creamos tu propia carpeta privada y tu memoria — con un solo clic. Tú no haces la cirugía.",
 "Set up my agent home":"Crear mi espacio de IA",
 "One click. One time. Done.":"Un toque. Una sola vez. Listo.",
 "Do this once. You never need to come back — extras later? Just ask your AI.":"Hazlo una sola vez. No tienes que volver — ¿algo más después? Pregúntale a tu IA.",
@@ -2086,7 +2197,10 @@ function applyLang(){
   var ko=isKo();
   // Welcome
   setTextId("welcomeH1",tt("Every AI you use. One memory.","쓰는 AI는 달라도, 기억은 하나예요."));
-  setTextId("welcomeLede",tt("One private home, so every AI helper knows you.","나만의 공간 하나면, 모든 AI가 나를 기억해요."));
+  setTextId("painCap1",tt("Tired of repeating yourself?","매번 같은 말, 지치셨죠?","¿Cansado de repetirte?"));
+  setTextId("painCap2",tt("Your AI forgets your instructions.","AI가 내 말을 자꾸 잊어요.","Tu IA olvida tus instrucciones."));
+  setTextId("painCap3",tt("Three AIs, three different memories.","AI마다 기억이 달라요.","Cada IA recuerda algo distinto."));
+  setTextId("welcomeLede",tt("We give you your own private folder and memory store — set up for you in one click. No surgery yourself.","나만의 비밀 폴더와 기억 저장소를 만들어 드려요. 한 번만 누르면 끝 — 직접 할 일은 없어요.","Te creamos tu propia carpeta privada y tu memoria — con un solo clic. Tú no haces la cirugía."));
   setTextId("startBtn",tt("Set up my agent home","내 AI 공간 만들기"));
   setTextId("welcomeWhy",tt("One click. One time. Done.","한 번만 누르세요. 한 번이면 끝나요."));
   setTextId("welcomeOnce",tt("Do this once. You never need to come back — extras later? Just ask your AI.","한 번만 하세요. 다시 올 필요 없어요 — 나중에 더 필요하면 AI에게 물어보세요."));
@@ -2183,8 +2297,8 @@ function applyLang(){
     else if(t==="Optional: GitHub Secrets (manual — this page does not do this for you)")s.textContent=tt("Optional: GitHub Secrets (manual — this page does not do this for you)","선택: GitHub Secrets (직접 하기)","Opcional: GitHub Secrets (manual — esta página no lo hace por ti)");
   });
   // Details essential prose (Korean: shorter, essential content only)
-  var wp=document.querySelector("#screen-welcome details p"); if(wp)wp.textContent=tt("Someone shared this page with you so your AI helpers can actually remember you. It sets up two things in your own name, both private: a folder for your files, and a safe store for what your helpers learn about you — instead of every app forgetting you between chats.","AI가 나를 기억하게 하려고 누가 이 페이지를 보냈어요. 내 이름으로 비밀 폴더와 기억 공간을 만들어요. 앱마다 잊어버리지 않게요.","Alguien te compartió esta página para que tus IA te recuerden de verdad. Crea dos cosas a tu nombre, ambas privadas: una carpeta para tus archivos y un lugar seguro para lo que aprenden de ti.");
-  var wp2=document.querySelectorAll("#screen-welcome details p")[1]; if(wp2)wp2.innerHTML=tt("<strong>Use this page once.</strong> After that, your AIs just work better — there is nothing here to come back to, no account with us, no app to download.","<strong>한 번만 쓰세요.</strong> 그 뒤엔 AI가 더 잘 도와요. 다시 올 곳도, 앱도 없어요.","<strong>Usa esta página una sola vez.</strong> Después, tus IA simplemente funcionan mejor — no hay nada a lo que volver, ni cuenta con nosotros, ni app que descargar.");
+  var wp=document.querySelector("#screen-welcome details p"); if(wp)wp.textContent=tt("Someone shared this with you so your AIs actually remember you.","AI가 나를 기억하게 하려고 누가 이 페이지를 보냈어요.","Alguien te compartió esto para que tus IA te recuerden de verdad.");
+  var wp2=document.querySelectorAll("#screen-welcome details p")[1]; if(wp2)wp2.innerHTML=tt("<strong>Use this page once.</strong> No account with us. No app to download.","<strong>한 번만 쓰세요.</strong> 계정도, 앱도 없어요.","<strong>Usa esta página una sola vez.</strong> Sin cuenta con nosotros. Sin app.");
   // Outbound deep-link guidance, in chosen language
   document.querySelectorAll(".outbound-note").forEach(function(el){el.textContent=tt("We'll open the right page — just tap Allow/Create, then come back.","맞는 페이지를 열어요 — 허용/만들기만 누르고 돌아오세요.");});
   var bl=document.querySelector(".bubble-label"); if(bl)bl.textContent=tt("Read back from your home just now.","방금 내 공간에서 읽어 왔어요.");
@@ -2193,10 +2307,49 @@ function applyLang(){
   [["langEnBtn","en"],["langKoBtn","ko"],["langEsBtn","es"],["langSheetEnBtn","en"],["langSheetKoBtn","ko"],["langSheetEsBtn","es"]].forEach(function(pair){var b=$(pair[0]); if(b)b.classList.toggle("on",LANG===pair[1]);});
   var fab=$("langFabBtn"); if(fab)fab.textContent=LANG==="ko"?"🇰🇷":(LANG==="es"?"🇪🇸":"🇺🇸");
   var sc=$("langSheetClose"); if(sc)sc.textContent=tt("Close","닫기","Cerrar");
+  setTextId("howSummaryDone",tt("How this works — as deep as you want","어떻게 돌아가는지 — 원하는 만큼 깊이","Cómo funciona — tan profundo como quieras"));
+  setTextId("howSummaryExtras",tt("How this works — as deep as you want","어떻게 돌아가는지 — 원하는 만큼 깊이","Cómo funciona — tan profundo como quieras"));
+  renderHow();
   renderFullSet();
   renderFullSetLangOnly();
 }
 function renderFullSetLangOnly(){ /* fs buttons already re-texted above; full re-render keeps URLs */ }
+/* ============ layered details: "How this works — as deep as you want" (done + extras mirror) ============ */
+function renderHow(){
+  var regTile='<span class="btile sm" style="background:#0A6640" aria-hidden="true">✓</span>';
+  function li(tile,text){return '<li>'+(tile?tile+' ':'')+esc(text)+'</li>';}
+  function liB(tile,lead,rest){return '<li>'+(tile?tile+' ':'')+'<strong>'+esc(lead)+'</strong>'+esc(rest)+'</li>';}
+  var h=''
+  +'<h3>'+esc(tt("What you get","받는 것","Lo que recibes"))+'</h3>'
+  +'<ul class="blist">'
+  +li(brandTileHTML("github",true),tt("Your private folder (GitHub) — your files, only you can see them.","나만의 비밀 폴더 (GitHub) — 내 파일, 나만 볼 수 있어요.","Tu carpeta privada (GitHub) — tus archivos, solo tú puedes verlos."))
+  +li(brandTileHTML("supabase",true),tt("Your private memory store (Supabase) — what your AIs learn about you, locked to you.","나만의 비밀 기억 저장소 (Supabase) — AI가 배운 내 정보, 나에게만 잠겨 있어요.","Tu memoria privada (Supabase) — lo que tus IA aprenden de ti, bloqueado para ti."))
+  +li(brandTileHTML("claude",true),tt("Your AIs wired to both — every app reads and writes the same home.","AI들이 둘 다에 연결돼요 — 모든 앱이 같은 공간을 읽고 써요.","Tus IA conectadas a ambos — cada app lee y escribe en el mismo espacio."))
+  +li(regTile,tt("The best-practices register — the shared list of what works, kept in your home.","베스트 프랙티스 목록 — 검증된 방법들의 공유 목록, 내 공간에 있어요.","El registro de buenas prácticas — la lista compartida de lo que funciona, en tu espacio."))
+  +liB("",tt("What do you have to do after this? ","이후에 할 일은? ","¿Qué tienes que hacer después? "),tt("Nothing. Your AIs keep it in sync. Occasionally one will ask you a single question.","없어요. AI들이 알아서 맞추고, 가끔 질문 하나만 물어봐요.","Nada. Tus IA lo mantienen en sync. A veces una te hará una sola pregunta."))
+  +'</ul>'
+  +'<h3>'+esc(tt("The files","파일들","Los archivos"))+'</h3>'
+  +'<ul class="blist">'
+  +li("",tt("SOUL.md — how your AI behaves.","SOUL.md — AI가 어떻게 행동하는지.","SOUL.md — cómo se comporta tu IA."))
+  +li("",tt("IDENTITY.md — who your AI is.","IDENTITY.md — AI가 누구인지.","IDENTITY.md — quién es tu IA."))
+  +li("",tt("USER.md — who you are.","USER.md — 내가 누구인지.","USER.md — quién eres tú."))
+  +li("",tt("MEMORY.md — what it remembers.","MEMORY.md — 무엇을 기억하는지.","MEMORY.md — lo que recuerda."))
+  +li("",tt("AGENTS.md — how it works in your home.","AGENTS.md — 내 공간에서 어떻게 일하는지.","AGENTS.md — cómo trabaja en tu espacio."))
+  +li("",tt("DECISIONS.md — choices made for you, changeable anytime.","DECISIONS.md — 대신 정해 둔 선택, 언제든 바꿀 수 있어요.","DECISIONS.md — decisiones tomadas por ti, cambiables cuando quieras."))
+  +li("",tt("CONNECT.md — how each app plugs in.","CONNECT.md — 앱마다 어떻게 연결되는지.","CONNECT.md — cómo se conecta cada app."))
+  +'</ul>'
+  +'<h3>'+esc(tt("The design","설계","El diseño"))+'</h3>'
+  +'<ul class="blist">'
+  +li("",tt("The database is canonical. The files are the human-readable layer.","데이터베이스가 원본이에요. 파일은 사람이 읽는 층이에요.","La base de datos es la original. Los archivos son la capa legible."))
+  +li("",tt("Owner-only rows — nobody else's AI can read your home.","행마다 주인만 열 수 있어요 — 남의 AI는 내 공간을 못 읽어요.","Filas solo del dueño — la IA de nadie más puede leer tu espacio."))
+  +li("",tt("Credentials never live in the repo. Keys stay in your local .env.","비밀번호는 저장소에 없어요. 열쇠는 내 .env에만 있어요.","Las credenciales nunca viven en el repo. Las claves quedan en tu .env local."))
+  +li("",tt("Imports are reconciled, never silently overwritten.","가져온 건 맞춰서 합쳐요 — 몰래 덮어쓰지 않아요.","Las importaciones se reconcilian, nunca se sobrescriben en silencio."))
+  +li("",tt("Choices you didn't make were set with expert defaults (DECISIONS.md).","내가 안 정한 건 전문가 기본값으로 정해 뒀어요 (DECISIONS.md).","Las decisiones que no tomaste se fijaron con valores expertos (DECISIONS.md)."))
+  +li("",tt("Open choices surface later — one at a time, when they matter.","남은 선택은 나중에, 필요할 때 하나씩 물어봐요.","Las decisiones abiertas aparecen después — una por una, cuando importan."))
+  +'</ul>';
+  var d=$("howDone"); if(d)d.innerHTML=h;
+  var x=$("howExtras"); if(x)x.innerHTML=h;
+}
 var DYN_KO={
   "Working…":"하고 있어요…","Please keep this page open.":"이 페이지를 열어 두세요.",
   "Creating your folder…":"폴더를 만들어요…","Checking your sign-in…":"로그인을 확인해요…",
@@ -2374,7 +2527,7 @@ function renderFullSet(){
   var c=$("fullSetRows"); if(!c)return; c.innerHTML="";
   apps.forEach(function(a){
     var row=document.createElement("div"); row.className="fs-row";
-    var n=document.createElement("span"); n.className="fs-name"; n.textContent=a[1];
+    var n=document.createElement("span"); n.className="fs-name"; n.innerHTML=brandTileHTML(a[0])+"<span>"+esc(a[1])+"</span>";
     var b=document.createElement("a"); b.className="btn small-btn secondary"; b.textContent=(typeof tt==="function")?tt("Get it free","무료로 받기","Gratis"):"Get it free";
     b.href=SIGNUP_URLS[a[0]]||"#"; b.target="_blank"; b.rel="noopener";
     row.appendChild(n); row.appendChild(b); c.appendChild(row);
