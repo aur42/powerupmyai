@@ -3953,7 +3953,7 @@ function Nt(e, t, n) {
             st.push(["now", r(
                 "This page can't see inside the app. When %AI% replies with your phrase, tap the tick.",
                 "이 페이지는 앱 안을 볼 수 없어요. %AI%가 확인 문구로 답하면 체크를 눌러 주세요.",
-                "Esta página no puede ver dentro de la app. Cuando %AI% responda con tu frase, toca la marca."
+                "Esta página no puede ver dentro de la app. Cuando %AI% responda con tu frase, toca el círculo."
                 ).replace("%AI%",
                 e.label)])
         } else {
@@ -4642,7 +4642,7 @@ function paintClosing() {
         ps[0].textContent = r(
             "Your agent home lives in your GitHub and your Supabase. This page is your check-up — status, wiring and repairs — whenever you want one.",
             "내 에이전트 홈은 내 GitHub와 Supabase에 있어요. 이 페이지는 상태와 연결, 수리를 확인하는 점검 페이지예요 — 원할 때 언제든요.",
-            "Tu hogar de agentes vive en tu GitHub y tu Supabase. Esta página es tu revisión — estado, conexión y reparaciones — cuando quieras.");
+            "Tu espacio vive en tu GitHub y tu Supabase. Esta página es tu revisión — estado, conexión y reparaciones — cuando quieras.");
         if (ps[1]) ps[1].classList
             .add("hidden")
     } else {
@@ -5411,7 +5411,7 @@ function composeAudit(kind, rec) {
             ].join("\n");
         if (L === "es")
             return [
-                "Por favor deja mi hogar de agentes como estaba.",
+                "Por favor, deja mi espacio como estaba.",
                 "",
                 "Mi espacio:",
                 "- Carpeta (GitHub): " + repo,
@@ -5457,7 +5457,7 @@ function composeAudit(kind, rec) {
         "6. 증거 수준으로 보고해 주세요: 무엇이 잘못됐는지, 무엇을 바꿨는지, 무엇을 못 고쳤는지."
     ]).join("\n");
     if (L === "es") return [
-        "Por favor revisa mi hogar de agentes y arregla lo que esté mal.",
+        "Por favor, revisa mi espacio y arregla lo que esté mal.",
         "",
         "Mi espacio:",
         "- Carpeta (GitHub): " + repo,
@@ -8415,7 +8415,7 @@ async function qn() {
                     x("resyncErr",
                         r("No agent home folder was found on that GitHub account.",
                             "그 GitHub 계정에서 공간 폴더를 찾지 못했어요.",
-                            "No se encontró ninguna carpeta de espacio en esa cuenta de GitHub."
+                            "No se encontró la carpeta de tu espacio en esa cuenta de GitHub."
                             ));
                 return
             }
@@ -10324,7 +10324,7 @@ No necesitas saber de IA.`,
         "That didn't work": "No funcionó",
         "Try again": "Intentar de nuevo",
         "Go back": "Volver",
-        "Get the full set. Free.": "Consigue el set completo. Gratis.",
+        "Get the full set. Free.": "Consigue el paquete completo. Gratis.",
         "Most people use just one AI. The others are free too. Then one paste wires each one to your home.": "La mayoría usa solo una IA. Las demás también son gratis. Luego, un pegado conecta cada una a tu espacio.",
         "You can add more AIs anytime. Just ask your AI.": "Puedes agregar más IA cuando quieras. Pregúntale a tu IA.",
         "You're done 🎉": "Ya terminaste 🎉",
@@ -10341,7 +10341,7 @@ No necesitas saber de IA.`,
         "Settle them one at a time": "Decídelas una por una",
         Copy: "Copiar",
         "Notion — bring it in as files": "Notion — tráelo como archivos",
-        "Honest label: this is a file import, not a live connection. You export once, and the files join the same reconcile below.": "Con honestidad: es importar archivos, no una conexión en vivo. Exportas una vez y los archivos se unen abajo.",
+        "Honest label: this is a file import, not a live connection. You export once, and the files join the same reconcile below.": "Siendo claros: es importar archivos, no una conexión en vivo. Exportas una vez y los archivos se unen abajo.",
         "Two honest paths — pick either, both, or neither. Your home stays the original either way.": "Dos caminos honestos — elige uno, los dos o ninguno. Tu espacio sigue siendo el original.",
         "1. Import what Notion already holds": "1. Importa lo que Notion ya tiene",
         "Use “Bring what your tools already know” above: export from Notion (app → Settings → Export all workspace content) and add the .md files. A one-time file import, not a live link.": "Usa «Traer lo que tus herramientas ya saben» arriba: exporta de Notion (app → Ajustes → Exportar todo el contenido) y agrega los archivos .md. Es una sola vez, no es un enlace en vivo.",
@@ -10663,7 +10663,7 @@ Un solo lugar para leer y escribir lo arregla.`
             ),
         L2("workDbSleepLine",
             "내 기억은 Supabase 무료 플랜에 있어요. 일주일쯤 쓰지 않으면 Supabase가 잠들게 해요 — 먼저 이메일로 알려 주고, 깨우는 건 한 번 누르면 돼요. AI들이 쓰는 것도 사용으로 쳐요.",
-            "Tu memoria está en el plan gratuito de Supabase. Si no se usa durante una semana, Supabase la pone a dormir — te avisa por correo antes, despertarla es un toque, y que tus IA la usen cuenta como uso."),
+            "Tu memoria está en el plan gratuito de Supabase. Si no se usa durante una semana, Supabase la pone a dormir — te avisa por correo antes, despertarla es un toque, y que tus IA la usen también cuenta."),
         L2("sbPwSaveLine",
             "지금 저장해 두세요.",
             "Guárdala ahora."),
@@ -10862,7 +10862,7 @@ AI를 잘 몰라도 돼요.`)), u("footerYours",
         u("saveBackLine", r(
             "Want to check on things yourself? Save your way back. This page becomes your check-up.",
             "직접 확인하고 싶다면? 돌아올 길을 저장해 두세요. 이 페이지가 점검 창구가 돼요.",
-            "¿Quieres revisar las cosas tú mismo? Guarda tu camino de vuelta. Esta página queda como tu chequeo."
+            "¿Quieres revisar las cosas tú mismo? Guarda tu camino de vuelta. Esta página queda como tu revisión."
             )), u("step2H1", r(
             "Your private memory",
             "나만의 비밀 기억")), u(
@@ -11406,7 +11406,7 @@ function na() {
             )) + "</strong>" + w(r(
             "Nothing. Your AIs keep it in sync. Occasionally one will ask you a single question.",
             "없어요. AI들이 알아서 맞추고, 가끔 질문 하나만 물어봐요.",
-            "Nada. Tus IA lo mantienen en sync. A veces una te hará una sola pregunta."
+            "Nada. Tus IA lo mantienen sincronizado. A veces una te hará una sola pregunta."
             )) + "</p><h3>" + w(r(
             "The files", "파일들",
             "Los archivos")) +
@@ -11457,7 +11457,7 @@ function na() {
             )) + e("", r(
             "Credentials never live in the repo. Keys stay in your local .env.",
             "비밀번호는 저장소에 없어요. 열쇠는 내 .env에만 있어요.",
-            "Las credenciales nunca viven en el repo. Las claves quedan en tu .env local."
+            "Las credenciales nunca viven en tu carpeta. Las claves quedan en tu .env local."
             )) + e("", r(
             "Imports are reconciled, never silently overwritten.",
             "가져온 건 맞춰서 합쳐요 — 몰래 덮어쓰지 않아요.",
@@ -13315,7 +13315,7 @@ function _e(e) {
                     .textContent =
                     r("Taking longer than usual. Still working. If it fails, retry and a report button will appear. Nothing is lost.",
                         "평소보다 오래 걸려요. 계속 하고 있어요. 실패하면 다시 하기 버튼과 보고서 버튼이 나와요. 잃는 건 없어요.",
-                        "Tarda más de lo normal. Sigue trabajando. Si falla, aparecerán reintentar y un botón de informe. No se pierde nada."
+                        "Tarda más de lo normal. Sigue trabajando. Si falla, podrás reintentar y aparecerá un botón de informe. No se pierde nada."
                         )
             }
         };
