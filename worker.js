@@ -300,12 +300,32 @@ export default {
     }
 
     // Feedback screenshots, fetched one at a time by the admin view so the
-    // /admin list itself stays small. Same link-key auth as /admin option (b).
+    // /admin list itself stays small. Auth mirrors /admin exactly: the
+    // link key (option b) OR a Bearer GitHub token belonging to the admin
+    // login (option a) — the page's admin view can therefore sign in with
+    // GitHub and never needs the key in a URL at all.
     if (url.pathname === "/admin/img" && request.method === "GET") {
       if (!env.SETUPS) return json({ error: "registry_not_configured" }, 501);
       const keyParam = url.searchParams.get("key");
       const keyOk = !!env.ADMIN_LINK_KEY && keyParam !== null && secretEquals(keyParam, env.ADMIN_LINK_KEY);
-      if (!keyOk) return json({ error: "unauthorized" }, 401);
+      if (!keyOk) {
+        const auth = request.headers.get("Authorization") || "";
+        const token = auth.startsWith("Bearer ") ? auth.slice(7).trim() : "";
+        if (!token) return json({ error: "missing_token" }, 401);
+        const meResp = await fetch("https://api.github.com/user", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/vnd.github+json",
+            "User-Agent": "agent-home-oauth-worker",
+          },
+        });
+        if (!meResp.ok) return json({ error: "invalid_token" }, 401);
+        const me = await meResp.json().catch(() => ({}));
+        const adminLogin = (env.ADMIN_GITHUB_LOGIN || "").trim().toLowerCase();
+        if (!adminLogin || !me.login || String(me.login).toLowerCase() !== adminLogin) {
+          return json({ error: "not_admin" }, 403);
+        }
+      }
       const name = url.searchParams.get("name") || "";
       if (!/^img:\d+:[a-z0-9]+$/.test(name)) return json({ error: "bad_name" }, 400);
       const img = await env.SETUPS.get(name);
