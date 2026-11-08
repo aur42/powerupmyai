@@ -1,0 +1,2445 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light" />
+<link rel="icon" href="data:," />
+<title>PowerUpMyAI — Power up your AIs. One time.</title>
+<style>
+:root{
+  --bg:#ffffff; --surface:#ffffff; --surface2:#f4f4f1; --ink:#111111; --muted:#3f3f3f;
+  --line:#cfcfc8; --accent:#0a6640; --accent-ink:#ffffff; --accent-soft:#e6f2ec;
+  --warn-bg:#fff6dd; --warn-line:#d9b84a; --warn-ink:#5c4300;
+  --err-bg:#fdecec; --err-line:#d98c8c; --err-ink:#8c1d1d;
+  --ok:#0a6640; --code-bg:#111111; --code-ink:#f2f2f2;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:20px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:640px;margin:0 auto;padding:36px 22px 48px;min-height:100dvh;display:flex;flex-direction:column}
+h1{font-size:42px;line-height:1.12;margin:0 0 16px;font-weight:800;letter-spacing:-.02em}
+h2{font-size:32px;line-height:1.2;margin:0 0 10px;font-weight:800}
+h3{font-size:22px;margin:22px 0 8px;font-weight:700}
+p{margin:0 0 14px}
+a{color:var(--accent);text-underline-offset:3px;font-weight:600}
+.screen{display:none}
+.screen.active{display:block;animation:slideFade .28s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes slideFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes checkPop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+@keyframes calmPulse{0%,100%{opacity:1}50%{opacity:.55}}
+.big-icon.ok{animation:checkPop .45s ease}
+#screen-working .spinner{animation:spin .8s linear infinite,calmPulse 1.6s ease-in-out infinite}
+html,body{overflow-x:hidden;max-width:100%}
+img,svg,pre,table{max-width:100%}
+@media (max-width:640px){
+  .wrap{padding:22px 18px 34px}
+  #startBtn,#nameContinueBtn,#ghPrimaryBtn,#sbPrimaryBtn,#fullSetContinueBtn,#successContinueBtn,#failedRetryBtn{position:sticky;bottom:12px;z-index:5;box-shadow:0 6px 20px rgba(0,0,0,.14)}
+  .fs-row{flex-wrap:wrap}
+  input,select,textarea{font-size:20px}
+}
+.lede{font-size:22px;color:var(--ink);margin-bottom:28px}
+.progress{margin-bottom:28px}
+.progress-label{font-size:18px;color:var(--muted);font-weight:600;margin-bottom:10px}
+.dots{display:flex;gap:10px}
+.dots span{width:14px;height:14px;border-radius:50%;background:#d9d9d2;border:2px solid #bdbdb2}
+.dots span.on{background:var(--accent);border-color:var(--accent)}
+.dots span.done{background:var(--accent);border-color:var(--accent);opacity:.45}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:72px;
+  border:0;cursor:pointer;font:inherit;font-weight:700;font-size:23px;line-height:1.25;
+  background:var(--accent);color:var(--accent-ink);padding:18px 24px;border-radius:18px;
+  margin-top:16px;text-align:center;text-decoration:none}
+.btn:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.btn.secondary{background:#ffffff;color:var(--ink);border:3px solid var(--ink)}
+.btn.quiet{background:var(--surface2);color:var(--ink);border:2px solid var(--line)}
+.btn.small-btn{width:auto;min-height:56px;font-size:19px;padding:12px 20px;margin-top:8px;display:inline-flex}
+.text-btn{display:block;width:100%;min-height:56px;margin-top:10px;padding:12px 20px;background:none;border:0;cursor:pointer;font:inherit;font-size:20px;font-weight:700;color:var(--accent);text-decoration:underline;text-underline-offset:4px;text-align:center}
+.demo-line{font-size:19px;font-weight:700;color:var(--warn-ink);margin:14px 0 0}
+.why{font-size:17px;color:var(--muted);text-align:center;margin:12px 0 0}
+.visual{margin:34px 0 6px}
+.visual svg{width:100%;height:auto;display:block}
+.bubble{background:var(--accent-soft);border-radius:22px 22px 22px 8px;padding:20px 22px;font-size:21px;line-height:1.45;margin:6px 0 0}
+.bubble-label{font-size:16px;color:var(--muted);margin:10px 0 0}
+#pastesWrap>summary{display:none}
+.fs-row{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--surface2);border-radius:16px;padding:14px 18px;margin-top:12px}
+.fs-row .fs-name{font-size:21px;font-weight:700}
+.fs-row .btn{margin-top:0;flex:none}
+label{display:block;font-weight:700;font-size:20px;margin:22px 0 8px}
+input[type=text],input[type=password],select,textarea{width:100%;min-height:64px;padding:14px 16px;
+  border:2px solid var(--ink);border-radius:14px;background:#fff;color:var(--ink);font:inherit;font-size:20px}
+input[type=file]{font:inherit;font-size:18px;width:100%;padding:14px 0}
+textarea{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:16px}
+input:focus,select:focus,textarea:focus,.btn:focus-visible,summary:focus-visible{outline:4px solid var(--accent);outline-offset:2px}
+details{margin-top:26px;border-top:2px solid var(--line);padding-top:18px}
+summary{cursor:pointer;font-size:19px;color:var(--accent);font-weight:700;min-height:48px}
+details p,details li{font-size:18px}
+.small{font-size:18px;color:var(--muted)}
+.honest{background:var(--warn-bg);border:2px solid var(--warn-line);border-radius:14px;padding:18px;margin:18px 0;color:var(--ink);font-size:18px}
+.safe{background:var(--accent-soft);border:2px solid var(--line);border-radius:14px;padding:18px;margin:18px 0;font-size:18px}
+.tag{display:inline-block;font-size:17px;font-weight:700;padding:6px 14px;border-radius:999px;background:var(--accent-soft);color:var(--accent);border:2px solid var(--line)}
+.tag.paste{background:var(--warn-bg);color:var(--warn-ink);border-color:var(--warn-line)}
+ul.check{list-style:none;margin:14px 0;padding:0}
+ul.check li{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:2px dashed var(--line);font-size:18px}
+ul.check li:last-child{border-bottom:0}
+.dot{flex:none;width:28px;height:28px;border-radius:50%;border:3px solid var(--line);margin-top:1px;display:inline-flex;align-items:center;justify-content:center;font-size:16px;color:transparent;background:#fff}
+li.doing .dot{border-color:var(--accent);border-top-color:transparent;animation:spin .8s linear infinite}
+li.done .dot{background:var(--ok);border-color:var(--ok);color:#fff}
+li.failed .dot{background:var(--err-ink);border-color:var(--err-ink);color:#fff}
+li .st{margin-left:auto;font-size:17px;color:var(--muted);white-space:nowrap;padding-left:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.err{display:none;background:var(--err-bg);border:2px solid var(--err-line);color:var(--err-ink);border-radius:14px;padding:16px;margin-top:14px;font-size:18px;word-break:break-word;white-space:pre-wrap}
+.err.show{display:block}
+.okbox{display:none;background:var(--accent-soft);border:2px solid var(--line);border-radius:14px;padding:16px;margin-top:14px;font-size:18px}
+.okbox.show{display:block}
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:14px;padding:16px;overflow-x:auto;font-size:16px;line-height:1.55;margin:10px 0;white-space:pre-wrap;word-break:break-word}
+.block-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:22px}
+.block-head h3{margin:0}
+.hidden{display:none !important}
+.filelist{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:16px;color:var(--muted);line-height:1.9}
+.pw-once{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:19px;background:var(--code-bg);color:var(--code-ink);padding:16px;border-radius:14px;word-break:break-all;margin:10px 0}
+.spinner{width:76px;height:76px;border-radius:50%;border:9px solid var(--accent-soft);border-top-color:var(--accent);animation:spin .8s linear infinite;margin:12px 0 28px}
+.big-icon{width:118px;height:118px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:62px;font-weight:800;margin:8px 0 26px;color:#fff}
+.big-icon.ok{background:var(--ok)}
+.big-icon.bad{background:#b3261e}
+.state-msg{font-size:22px}
+.inline-err{display:none;color:var(--err-ink);font-weight:700;font-size:20px;margin-top:14px}
+.inline-err.show{display:block}
+.done-links p{font-size:21px;word-break:break-word}
+.footer-line{margin-top:auto;padding-top:40px;font-size:14px;color:var(--muted);text-align:center}
+table{font-size:18px}
+@media (max-width:560px){h1{font-size:36px}h2{font-size:30px}.btn{font-size:22px}}
+.flagdial{display:flex;gap:14px;justify-content:space-between;margin:4px 0 30px;padding:18px 14px 14px;background:var(--surface2);border-radius:24px}
+.flagopt{flex:1;background:none;border:0;cursor:pointer;font:inherit;display:flex;flex-direction:column;align-items:center;gap:8px;padding:4px 2px;color:var(--ink)}
+.flagopt .flagcircle{width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:44px;line-height:1;background:#fff;border:4px solid var(--line);box-shadow:0 4px 14px rgba(0,0,0,.08);transition:transform .15s ease,border-color .15s ease}
+.flagopt .flagword{font-size:20px;font-weight:700;line-height:1.2}
+.flagopt.on .flagcircle{border-color:var(--accent);transform:scale(1.08);box-shadow:0 6px 20px rgba(10,102,64,.22)}
+.flagopt.on .flagword{color:var(--accent)}
+.flagopt:focus-visible,.langfab:focus-visible,.sheetclose:focus-visible{outline:4px solid var(--accent);outline-offset:2px}
+.langfab{position:fixed;top:max(12px,env(safe-area-inset-top));right:14px;z-index:40;width:48px;height:48px;border-radius:50%;border:2px solid var(--line);background:#fff;font-size:26px;line-height:1;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.14);padding:0}
+.langfab.show{display:flex}
+.langsheet-back{position:fixed;inset:0;background:rgba(17,17,17,.44);z-index:50;display:none}
+.langsheet-back.open{display:block}
+.langsheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:#fff;border-radius:26px 26px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom));display:none;box-shadow:0 -8px 30px rgba(0,0,0,.2);max-width:640px;margin:0 auto}
+.langsheet.open{display:block;animation:sheetUp .22s ease}
+@keyframes sheetUp{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
+.langsheet h2{font-size:24px;text-align:center;margin-bottom:6px}
+.langsheet .flagdial{margin-bottom:8px}
+.sheetclose{width:100%;min-height:56px;border:0;background:var(--surface2);border-radius:14px;font:inherit;font-size:20px;font-weight:700;cursor:pointer}
+/* --- Animated welcome vignette (pure CSS/SVG, ~6s loop) --- */
+.vignette .pill-in,.vignette .pill-out,.vignette .folder-g,.vignette .spark{transform-box:fill-box;transform-origin:center}
+.vignette .pill-out{opacity:0}
+.vignette.playing .pill-in{animation:vIn 6s ease-in-out infinite}
+.vignette.playing .pill-in.d1{animation-delay:.18s}.vignette.playing .pill-in.d2{animation-delay:.36s}
+.vignette.playing .folder-g{animation:vPulse 6s ease-in-out infinite}
+.vignette.playing .pill-out{animation:vOut 6s ease-in-out infinite}
+.vignette.playing .pill-out.d1{animation-delay:.18s}.vignette.playing .pill-out.d2{animation-delay:.36s}
+.vignette.playing .spark{animation:vSpark 6s ease-in-out infinite}
+@keyframes vIn{0%,12%{transform:translate(0,0);opacity:1}34%,100%{transform:translate(118px,0) scale(.82);opacity:0}}
+@keyframes vPulse{0%,34%{transform:scale(1)}46%{transform:scale(1.09)}58%,100%{transform:scale(1)}}
+@keyframes vOut{0%,48%{transform:translate(-118px,0) scale(.82);opacity:0}72%,92%{transform:translate(0,0) scale(1.06);opacity:1}100%{transform:translate(0,0) scale(1.06);opacity:0}}
+@keyframes vSpark{0%,52%{opacity:0;transform:scale(.6)}68%,88%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(1.15)}}
+.vignette.paused .pill-in,.vignette.paused .pill-out,.vignette.paused .folder-g,.vignette.paused .spark{animation-play-state:paused !important}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.spinner,li.doing .dot,.big-icon.ok,#screen-working .spinner,.vignette *{animation:none !important}.screen.active{animation:none}.vignette .pill-in{opacity:.28}.vignette .pill-out{opacity:1;transform:scale(1.06)}.langsheet.open{animation:none}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="progress hidden" id="progressWrap" aria-hidden="true">
+    <div class="progress-label" id="progressLabel">Step 1 of 3</div>
+    <div class="dots"><span id="dot1"></span><span id="dot2"></span><span id="dot3"></span></div>
+  </div>
+
+  <!-- WELCOME -->
+  <section class="screen active" id="screen-welcome">
+    <div class="flagdial" role="group" aria-label="Language / 언어 / Idioma">
+      <button type="button" id="langEnBtn" class="flagopt" aria-label="English"><span class="flagcircle" aria-hidden="true">🇺🇸</span><span class="flagword">English</span></button>
+      <button type="button" id="langKoBtn" class="flagopt" aria-label="한국어"><span class="flagcircle" aria-hidden="true">🇰🇷</span><span class="flagword">한국어</span></button>
+      <button type="button" id="langEsBtn" class="flagopt" aria-label="Español"><span class="flagcircle" aria-hidden="true">🇪🇸</span><span class="flagword">Español</span></button>
+    </div>
+    <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">👆 ✨</div>
+    <h1 id="welcomeH1">Every AI you use. One memory.</h1>
+    <div class="visual vignette playing" id="vignette" aria-hidden="true">
+      <svg viewBox="0 0 560 220" role="img" aria-label="Claude, ChatGPT and Grok flowing into one folder, and back out smarter">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a90"/></marker>
+        </defs>
+        <g font-family="inherit" font-size="17" font-weight="600" fill="#6b6b62">
+          <g class="pill-in"><rect x="6" y="18" width="128" height="44" rx="22" fill="#e9e9e2"/><text x="70" y="46" text-anchor="middle">Claude</text></g>
+          <g class="pill-in d1"><rect x="6" y="88" width="128" height="44" rx="22" fill="#e9e9e2"/><text x="70" y="116" text-anchor="middle">ChatGPT</text></g>
+          <g class="pill-in d2"><rect x="6" y="158" width="128" height="44" rx="22" fill="#e9e9e2"/><text x="70" y="186" text-anchor="middle">Grok</text></g>
+        </g>
+        <g font-family="inherit" font-size="17" font-weight="700" fill="#0a4d2e">
+          <g class="pill-out"><rect x="420" y="15" width="136" height="48" rx="24" fill="#cdeeda" stroke="#0a6640" stroke-width="2"/><text x="488" y="46" text-anchor="middle">Claude ✦</text></g>
+          <g class="pill-out d1"><rect x="420" y="85" width="136" height="48" rx="24" fill="#cdeeda" stroke="#0a6640" stroke-width="2"/><text x="488" y="116" text-anchor="middle">ChatGPT ✦</text></g>
+          <g class="pill-out d2"><rect x="420" y="155" width="136" height="48" rx="24" fill="#cdeeda" stroke="#0a6640" stroke-width="2"/><text x="488" y="186" text-anchor="middle">Grok ✦</text></g>
+        </g>
+        <text class="spark" x="356" y="52" font-size="24" fill="#0a6640">✦</text>
+        <text class="spark" x="196" y="176" font-size="20" fill="#0a6640">✦</text>
+        <path d="M140,40 C180,40 190,86 224,98" fill="none" stroke="#9a9a90" stroke-width="2.5" marker-end="url(#arr)"/>
+        <path d="M140,110 L224,110" fill="none" stroke="#9a9a90" stroke-width="2.5" marker-end="url(#arr)"/>
+        <path d="M140,180 C180,180 190,134 224,122" fill="none" stroke="#9a9a90" stroke-width="2.5" marker-end="url(#arr)"/>
+        <path d="M336,98 C370,86 380,40 420,40" fill="none" stroke="#0a6640" stroke-width="2.5" marker-end="url(#arr)"/>
+        <path d="M336,110 L420,110" fill="none" stroke="#0a6640" stroke-width="2.5" marker-end="url(#arr)"/>
+        <path d="M336,122 C370,134 380,180 420,180" fill="none" stroke="#0a6640" stroke-width="2.5" marker-end="url(#arr)"/>
+        <g class="folder-g">
+          <path d="M238,84 h30 l10,14 h58 a10,10 0 0 1 10,10 v56 a10,10 0 0 1 -10,10 h-98 a10,10 0 0 1 -10,-10 v-70 a10,10 0 0 1 10,-10 z" fill="#e6f2ec" stroke="#0a6640" stroke-width="2.5"/>
+          <text x="287" y="140" text-anchor="middle" font-size="21" font-weight="700" fill="#0a6640">One home</text>
+        </g>
+      </svg>
+    </div>
+    <p class="lede" id="welcomeLede">One private home, so every AI helper knows you.</p>
+    <button class="btn" id="startBtn" type="button">Set up my agent home</button>
+    <p class="why" id="welcomeWhy">One click. One time. Done.</p>
+    <p class="small" id="welcomeOnce" style="text-align:center;margin-top:8px">Do this once. You never need to come back — extras later? Just ask your AI.</p>
+    <details>
+      <summary>Details</summary>
+      <p>Someone shared this page with you so your AI helpers can actually remember you. It sets up two things in your own name, both private: a folder for your files, and a safe store for what your helpers learn about you — instead of every app forgetting you between chats.</p>
+      <p><strong>Use this page once.</strong> After that, your AIs just work better — there is nothing here to come back to, no account with us, no app to download.</p>
+      <p><strong>Free — no payment and no account with us.</strong> Everything created is yours, under your own accounts. GitHub's and Supabase's free plans cover everything it creates, so it costs us nothing per person either.</p>
+      <p><strong>Honest labels.</strong> Each step says what it really takes:</p>
+      <ul>
+        <li><strong>GitHub — one click, when switched on.</strong> The “Connect GitHub” button uses GitHub's own sign-in screen. That needs a small registered app behind it; if this copy of the page doesn't have one yet, the button says so plainly (“Demo mode”) and offers a copy-a-code fallback under Details on that step — it will never pretend to be connected when it isn't.</li>
+        <li><strong>Supabase — one click, when switched on.</strong> Same deal: a “Connect Supabase” button, an honest demo-mode label when it isn't configured, and the same code fallback under Details.</li>
+        <li><strong>Your AI tools — one paste each.</strong> There is no shared one-click sign-in across Muse, Claude, ChatGPT, Grok and others. This page generates a ready-to-paste block for each tool instead.</li>
+        <li><strong>Credentials never go in the repo.</strong> The repo only ever receives a project reference and a public URL. Keys live in a local <code>.env</code> file you keep, or in GitHub Secrets.</li>
+      </ul>
+      <p>No server of ours touches your keys. Everything runs in your browser: you sign in on GitHub's and Supabase's own screens (a tiny helper swaps the sign-in reply for a key only GitHub or Supabase ever sees used), and anything you paste under a code fallback is checked in your browser and never saved — it is held in memory only, and sent nowhere except the company it belongs to.</p>
+      <p>A checklist item only counts as done after this page has read the result back from GitHub or Supabase itself — “created” means the provider confirmed it on a fresh request, not that a request was sent. If a provider refuses something, its own error message is shown, unedited, in the Details for that step.</p>
+      <button class="btn quiet" id="welcomeExtrasBtn" type="button">Just want the template files?</button>
+    </details>
+  </section>
+
+  <!-- STEP 1 OF 3 : NAME -->
+  <section class="screen" id="step0">
+    <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">👤</div>
+    <h1 id="step0H1">What's your name?</h1>
+    <p class="lede" id="step0Lede">This fills your home with your details.</p>
+    <div id="googleWrap">
+      <button class="btn secondary" id="googleBtn" type="button">Continue with Google</button>
+      <div id="googleBtnReal" style="margin-top:10px"></div>
+    </div>
+    <label for="fName">Your name</label>
+    <input type="text" id="fName" placeholder="e.g. Alex Rivera" autocomplete="name" />
+    <label for="fEmail">Your email</label>
+    <input type="text" id="fEmail" placeholder="you@example.com" autocomplete="email" spellcheck="false" />
+    <p class="inline-err" id="nameErr">Please type your name first.</p>
+    <button class="btn" id="nameContinueBtn" type="button">Continue</button>
+    <p class="why">So they know who you are.</p>
+    <details>
+      <summary>Details</summary>
+      <p class="small" id="googleNote">Continue with Google is not switched on for this copy of the page — it needs a Google client ID configured by whoever published it, and none is set. Use the name and email fields below instead: they do exactly the same job, and nothing about the rest of setup changes.</p>
+      <p>One identity runs through everything: it prefills your USER.md, suggests your repo name, and is the name and email to use when you sign up for GitHub and Supabase, so the accounts line up as yours.</p>
+      <div class="okbox" id="identitySummary"></div>
+      <label for="fRepo">Repository name</label>
+      <input type="text" id="fRepo" value="agent-home" autocomplete="off" spellcheck="false" />
+      <p class="small">Suggested from your name; change it freely. Lowercase letters, numbers and hyphens. It will be created <strong>private</strong> — nothing public, ever.</p>
+    </details>
+  </section>
+
+  <!-- STEP 2 OF 3, PART A : GITHUB CHOICE (this screen's only job is the choice) -->
+  <section class="screen" id="step1choice">
+    <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">📁</div>
+    <h1 id="choiceH1">Do you have GitHub?</h1>
+    <p class="lede" id="choiceLede">If not, we'll show you how.</p>
+    <button class="btn" id="ghHaveBtn" type="button">I have GitHub</button>
+    <button class="btn secondary" id="ghNewBtn" type="button">I don't have GitHub</button>
+    <p class="why" id="choiceWhy">Nothing is public, ever.</p>
+  </section>
+
+  <!-- STEP 2 OF 3, PART B : GITHUB SIGNUP -->
+  <section class="screen" id="step1signup">
+    <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">📁</div>
+    <h1 id="signupH1">Create a GitHub account</h1>
+    <p class="lede" id="signupLede">It's free and takes two minutes.</p>
+    <a class="btn" href="https://github.com/signup" target="_blank" rel="noopener">Open GitHub signup</a>
+    <p class="why outbound-note">We'll open the right page — just tap Allow/Create, then come back.</p>
+    <p class="why">Free — straight from GitHub.</p>
+    <button class="text-btn" id="ghSignupHaveBtn" type="button">I have GitHub now</button>
+    <details>
+      <summary>Details</summary>
+      <p><strong>We can't create a GitHub account for you — nobody can.</strong> GitHub's own signup is the path: it offers “Continue with Google”, so sign up there with the same name and email from the last screen and everything lines up. Then come back to this tab and tap “I have GitHub now”.</p>
+      <p>This page will still be here, with everything you typed kept in this tab. We will never claim your account was created by us — GitHub created it, with you.</p>
+    </details>
+  </section>
+
+  <!-- STEP 2 OF 3 : GITHUB -->
+  <section class="screen" id="step1">
+    <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">📁 🔒</div>
+    <h1 id="step1H1">Your private folder</h1>
+    <p class="lede" id="step1Lede">Only you can ever see what's inside.</p>
+    <button class="btn" id="ghPrimaryBtn" type="button">Connect and create it</button>
+    <p class="why" id="step1Why">So your AIs share one memory.</p>
+    <p class="demo-line hidden" id="ghDemoLine">Demo mode — use a code instead (in Details).</p>
+    <details id="ghDetails">
+      <summary>Details</summary>
+      <p>A “repo” is a private folder online that keeps every version of your files — only you can see it. GitHub is where that folder will live. <span class="tag" id="ghPill">Checking…</span></p>
+      <div id="ghHavePanel">
+        <button class="btn" id="ghConnectBtn" type="button">Connect GitHub</button>
+        <p class="small" id="ghConnectNote" style="margin-top:8px"></p>
+        <div class="okbox" id="ghConnected"></div>
+        <p style="margin-top:14px">Once you're connected, this button creates your private folder, fills it with the full starter set, then reads it back to prove it is really there and really private.</p>
+        <button class="btn" id="ghBtn" type="button">Create my private folder</button>
+        <ul class="check" id="ghCheck">
+          <li data-k="gh-verify"><span class="dot">✓</span><span>Token verified against GitHub (reads back your username)</span><span class="st"></span></li>
+          <li data-k="gh-create"><span class="dot">✓</span><span>Private repo created</span><span class="st"></span></li>
+          <li data-k="gh-upload"><span class="dot">✓</span><span>Template files uploaded</span><span class="st"></span></li>
+          <li data-k="gh-readback"><span class="dot">✓</span><span>Repo read back — confirmed private, files present</span><span class="st"></span></li>
+        </ul>
+        <div class="err" id="ghErr"></div>
+        <div class="okbox" id="ghOk"></div>
+        <details id="ghAdvanced">
+          <summary>Having trouble? Connect with a code instead</summary>
+          <p class="small" style="margin-top:8px">Only use this if the button above isn't working. You'll make a one-time code on GitHub and paste it here. Follow the steps exactly:</p>
+          <ol class="small" style="margin:8px 0;padding-left:24px;line-height:1.7">
+            <li><a href="https://github.com/settings/tokens/new?scopes=repo&amp;description=agent-home%20setup" target="_blank" rel="noopener">Tap here — it opens GitHub in a new tab</a>, already on the right screen, with the right boxes ticked.</li>
+            <li class="outbound-note">We'll open the right page — just tap Allow/Create, then come back.</li>
+            <li>The name box should say “agent-home setup”. If it's empty, type that in.</li>
+            <li>Scroll to the bottom and tap the green <strong>Generate token</strong> button.</li>
+            <li>GitHub shows a long code starting with <code>ghp_</code>. Tap the copy icon next to it.</li>
+            <li>Come back to this tab and paste the code in the box below. This page checks it straight away and tells you if it works.</li>
+          </ol>
+          <label for="ghToken">Your code from GitHub</label>
+          <input type="password" id="ghToken" placeholder="Paste the long code here…" autocomplete="off" spellcheck="false" />
+          <div class="okbox" id="ghTokenStatus"></div>
+          <div class="err" id="ghTokenErr"></div>
+          <p class="small">The code is only ever sent to GitHub itself, from your browser, and is never saved. You can delete it on GitHub the moment setup finishes — your folder stays yours.</p>
+        </details>
+      </div>
+    </details>
+  </section>
+
+  <!-- STEP 3 OF 3 : SUPABASE -->
+  <section class="screen" id="step2">
+    <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">✨ 🧠</div>
+    <h1 id="step2H1">Your private memory</h1>
+    <p class="lede" id="step2Lede">Locked away, and only you hold the key.</p>
+    <button class="btn" id="sbPrimaryBtn" type="button">Create my private memory</button>
+    <p class="why" id="step2Why">So they remember between chats.</p>
+    <p class="demo-line hidden" id="sbDemoLine">Demo mode — use a code instead (in Details).</p>
+    <button class="text-btn" id="sbSkip" type="button">Skip for now</button>
+    <details id="sbDetails">
+      <summary>Details</summary>
+      <p>A “database” is where your agent's memory is stored safely — organised, searchable, and locked so only you can open it. Supabase is the company that will hold yours, in your own account, on their free plan. <span class="tag" id="sbPill">Checking…</span></p>
+      <button class="btn" id="sbConnectBtn" type="button">Connect Supabase</button>
+      <p class="small" id="sbConnectNote" style="margin-top:8px"></p>
+      <div class="okbox" id="sbConnected"></div>
+      <p style="margin-top:12px">Once you're connected, this creates your memory store, sets it up with only-you-can-see-it locking from the first minute, then checks it to prove everything is really there.</p>
+      <p class="small">The project is created <strong>under your Supabase account, hooked to your identity</strong> — Supabase signup itself works with your GitHub account or email, so use the same identity from step 1 and everything lines up. The link between the two halves is the wiring at the end: <code>agent.config.json</code> in your repo carries the project's reference and public URL. That's the whole connection — no shared account, nothing of yours on anyone else's infrastructure.</p>
+      <p class="small">No Supabase account yet? <a href="https://supabase.com/dashboard/sign-up" target="_blank" rel="noopener">Create one free</a> (it offers GitHub sign-in — use the same account as step 1 so everything lines up).</p>
+      <label for="sbOrg">Your Supabase group (“organisation”)</label>
+      <select id="sbOrg"><option value="">Connect above, then load your groups →</option></select>
+      <label for="sbRegion">Region (closest to you is best)</label>
+      <select id="sbRegion">
+        <option value="ap-southeast-1" selected>Singapore (Southeast Asia)</option>
+        <option value="ap-northeast-1">Tokyo (Northeast Asia)</option>
+        <option value="ap-northeast-2">Seoul (Northeast Asia)</option>
+        <option value="ap-south-1">Mumbai (South Asia)</option>
+        <option value="ap-southeast-2">Sydney (Oceania)</option>
+        <option value="eu-west-1">Ireland (Europe)</option>
+        <option value="eu-west-2">London (Europe)</option>
+        <option value="eu-central-1">Frankfurt (Europe)</option>
+        <option value="us-east-1">N. Virginia (US East)</option>
+        <option value="us-west-1">N. California (US West)</option>
+        <option value="ca-central-1">Canada (Central)</option>
+        <option value="sa-east-1">São Paulo (South America)</option>
+      </select>
+      <button class="btn quiet" id="sbOrgBtn" type="button">Load my groups</button>
+      <button class="btn" id="sbBtn" type="button">Create my memory store</button>
+      <ul class="check" id="sbCheck">
+        <li data-k="sb-verify"><span class="dot">✓</span><span>Token verified (organisations listed)</span><span class="st"></span></li>
+        <li data-k="sb-create"><span class="dot">✓</span><span>Free-tier project created</span><span class="st"></span></li>
+        <li data-k="sb-active"><span class="dot">✓</span><span>Project is live (status ACTIVE_HEALTHY)</span><span class="st"></span></li>
+        <li data-k="sb-schema"><span class="dot">✓</span><span>Starter schema applied</span><span class="st"></span></li>
+        <li data-k="sb-readback"><span class="dot">✓</span><span>Tables verified by querying the database</span><span class="st"></span></li>
+      </ul>
+      <div class="err" id="sbErr"></div>
+      <div class="okbox" id="sbOk"></div>
+      <details id="sbAdvanced">
+        <summary>Having trouble? Connect with a code instead</summary>
+        <p class="small" style="margin-top:8px">Only use this if the button above isn't working. Follow the steps exactly:</p>
+        <ol class="small" style="margin:8px 0;padding-left:24px;line-height:1.7">
+          <li><a href="https://supabase.com/dashboard/account/tokens" target="_blank" rel="noopener">Tap here — it opens Supabase in a new tab</a>, on the page where access codes live.</li>
+          <li class="outbound-note">We'll open the right page — just tap Allow/Create, then come back.</li>
+          <li>1. Tap the button above — Supabase opens. 2. Tap Generate, copy the code. 3. Come back here and paste it below — one tap on Paste, no typing.</li>
+          <li>Tap <strong>Generate new token</strong>, name it “agent-home setup”, and tap generate.</li>
+          <li>Supabase shows a long code starting with <code>sbp_</code>. Copy it.</li>
+          <li>Come back to this tab and paste it in the box below. This page checks it straight away, then the “Create my memory store” button above will work.</li>
+        </ol>
+        <label for="sbToken">Your code from Supabase</label>
+        <input type="password" id="sbToken" placeholder="Paste the long code here…" autocomplete="off" spellcheck="false" />
+        <div class="okbox" id="sbTokenStatus"></div>
+        <div class="err" id="sbTokenErr"></div>
+        <p class="small">The code is only ever sent to Supabase itself, from your browser, and is never saved. You can delete it on Supabase the moment setup finishes.</p>
+      </details>
+    </details>
+  </section>
+
+  <!-- WORKING STATE -->
+  <section class="screen" id="screen-working" aria-live="polite">
+    <div class="spinner" role="status" aria-label="Working"></div>
+    <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">⏳</div>
+    <h1 id="workingTitle">Working…</h1>
+    <p class="state-msg" id="workingMsg">Please keep this page open.</p>
+  </section>
+
+  <!-- SUCCESS STATE -->
+  <section class="screen" id="screen-success">
+    <div class="big-icon ok" aria-hidden="true">✓</div>
+    <h1 id="successTitle">Done</h1>
+    <p class="state-msg" id="successLine">Checked and confirmed.</p>
+    <button class="btn" id="successContinueBtn" type="button">Continue</button>
+  </section>
+
+  <!-- FAILED STATE -->
+  <section class="screen" id="screen-failed">
+    <div class="big-icon bad" aria-hidden="true">✗</div>
+    <h1 id="failedH1">That didn't work</h1>
+    <p class="state-msg" id="failedLine">Something went wrong. Nothing is lost.</p>
+    <button class="btn" id="failedRetryBtn" type="button">Try again</button>
+    <button class="text-btn" id="failedBackBtn" type="button">Go back</button>
+    <details id="failedDetails">
+      <summary>Details</summary>
+      <pre id="failedTech"></pre>
+    </details>
+  </section>
+
+  <!-- GET THE FULL SET (optional, after wiring, before done) -->
+  <section class="screen" id="stepFullSet">
+    <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">✨</div>
+    <h1 id="fullSetH1">Get the full set. Free.</h1>
+    <p class="lede" id="fullSetLede">Most people use just one AI. The others are free too.</p>
+    <div id="fullSetRows"></div>
+    <button class="btn" id="fullSetContinueBtn" type="button" style="margin-top:26px">Continue</button>
+    <p class="why" id="fullSetWhy">You can add more AIs anytime — just ask your AI.</p>
+    <details>
+      <summary>Details</summary>
+      <p>Links may include the sharer's referral code.</p>
+      <p>After joining, redeem code 18GRDY in Settings within 48 hours — you both get 1 billion Muse tokens.</p>
+    </details>
+  </section>
+
+  <!-- DONE -->
+  <section class="screen" id="step4">
+    <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">✓</div>
+    <h1 id="doneH1">You're done 🎉</h1>
+    <p class="lede" id="doneLede">You never need to come back here. Everything lives in your own accounts now — want extras later, just ask your AI.</p>
+    <p class="small" id="doneSub">Your AIs can now remember you properly — expert-level setup, done once.</p>
+    <div id="proofBubble" class="hidden">
+      <div class="bubble" id="proofBubbleText"></div>
+      <p class="bubble-label">Read back from your home just now.</p>
+    </div>
+    <div class="done-links" id="doneLinks"></div>
+    <details id="sbPwBox" class="hidden">
+      <summary>Save this database password now</summary>
+      <p class="small">Generated in your browser for the new project. Shown once here, never committed anywhere. You need it only for direct database connections — most tools use the API keys in your <code>.env</code> instead.</p>
+      <div class="pw-once" id="sbPw"></div>
+      <button class="btn small-btn secondary" id="sbPwCopy" type="button">Copy password</button>
+    </details>
+    <button class="btn" id="showPastesBtn" type="button">Show my copy-paste messages</button>
+    <p class="why">Paste once into each app.</p>
+    <details id="pastesWrap">
+      <summary>Copy-paste messages</summary>
+      <div class="safe">
+        <p style="margin:0"><strong>The one safety rule:</strong> everything created here is private and yours — the repo under your GitHub account, the database under your Supabase account. Nothing on this page keeps a copy of your tokens or keys. If you ever want to cut access, revoke the token from the provider's own settings (GitHub → Settings → Developer settings; Supabase → Account → Access Tokens) and delete the keys from your local <code>.env</code>. Now revoke the two setup tokens you pasted — setup is done, they have served their purpose.</p>
+      </div>
+      <div class="safe">
+        <label style="display:flex;gap:12px;align-items:flex-start;font-weight:400;margin:0;cursor:pointer">
+          <input type="checkbox" id="regTick" checked style="width:28px;height:28px;margin-top:4px;flex:none" />
+          <span><strong>Tell the person who shared this with me that I'm set up</strong> — this sends only my name and my repo link, nothing else.</span>
+        </label>
+        <p class="small" id="regNote" style="margin:8px 0 0"></p>
+      </div>
+      <h3>Confirm each app is wired: paste it this message</h3>
+      <p><strong>How to read the reply:</strong> a correct verification phrase plus correct facts are strong evidence the app is wired — not proof. A wrong or missing verification phrase means <strong>not wired</strong>, even if the other answers sound plausible.</p>
+      <p class="small">Send the matching message to each AI app you use. It tells the app to read your repo and reply, first, with the verification phrase written in MEMORY.md when your home was set up — quoted verbatim — then your name from USER.md, one fact from MEMORY.md quoted word for word, and the canonical-store line. If it names a blank field instead, you're connected — you just haven't filled that part in yet; that's “wired, just not filled in yet”, not a failure. If it instead says “I can't read your agent home yet”, that app isn't wired; paste it the full setup block from <code>CONNECT.md</code> in your repo first.</p>
+      <div id="confirmBlocks"></div>
+      <button class="text-btn" id="pastesFullSetBtn" type="button">Get more AIs (free)</button>
+      <h3>Full setup blocks</h3>
+      <p class="small">The longer first-time blocks (also saved as <code>CONNECT.md</code> in your repo). There is no shared one-click sign-in across these tools — a generated paste block is the honest version.</p>
+      <div id="doneBlocks"></div>
+      <div id="envBox" class="hidden">
+        <div class="block-head"><h3>Your local <code>.env</code> — save this, never commit it</h3>
+        <button class="btn small-btn secondary" data-copy="envPre" type="button">Copy</button></div>
+        <pre id="envPre"></pre>
+        <p class="small">This is the only key file an AI app may ever draw from, and the only key in it is <code>SUPABASE_ANON_KEY</code>.</p>
+      </div>
+      <div id="envServiceBox" class="hidden">
+        <div class="block-head"><h3><code>.env.service-role</code> (importer only — never give this to any AI app)</h3>
+        <button class="btn small-btn secondary" data-copy="envServicePre" type="button">Copy</button></div>
+        <pre id="envServicePre"></pre>
+        <p class="small">Save this as a separate local file next to your <code>.env</code>. Only the importer (<code>tools/import_md.py</code>) on your own machine uses it — it has full access to your database.</p>
+      </div>
+    </details>
+    <button class="text-btn" id="doneExtrasBtn" type="button">Bring old memories (optional)</button>
+    <details>
+      <summary>Details</summary>
+      <p>Your agent home lives in your GitHub and your Supabase now, not here. Everything else you need is inside the repo itself (<code>CONNECT.md</code>, <code>ORCHESTRATION.md</code>, <code>BEST-PRACTICES.md</code>).</p>
+      <p>You don't need this page again. Bookmark your repo and database links above — everything else lives inside the repo itself.</p>
+    </details>
+  </section>
+
+  <!-- EXTRAS : IMPORT + MANUAL + WIRING (post-done, optional) -->
+  <section class="screen" id="screen-extras">
+    <h1 id="extrasH1">Extras, if you want them</h1>
+    <p class="lede" id="extrasLede">Optional, forever. Your setup already works without these — and your AI can do any of them with you, anytime. You never need to come back here for them.</p>
+    <button class="btn secondary" id="backToDoneBtn" type="button">Back</button>
+    <button class="btn" id="extrasFullSetBtn" type="button">Get more AIs (free)</button>
+        <details id="decisionsDetails">
+      <summary>Choices we made for you</summary>
+      <p id="decisionsSentence">Your home starts with expert defaults, saved in DECISIONS.md, plus a few open choices. You can change any of them anytime — just ask your AI.</p>
+      <div class="block-head"><h3 id="decisionsBlockH">Settle them one at a time</h3>
+      <button class="btn small-btn secondary" id="decisionsCopyBtn" type="button">Copy</button></div>
+      <pre id="decisionsPre">Read DECISIONS.md in my home. When a situation matches an open decision, ask me that one question, save my answer, and follow it. One at a time, never a list.</pre>
+    </details>
+
+    <details id="scoreboardDetails">
+      <summary>Your best-practices scoreboard</summary>
+      <p class="small">From <code>BEST-PRACTICES.md</code>, the shared register of what we've learned building agent setups like this. Only checks this page actually verified during your setup are listed — anything not verified is not claimed.</p>
+      <div id="scoreboard"></div>
+    </details>
+
+    <div id="stepImport">
+      <details>
+      <summary>Bring what your tools already know</summary>
+      <p>Already have memory files — a Claude or Muse export, ChatGPT or Grok notes, plain local files? Add them here. This page reads them <em>in your browser only</em>, pulls out candidate memories, drops exact duplicates, and shows you every conflict to settle yourself. <strong>Nothing is silently overwritten, ever</strong> — where two files disagree, you pick.</p>
+            <h3 id="notionImportH">Notion — bring it in as files</h3>
+      <p class="small" id="notionImportNote">Honest label: this is a <strong>file import</strong>, not a live connection. You export once, and the files join the same reconcile below.</p>
+      <ol class="small" id="notionImportSteps" style="margin:8px 0;padding-left:24px;line-height:1.7">
+        <li>Open the Notion app → Settings → Export all workspace content.</li>
+        <li>If it arrives as a zip, unzip it.</li>
+        <li>Come back here and add the Markdown (.md) files with the picker below — they reconcile exactly like an AI app's export.</li>
+      </ol>
+      <label for="importFiles">Memory files (.md, .txt, .json — pick as many as you have)</label>
+      <input type="file" id="importFiles" accept=".md,.txt,.json,text/markdown,text/plain,application/json" multiple />
+      <div class="okbox" id="importSummary"></div>
+      <div id="conflictList"></div>
+      <div class="err" id="importErr"></div>
+      <div id="importActions" class="hidden">
+        <button class="btn" id="importRepoBtn" type="button">Write the reconciled import to my repo</button>
+        <p class="small" style="margin-top:8px">Commits two things: your reconciled memories appended to <code>MEMORY.md</code>, and an <code>IMPORT-REPORT.md</code> listing what came from where, which duplicates were dropped, and how each conflict was resolved. Needs the repo from setup (if you import before creating the repo, the import rides along automatically when the repo is created).</p>
+        <button class="btn secondary" id="importRowsBtn" type="button">Show the database rows this prepares</button>
+        <div id="importRowsBox" class="hidden">
+          <div class="block-head"><h3>Rows prepared for the <code>memories</code> table</h3>
+          <button class="btn small-btn secondary" id="importRowsCopy" type="button">Copy JSON</button></div>
+          <pre id="importRowsPre"></pre>
+          <p class="small">Load them with <code>tools/import_md.py</code> from your repo, or paste into your own import. <code>owner_id</code> is left as <code>YOUR-AUTH-USER-ID</code> on purpose: it must be your Supabase auth user id, and this page will not invent one.</p>
+        </div>
+      </div>
+      </details>
+    </div>
+
+    <div id="stepNotion">
+      <details id="notionDetails">
+      <summary>Notion</summary>
+      <p id="notionIntro">Two honest paths — pick either, both, or neither. Your home stays the original either way.</p>
+      <h3 id="notionImportPathH">1. Import what Notion already holds</h3>
+      <p class="small" id="notionImportPathP">Use “Bring what your tools already know” above: export from Notion (app → Settings → Export all workspace content) and add the .md files. A one-time file import — not a live link.</p>
+      <h3 id="notionMirrorPathH">2. Keep a Notion page as a mirror (optional)</h3>
+      <p><span class="tag" id="notionMirrorTag">Mirror only — your home stays the original</span></p>
+      <p class="small" id="notionMirrorP">Paste this into your AI app. It keeps one Notion page updated as a readable copy of your home. Changes flow one way only — home → Notion — never back.</p>
+      <div class="block-head"><h3 id="notionMirrorH">Notion mirror</h3>
+      <button class="btn small-btn secondary" id="notionMirrorCopyBtn" type="button">Copy</button></div>
+      <pre id="notionMirrorPre">Keep a mirror of my agent home in Notion, one way only.
+
+1. Read MEMORY.md, USER.md and DECISIONS.md in my home.
+2. Update my Notion page titled “My agent home — mirror” so it matches them as a clean, readable summary.
+3. Mirror only: never edit my home based on the Notion page, and if the two disagree, my home wins.
+4. Tell me in one line what changed.</pre>
+      </details>
+    </div>
+
+    <div id="step3">
+      <details>
+      <summary>Wire the two together</summary>
+      <p>This commits three safe files to your repo: <code>agent.config.json</code> (project reference + public URL only — <strong>no keys, ever</strong>), a personalised <code>CONNECT.md</code>, and <code>.env.example</code>. Your real keys appear only in the <code>.env</code> boxes on the done screen, for local files that <code>.gitignore</code> keeps out of the repo. If an app needs database access, the exact variable it may receive is <code>SUPABASE_ANON_KEY</code> — never the service-role key, which stays in a separate importer-only file. Wiring normally runs by itself at the end of setup — this button is here if you ever need to run it again.</p>
+      <button class="btn" id="wireBtn" type="button" disabled>Wire it together</button>
+      <ul class="check" id="wireCheck">
+        <li data-k="wire-config"><span class="dot">✓</span><span><code>agent.config.json</code> committed (ref + URL only)</span><span class="st"></span></li>
+        <li data-k="wire-connect"><span class="dot">✓</span><span><code>CONNECT.md</code> committed</span><span class="st"></span></li>
+        <li data-k="wire-readback"><span class="dot">✓</span><span>Wiring read back from the repo and verified</span><span class="st"></span></li>
+      </ul>
+      <div class="err" id="wireErr"></div>
+      <div class="okbox" id="wireOk"></div>
+      <details>
+        <summary>Optional: GitHub Secrets (manual — this page does not do this for you)</summary>
+        <p class="small" style="margin-top:8px">If you later run GitHub Actions against your database, the keys belong in repo secrets. Adding them properly needs GitHub's public-key encryption flow, which this page does not perform — so here is the exact manual click-path instead of a fake button: open your repo → <strong>Settings → Secrets and variables → Actions → New repository secret</strong>, and add <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> from your local <code>.env</code>, one at a time. Add <code>SUPABASE_SERVICE_ROLE_KEY</code> only if an Action truly needs it — it has full access to your database. Takes about two minutes; most people never need it.</p>
+      </details>
+      </details>
+    </div>
+
+    <div id="manual">
+      <details>
+      <summary>Just want the template?</summary>
+      <p>Download every template file and set things up by hand. Fill in what you already have (or plan to have) and the paste blocks below update to match.</p>
+      <label for="mRepo">Your repo URL (optional)</label>
+      <input type="text" id="mRepo" placeholder="https://github.com/you/agent-home" autocomplete="off" spellcheck="false" />
+      <label for="mDb">Your database URL (optional)</label>
+      <input type="text" id="mDb" placeholder="https://xxxx.supabase.co" autocomplete="off" spellcheck="false" />
+      <button class="btn secondary" id="dlBtn" type="button">Download all template files</button>
+      <p class="small" style="margin-top:8px">Your browser will save each file one by one — allow multiple downloads if it asks. Files:</p>
+      <p class="filelist">README.md · SOUL.md · IDENTITY.md · USER.md · AGENTS.md · MEMORY.md · DECISIONS.md · CONNECT.md · ORCHESTRATION.md · BEST-PRACTICES.md · skills/README.md · skills/memory-hygiene.md · skills/verify-before-claiming.md · skills/import-and-reconcile.md · agent.config.example.json · .env.example · .gitignore · db/001_starter_schema.sql · tools/import_md.py</p>
+      <div id="manualBlocks"></div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ADMIN VIEW (owner only, reached via a secret #admin-<key> link) -->
+  <section class="screen" id="adminView">
+    <h1>Who's set up</h1>
+    <p class="lede">Names and repo links only.</p>
+    <p class="small">This link is your key — anyone who has it can see this list (names and repo links only), so keep it private, the way you'd keep a password.</p>
+    <p class="small" id="adminNote"></p>
+    <div id="adminTableWrap" style="overflow-x:auto"></div>
+  </section>
+
+  <button type="button" class="langfab" id="langFabBtn" aria-label="Language / 언어 / Idioma">🇺🇸</button>
+  <div class="langsheet-back" id="langSheetBack"></div>
+  <div class="langsheet" id="langSheet" role="dialog" aria-modal="true" aria-label="Language / 언어 / Idioma">
+    <h2>Language · 언어 · Idioma</h2>
+    <div class="flagdial" role="group" aria-label="Language / 언어 / Idioma">
+      <button type="button" id="langSheetEnBtn" class="flagopt" aria-label="English"><span class="flagcircle" aria-hidden="true">🇺🇸</span><span class="flagword">English</span></button>
+      <button type="button" id="langSheetKoBtn" class="flagopt" aria-label="한국어"><span class="flagcircle" aria-hidden="true">🇰🇷</span><span class="flagword">한국어</span></button>
+      <button type="button" id="langSheetEsBtn" class="flagopt" aria-label="Español"><span class="flagcircle" aria-hidden="true">🇪🇸</span><span class="flagword">Español</span></button>
+    </div>
+    <button type="button" class="sheetclose" id="langSheetClose">Close</button>
+  </div>
+
+  <p class="footer-line" id="footerLine">PowerUpMyAI · powerupmyai.com · Free for the first members · Everything created is yours</p>
+</div>
+
+<script>
+"use strict";
+/* ============ CONFIG — set googleClientId to switch on Continue with Google ============
+   Client-side only (Google Identity Services). The ID token is decoded in the browser
+   purely to prefill name + email; it is never sent to any server of ours (there is none).
+   When empty, the page falls back to name + email fields that do the same prefill. */
+var CONFIG = {
+  googleClientId: "",
+  /* OAuth (one-click connect). The client secret for an OAuth app can never live in a
+     public page, so the code-for-token swap is done by a tiny exchange endpoint:
+     POST {provider:"github"|"supabase", code} -> {access_token}.
+     Reference behaviour is all this page expects; when these are empty the page runs
+     in demo mode and says so on the button — it never simulates a connection. */
+  githubOAuthClientId: "",
+  supabaseOAuthClientId: "",
+  oauthExchangeUrl: "",
+  /* The public address of this page, used as the OAuth return address. Set it to the
+     address this page is actually shared at; left empty, the page uses its own path. */
+  oauthRedirectUri: "",
+  /* Optional register: the same helper worker's /register address. When set, the done
+     screen's tick-box can tell the person who shared the page that a setup finished,
+     and the owner's secret admin link (#admin-<key>) can read the list back. */
+  registryUrl: "",
+  MUSE_REFERRAL_CODE: "18GRDY",
+  /* "Get the full set" signup links. Defaults are the plain official signup pages;
+     the operator may replace any of them with a referral/invite link — signups then
+     carry the sharer's referral code automatically, because opening the link IS the
+     mechanism. Nothing about referrals is shown on screen beyond one Details line. */
+  signupUrls: {
+    claude: "https://claude.ai/",
+    chatgpt: "https://chatgpt.com/",
+    grok: "https://grok.com/",
+    muse: "https://muse.ai/join"
+  }
+};
+/* SIGNUP_URLS — the same links, as the flat constant the flow reads. */
+var SIGNUP_URLS = CONFIG.signupUrls;
+
+/* ============ state (memory only — nothing is ever persisted) ============ */
+var S = {
+  name:"", email:"", repoName:"agent-home", repoTouched:false,
+  verified:{}, importState:null,
+  ghToken:"", ghUser:"", repoUrl:"", repoFull:"", repoDone:false,
+  sbToken:"", sbOrgId:"", sbRegion:"ap-southeast-1", projectRef:"", projectUrl:"",
+  dbPassword:"", anonKey:"", serviceKey:"", dbDone:false, dbSkipped:false,
+  wired:false, verificationPhrase:"", ownerId:""
+};
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function b64encode(str){
+  var bytes=new TextEncoder().encode(str), bin="";
+  for(var i=0;i<bytes.length;i++){bin+=String.fromCharCode(bytes[i]);}
+  return btoa(bin);
+}
+function genPassword(){
+  var chars="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#%^*-_=+";
+  var arr=new Uint32Array(28); crypto.getRandomValues(arr);
+  var out=""; for(var i=0;i<arr.length;i++){out+=chars[arr[i]%chars.length];}
+  return out;
+}
+/* One random verification phrase per setup session (e.g. "harbor-lantern-42").
+   Generated once, cached in S, and written into MEMORY.md as a seed line; the
+   per-app sync checks ask the app to quote it back from MEMORY.md verbatim. */
+function verificationPhrase(){
+  if(S.verificationPhrase)return S.verificationPhrase;
+  var words=["harbor","lantern","meadow","cedar","willow","copper","velvet","ember","orchard","marble","compass","saddle","timber","violet","juniper","maple","beacon","anchor","falcon","glacier","river","summit","tulip","walnut","pearl","onyx","dune","cinder","cobalt","zephyr"];
+  var arr=new Uint32Array(3); crypto.getRandomValues(arr);
+  var w1=words[arr[0]%words.length], w2=words[arr[1]%words.length];
+  if(w2===w1)w2=words[(arr[1]+1)%words.length];
+  S.verificationPhrase=w1+"-"+w2+"-"+(10+(arr[2]%90));
+  return S.verificationPhrase;
+}
+function setCheck(listId,key,state,note){
+  var li=document.querySelector("#"+listId+" li[data-k='"+key+"']");
+  if(!li)return;
+  li.classList.remove("doing","done","failed");
+  if(state)li.classList.add(state);
+  var st=li.querySelector(".st");
+  if(st)st.textContent=note||(state==="done"?"verified":state==="failed"?"failed":"");
+}
+function showErr(id,msg){var e=$(id);e.textContent=msg;e.classList.add("show");}
+function clearErr(id){var e=$(id);e.textContent="";e.classList.remove("show");}
+function showOk(id,html){var e=$(id);e.innerHTML=html;e.classList.add("show");}
+function providerErr(prefix,body,status){
+  var m="";
+  if(body&&body.message)m=body.message;
+  else if(body&&body.msg)m=body.msg;
+  else if(typeof body==="string")m=body;
+  return prefix+" (HTTP "+status+")"+(m?": "+m:"");
+}
+
+/* ============ the template — guided prompts, never blank pages ============ */
+function tplReadme(v){
+return "# "+v.repoName+" — my agent home\n\n"+
+"This repository is the home base for my AI assistants. It holds who I am, how I want to be helped, and what my tools have learned about me — in files I can read, backed by a database I own.\n\n"+
+"## Which store is canonical\n\n"+
+"**The database is canonical.** The Markdown files here are the human-readable layer: easy to read, edit and diff. The database (Supabase, schema in `db/`) is the store of record — structured, queryable, and protected by owner-only row-level security. When a file and the database disagree, the database wins, and the file gets regenerated or corrected.\n\n"+
+"## What lives where\n\n"+
+"- `USER.md` — who I am. `IDENTITY.md` — names and handles for me and my assistant.\n"+
+"- `SOUL.md` — the assistant's persona. `AGENTS.md` — how the assistant should work.\n"+
+"- `MEMORY.md` — curated long-term memory (the distilled version; the full store is the database).\n"+
+"- `DECISIONS.md` — the choices set for you at setup, and the open choices to settle later, one at a time.\n"+
+"- `CONNECT.md` — the paste blocks that point each of my AI tools at this repo and database.\n"+
+"- `agent.config.json` — non-secret config only: project reference and public URL. **No keys, ever.**\n"+
+"- `db/` — the database schema and migrations.\n"+
+"- `tools/import_md.py` — imports existing Markdown memory files into the database.\n\n"+
+"## Rules for any AI tool reading this\n\n"+
+"1. Read `AGENTS.md`, `USER.md`, `SOUL.md` and `MEMORY.md` before doing anything else.\n"+
+"2. Write durable facts about me to the database (`memories` table), not just into chat. Keep `MEMORY.md` as the curated summary.\n"+
+"3. What you learn about me stays here, under my keys. Never copy it anywhere else.\n"+
+"4. Never ask for, print, or commit credentials. Keys live only in a local `.env` file (see `.env.example`), which `.gitignore` keeps out of this repo.\n\n"+
+"## Moving in from scattered files\n\n"+
+"If you already have memory files from Claude, ChatGPT, Grok or local notes, run `tools/import_md.py` — it loads them into the database so nothing learned so far is lost.\n";
+}
+function tplSoul(v){
+return "# SOUL.md — the assistant's persona\n\n"+
+"<!-- Guided prompts: answer the questions in your own words, then delete the comments. -->\n\n"+
+"## Voice\n"+
+"<!-- How should the assistant sound? e.g. \"Direct and warm. Short answers by default; detail when I ask. No corporate filler, no flattery.\" -->\n\n"+
+"## Stance\n"+
+"<!-- How should it treat you? e.g. \"A chief of staff, not a servant: push back when I'm wrong, flag what I haven't noticed, don't just agree.\" -->\n\n"+
+"## Hard lines\n"+
+"<!-- What must it never do? e.g. \"Never send anything as me without my approval. Never invent a fact about me. Say 'I don't know' instead of guessing.\" -->\n\n"+
+"## What good looks like\n"+
+"<!-- Describe the best interaction you've had with an assistant, human or AI. What made it good? -->\n";
+}
+function tplIdentity(v){
+return "# IDENTITY.md — names and handles\n\n"+
+"<!-- Fill in what applies; delete the rest. -->\n\n"+
+"- **My name:** "+(v.name||"<!-- your name -->")+"\n"+
+"- **My email:** "+(v.email||"<!-- the email your accounts run under -->")+"\n"+
+"- **What to call me:** <!-- e.g. first name, nickname -->\n"+
+"- **My assistant's name:** <!-- give it one if you like — it makes the relationship concrete -->\n"+
+"- **Timezone:** <!-- e.g. Asia/Tokyo — your tools need this to reason about your day -->\n"+
+"- **Languages:** <!-- which languages you work in -->\n";
+}
+function tplUser(v){
+return "# USER.md — who I am\n\n"+
+"<!-- Guided prompts. Short honest answers beat polished ones. Your assistant reads this to stop treating you like a stranger. -->\n\n"+
+"## The basics\n"+
+"- **Name:** "+(v.name||"")+"\n"+
+"- **Email:** "+(v.email||"")+"\n"+
+"- **Where I'm based / how I move:** <!-- home base, travel pattern -->\n"+
+"- **What I do:** <!-- job, company, what you're building -->\n\n"+
+"## What I'm working on\n"+
+"<!-- Your main projects right now, in priority order. What does success look like this quarter? -->\n\n"+
+"## How I work\n"+
+"<!-- When are you sharpest? How do you like information — bottom line first, or the reasoning? What do you hate in replies (length, hedging, formatting)? -->\n\n"+
+"## People who matter\n"+
+"<!-- Key people: name, who they are to you, what to remember. The structured version lives in the `people` table. -->\n\n"+
+"## Health, constraints, non-negotiables\n"+
+"<!-- Anything an assistant should never schedule over, suggest against, or forget. Only what you're comfortable storing here — this repo is private and yours. -->\n\n"+
+"## What I want more / less of\n"+
+"<!-- Goals in plain words. The structured version lives in the `goals` table. -->\n";
+}
+function tplAgents(v){
+return "# AGENTS.md — how the assistant should work\n\n"+
+"## Before anything else\n"+
+"Read `README.md`, `USER.md`, `SOUL.md` and `MEMORY.md` in this repo. If a database connection is configured (see `agent.config.json` and the local `.env`), the database is the canonical store — check it for facts about the user before answering from chat memory alone.\n\n"+
+"## Memory discipline\n"+
+"- When you learn a durable fact about the user (a preference, a person, a decision, a date), write it to the `memories` table with its source, and update `MEMORY.md` if it belongs in the curated summary.\n"+
+"- A correction from the user beats any older source: mark the old memory superseded, don't just add a conflicting one.\n"+
+"- Something the assistant itself said is never evidence about the user. Only user statements and verified sources count.\n\n"+
+"## Behaviour\n"+
+"- Be proactive within the bounds in `SOUL.md`: surface what is coming, what is at risk, and what looks forgotten — not just answers to what was asked.\n"+
+"- Verify before stating: check the repo, the database, or a real source before presenting a fact as settled.\n"+
+"- Never send, post, or commit anything as the user without explicit approval.\n"+
+"- Never print, request, or store credentials. If a task needs a key, it comes from the local `.env` at runtime only.\n\n"+
+"## Privacy\n"+
+"Everything in this repo and database is the user's private information. Do not copy it to any other tool, repo, or conversation.\n";
+}
+function tplMemory(v){
+return "# MEMORY.md — curated long-term memory\n\n"+
+"<!-- The distilled layer. The full store is the database (`memories` table); this file holds what an assistant should always have in mind. Keep it tight — promote what lasts, prune what doesn't. -->\n\n"+
+"## Standing facts\n"+
+"<!-- One line each, dated when learned. The first one below is true already — it was written when this home was set up. -->\n"+
+"- Set up my agent home with PowerUpMyAI (owner: "+(v.name||"not filled in yet")+", "+new Date().toISOString().slice(0,10)+")\n"+
+"- Verification phrase: "+(v.verificationPhrase||verificationPhrase())+"\n\n"+
+"## Preferences that have held\n"+
+"<!-- Only preferences confirmed more than once. A single mention is a hint, not a fact. -->\n\n"+
+"## Decisions in force\n"+
+"<!-- Decisions made, with the date. When one is reversed, strike it through and add the new one — don't silently delete history. -->\n\n"+
+"## Open loops\n"+
+"<!-- Things promised, pending, or waiting on someone. Carry these forward until they close. -->\n";
+}
+function tplGitignore(){
+return ".env\n.env.*\n!.env.example\n__pycache__/\n*.pyc\n.DS_Store\n";
+}
+function tplEnvExample(v){
+return "# Copy this file to .env and fill it in. .env is git-ignored — never commit real keys.\n"+
+"SUPABASE_URL="+(v.projectUrl||"https://YOUR-PROJECT-REF.supabase.co")+"\n"+
+"SUPABASE_ANON_KEY=\n"+
+"SUPABASE_SERVICE_ROLE_KEY=   # local use only (e.g. tools/import_md.py) — full access, guard it\n"+
+"# DATABASE_URL=              # only if a tool connects to Postgres directly\n";
+}
+function tplConfigExample(v){
+return JSON.stringify({repo:v.repoName,supabase:{project_ref:"YOUR-PROJECT-REF",url:"https://YOUR-PROJECT-REF.supabase.co"},canonical_store:"database",note:"Non-secret values only. Keys live in a local .env, never in this repo."},null,2)+"\n";
+}
+function tplConfig(v){
+return JSON.stringify({repo:v.repoName,supabase:{project_ref:v.projectRef||"",url:v.projectUrl||""},canonical_store:"database",note:"Non-secret values only. Keys live in a local .env, never in this repo."},null,2)+"\n";
+}
+function tplSchema(){
+return "-- 001_starter_schema.sql — agent home starter schema\n"+
+"-- A personal memory store with owner-only row-level security from line one.\n"+
+"-- Principle: what the system learns about the person stays in THEIR database, under THEIR keys.\n"+
+"-- owner_id is the Supabase auth user id (auth.uid()). Every policy below is owner-only:\n"+
+"-- a signed-in user can see and change only rows where owner_id = their own id.\n\n"+
+"create extension if not exists pgcrypto;\n\n"+
+"-- updated_at helper -----------------------------------------------------------\n"+
+"create or replace function public.set_updated_at()\n"+
+"returns trigger language plpgsql as $$\n"+
+"begin new.updated_at = now(); return new; end; $$;\n\n"+
+"-- memories: durable facts and notes about the owner --------------------------\n"+
+"create table if not exists public.memories (\n"+
+"  id uuid primary key default gen_random_uuid(),\n"+
+"  owner_id uuid not null,\n"+
+"  kind text not null default 'fact',          -- fact | preference | decision | note\n"+
+"  content text not null,\n"+
+"  source text,                                 -- where it came from (tool, file, conversation)\n"+
+"  confidence numeric,                          -- 0..1, how sure we are\n"+
+"  superseded_by uuid references public.memories(id),\n"+
+"  tags text[] not null default '{}',\n"+
+"  created_at timestamptz not null default now(),\n"+
+"  updated_at timestamptz not null default now()\n"+
+");\n\n"+
+"-- people ----------------------------------------------------------------------\n"+
+"create table if not exists public.people (\n"+
+"  id uuid primary key default gen_random_uuid(),\n"+
+"  owner_id uuid not null,\n"+
+"  name text not null,\n"+
+"  relationship text,\n"+
+"  notes text,\n"+
+"  created_at timestamptz not null default now(),\n"+
+"  updated_at timestamptz not null default now()\n"+
+");\n\n"+
+"-- goals -----------------------------------------------------------------------\n"+
+"create table if not exists public.goals (\n"+
+"  id uuid primary key default gen_random_uuid(),\n"+
+"  owner_id uuid not null,\n"+
+"  title text not null,\n"+
+"  detail text,\n"+
+"  status text not null default 'active',       -- active | paused | done | dropped\n"+
+"  created_at timestamptz not null default now(),\n"+
+"  updated_at timestamptz not null default now()\n"+
+");\n\n"+
+"-- conversations: a log of what was discussed, with whom/what -------------------\n"+
+"create table if not exists public.conversations (\n"+
+"  id uuid primary key default gen_random_uuid(),\n"+
+"  owner_id uuid not null,\n"+
+"  source text,                                 -- Muse | claude | chatgpt | grok | instinct | other\n"+
+"  summary text,\n"+
+"  raw_ref text,                                -- link or path to the full transcript, if kept\n"+
+"  happened_at timestamptz not null default now(),\n"+
+"  created_at timestamptz not null default now()\n"+
+");\n\n"+
+"-- sources: the tools and feeds connected to this home --------------------------\n"+
+"create table if not exists public.sources (\n"+
+"  id uuid primary key default gen_random_uuid(),\n"+
+"  owner_id uuid not null,\n"+
+"  kind text not null,                          -- ai-tool | file-import | calendar | mail | other\n"+
+"  label text not null,\n"+
+"  detail jsonb not null default '{}'::jsonb,\n"+
+"  created_at timestamptz not null default now(),\n"+
+"  updated_at timestamptz not null default now()\n"+
+");\n\n"+
+"-- indexes -----------------------------------------------------------------------\n"+
+"create index if not exists memories_owner_idx on public.memories(owner_id, created_at desc);\n"+
+"create index if not exists memories_tags_idx on public.memories using gin(tags);\n"+
+"create index if not exists people_owner_idx on public.people(owner_id);\n"+
+"create index if not exists goals_owner_idx on public.goals(owner_id, status);\n"+
+"create index if not exists conversations_owner_idx on public.conversations(owner_id, happened_at desc);\n"+
+"create index if not exists sources_owner_idx on public.sources(owner_id);\n\n"+
+"-- updated_at triggers -----------------------------------------------------------\n"+
+"drop trigger if exists memories_updated on public.memories;\n"+
+"create trigger memories_updated before update on public.memories for each row execute function public.set_updated_at();\n"+
+"drop trigger if exists people_updated on public.people;\n"+
+"create trigger people_updated before update on public.people for each row execute function public.set_updated_at();\n"+
+"drop trigger if exists goals_updated on public.goals;\n"+
+"create trigger goals_updated before update on public.goals for each row execute function public.set_updated_at();\n"+
+"drop trigger if exists sources_updated on public.sources;\n"+
+"create trigger sources_updated before update on public.sources for each row execute function public.set_updated_at();\n\n"+
+"-- row-level security: owner-only, on every table, from line one ------------------\n"+
+"alter table public.memories enable row level security;\n"+
+"alter table public.people enable row level security;\n"+
+"alter table public.goals enable row level security;\n"+
+"alter table public.conversations enable row level security;\n"+
+"alter table public.sources enable row level security;\n\n"+
+"drop policy if exists memories_owner on public.memories;\n"+
+"create policy memories_owner on public.memories for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);\n"+
+"drop policy if exists people_owner on public.people;\n"+
+"create policy people_owner on public.people for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);\n"+
+"drop policy if exists goals_owner on public.goals;\n"+
+"create policy goals_owner on public.goals for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);\n"+
+"drop policy if exists conversations_owner on public.conversations;\n"+
+"create policy conversations_owner on public.conversations for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);\n"+
+"drop policy if exists sources_owner on public.sources;\n"+
+"create policy sources_owner on public.sources for all using (auth.uid() = owner_id) with check (auth.uid() = owner_id);\n\n"+
+"-- owners: one row per auth user — the record every import and write relies on --\n"+
+"create table if not exists public.owners (\n"+
+"  id uuid primary key,\n"+
+"  display_name text,\n"+
+"  created_at timestamptz not null default now()\n"+
+");\n\n"+
+"-- owner bootstrap: create the owners row the moment an auth user appears -------\n"+
+"-- Without this, no owners row ever exists and every import / database write that\n"+
+"-- checks it fails. Security definer so the insert is not blocked by row-level\n"+
+"-- security on the owners table itself.\n"+
+"create or replace function public.handle_new_auth_user()\n"+
+"returns trigger language plpgsql security definer set search_path = public as $$\n"+
+"begin\n"+
+"  insert into public.owners (id, display_name)\n"+
+"  values (new.id, coalesce(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name'))\n"+
+"  on conflict (id) do nothing;\n"+
+"  return new;\n"+
+"end; $$;\n\n"+
+"drop trigger if exists on_auth_user_created on auth.users;\n"+
+"create trigger on_auth_user_created\n"+
+"  after insert on auth.users\n"+
+"  for each row execute function public.handle_new_auth_user();\n\n"+
+"-- backfill: owners rows for auth users who already exist -----------------------\n"+
+"insert into public.owners (id, display_name)\n"+
+"select id, coalesce(raw_user_meta_data->>'full_name', raw_user_meta_data->>'name') from auth.users\n"+
+"on conflict (id) do nothing;\n";
+}
+function tplImportPy(){
+return "#!/usr/bin/env python3\n"+
+"\"\"\"\n"+
+"import_md.py — import existing Markdown memory files into your agent-home database.\n\n"+
+"The migration path away from scattered file memory: files stay the human-readable\n"+
+"layer, the database becomes the store. Each Markdown file becomes rows in the\n"+
+"`memories` table (split on headings), tagged with its source filename.\n\n"+
+"Usage:\n"+
+"    pip install requests python-dotenv\n"+
+"    python tools/import_md.py ./my-old-memory-folder [--source claude-export]\n\n"+
+"Keys are read from a local .env file ONLY (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY,\n"+
+"OWNER_ID). Nothing is read from, or written to, the repo. The service-role key has\n"+
+"full access to your project — it never leaves your machine in this script except\n"+
+"in requests to your own Supabase project.\n"+
+"\"\"\"\n"+
+"import argparse, os, re, sys\n"+
+"from pathlib import Path\n\n"+
+"import requests\n"+
+"try:\n"+
+"    from dotenv import load_dotenv\n"+
+"    load_dotenv()\n"+
+"except ImportError:\n"+
+"    pass  # a real environment works too; .env is just the convenient default\n\n\n"+
+"def split_markdown(text):\n"+
+"    \"\"\"Split a Markdown file into (heading, body) chunks on ## / ### headings.\"\"\"\n"+
+"    chunks, heading, buf = [], \"(intro)\", []\n"+
+"    for line in text.splitlines():\n"+
+"        m = re.match(r\"^#{2,3}\\s+(.*)\", line)\n"+
+"        if m:\n"+
+"            if any(x.strip() for x in buf):\n"+
+"                chunks.append((heading, \"\\n\".join(buf).strip()))\n"+
+"            heading, buf = m.group(1).strip(), []\n"+
+"        else:\n"+
+"            buf.append(line)\n"+
+"    if any(x.strip() for x in buf):\n"+
+"        chunks.append((heading, \"\\n\".join(buf).strip()))\n"+
+"    return [(h, b) for h, b in chunks if b]\n\n\n"+
+"def main():\n"+
+"    ap = argparse.ArgumentParser(description=__doc__)\n"+
+"    ap.add_argument(\"folder\", help=\"folder of .md files to import\")\n"+
+"    ap.add_argument(\"--source\", default=\"file-import\", help=\"source label stored on each row\")\n"+
+"    args = ap.parse_args()\n\n"+
+"    url = os.environ.get(\"SUPABASE_URL\")\n"+
+"    key = os.environ.get(\"SUPABASE_SERVICE_ROLE_KEY\")\n"+
+"    owner = os.environ.get(\"OWNER_ID\")  # your Supabase auth user id\n"+
+"    if not (url and key and owner):\n"+
+"        sys.exit(\"Missing SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY or OWNER_ID — check your local .env\")\n\n"+
+"    headers = {\"apikey\": key, \"Authorization\": f\"Bearer {key}\", \"Content-Type\": \"application/json\"}\n"+
+"    total = 0\n"+
+"    for path in sorted(Path(args.folder).rglob(\"*.md\")):\n"+
+"        for heading, body in split_markdown(path.read_text(encoding=\"utf-8\")):\n"+
+"            row = {\"owner_id\": owner, \"kind\": \"note\",\n"+
+"                   \"content\": f\"{heading}\\n\\n{body}\",\n"+
+"                   \"source\": args.source, \"tags\": [path.name]}\n"+
+"            r = requests.post(f\"{url}/rest/v1/memories\", headers=headers, json=row, timeout=30)\n"+
+"            r.raise_for_status()\n"+
+"            total += 1\n"+
+"        print(f\"{path}: imported\")\n"+
+"    print(f\"Done — {total} memories imported into {url}\")\n\n\n"+
+"if __name__ == \"__main__\":\n"+
+"    main()\n";
+}
+
+/* ============ CONNECT blocks ============ */
+var TOOLS=[
+  {id:"muse",label:"Muse"},
+  {id:"claude",label:"Claude"},
+  {id:"chatgpt",label:"ChatGPT"},
+  {id:"grok",label:"Grok"},
+  {id:"instinct",label:"Instinct"},
+  {id:"other",label:"Any other AI tool"}
+];
+function connectBlock(tool,v){
+  var repo=v.repoUrl||"https://github.com/YOUR-USERNAME/"+v.repoName;
+  var hasDb=/^https?:\/\//.test(v.projectUrl||"");
+  var head="You have a new home base for everything you learn about me. Use it from now on.\n\n"+
+  "Repo (private, mine): "+repo+"\n";
+  var rules;
+  if(hasDb){
+    rules="Database (canonical store): "+v.projectUrl+"\n\n"+
+    "Before helping me with anything:\n"+
+    "1. Read README.md, AGENTS.md, USER.md, SOUL.md and MEMORY.md in that repo.\n"+
+    "2. The database is the canonical store; the Markdown files are the human-readable layer. If they disagree, the database wins.\n"+
+    "3. When you learn a durable fact about me — a preference, a person, a decision, a date — write it to the `memories` table in that database (with its source), and keep MEMORY.md as the curated summary. A correction from me beats any older source: supersede the old memory, don't add a conflicting one.\n"+
+    "4. What you learn about me stays in my repo and my database, under my keys. Never copy it anywhere else.\n";
+  }else{
+    rules="Database: none yet — I work from the files until I add one.\n\n"+
+    "Before helping me with anything:\n"+
+    "1. Read README.md, AGENTS.md, USER.md, SOUL.md and MEMORY.md in that repo.\n"+
+    "2. Until a database is added, the Markdown files are the canonical store — MEMORY.md is where durable facts live. (A database comes later and takes over as canonical then; README.md explains the switch.)\n"+
+    "3. When you learn a durable fact about me — a preference, a person, a decision, a date — write it into MEMORY.md in that repo (with where it came from). A correction from me beats any older note: replace the old line, don't add a conflicting one.\n"+
+    "4. What you learn about me stays in my repo, under my keys. Never copy it anywhere else.\n";
+  }
+  return head+rules+
+  "5. Never ask for, print, or commit my credentials. Keys live only in a local .env file on my machine. The only key an app may ever receive from that file is the one named SUPABASE_ANON_KEY — never the service-role key, which is importer-only.\n\n"+
+  "Confirm you've read the files by telling me, in one line each: who I am, what I'm working on, and one open loop from MEMORY.md.";
+}
+function tplDecisions(v){
+return "# DECISIONS.md — choices made for you, and choices still open\n\n"+
+"Expert defaults were set at setup so this home works well from day one. You can change any of them anytime — just ask your assistant. Open choices are settled one at a time, in context, when they actually come up — never as a questionnaire.\n\n"+
+"## Defaults in force\n\n"+
+"- The database is the canonical store; the Markdown files are the readable layer.\n"+
+"- Private by default: nothing leaves this home, and credentials never enter the repo.\n"+
+"- Verify before claiming: done means checked, not just attempted.\n"+
+"- A correction from you beats any older source, and blocks the stale source from refilling it.\n"+
+"- The assistant's own words never count as evidence about you.\n"+
+"- Same settings everywhere is the default. A setting may differ per app only when you mark it intentionally separate (scoped) — then it is recorded here and never flagged as a conflict.\n"+
+"- Notion, if used, is a one-way mirror only: home \u2192 Notion. The home stays the original.\n\n"+
+"## Open choices — ask me one at a time\n\n"+
+"<!-- When a situation matches one of these, the assistant asks that ONE question, saves the answer under Settled, and follows it. -->\n"+
+"1. What should the assistant be called?\n"+
+"2. How proactive should it be — speak up on its own, or only when asked?\n"+
+"3. What voice: short and direct, or warm and detailed?\n"+
+"4. Should any setting be different in one app on purpose (scoped)? Which, and why?\n"+
+"5. Do you want a Notion mirror page kept updated?\n"+
+"6. Which languages and timezone should it reason in by default?\n\n"+
+"## Settled\n\n"+
+"<!-- Answers land here, dated, as open choices get decided. -->\n";
+}
+function tplConnect(v){
+  var out="# CONNECT.md — point every AI tool at this home\n\n"+
+  "There is no shared one-click sign-in across AI tools, so each tool gets a paste block. Paste the block for a tool as its first message, or into its custom / project instructions. Re-paste after big changes to `AGENTS.md` or `USER.md`.\n";
+  TOOLS.forEach(function(t){
+    out+="\n## "+t.label+"\n\n```text\n"+connectBlock(t,{repoUrl:v.repoUrl,repoName:v.repoName,projectUrl:v.projectUrl})+"\n```\n";
+  });
+  return out;
+}
+function tplSkillsIndex(){
+return "# Skills — reusable know-how for your assistant\n\n"+
+"Skills are short instruction files your assistant loads when a situation matches. They turn hard-won lessons into behaviour that repeats without you re-teaching it.\n\n"+
+"- `memory-hygiene.md` — how to keep the memory store clean and trustworthy.\n"+
+"- `verify-before-claiming.md` — never say something is done or true until it has been checked.\n"+
+"- `import-and-reconcile.md` — how to bring in memories from other tools without overwriting anything.\n\n"+
+"Add your own: one file per skill, named for the situation, written as direct instructions.\n";
+}
+function tplSkillMemory(){
+return "# Skill: memory hygiene\n\n"+
+"Use whenever storing, updating, or pruning what you know about the owner.\n\n"+
+"1. **The database is canonical.** Files are the readable layer; when they disagree, the database wins.\n"+
+"2. **Corrections beat history.** When the owner corrects a fact, mark the old memory superseded (`superseded_by`) — never leave two conflicting facts both looking live, and never let the stale source refill the corrected fact.\n"+
+"3. **Your own words are not evidence.** Something you (or another assistant) said is never proof about the owner. Only the owner's statements and verified sources become memories.\n"+
+"4. **Two echoes of one source count once.** The same claim repeated by the same origin is one piece of evidence, not two.\n"+
+"5. **A preference is a fact only when it has held.** One mention is a hint; write it as a preference after it repeats or the owner confirms it.\n"+
+"6. **Prune on a rhythm.** Periodically merge near-duplicates, drop expired open loops, and keep `MEMORY.md` to what an assistant should always hold in mind.\n";
+}
+function tplSkillVerify(){
+return "# Skill: verify before claiming\n\n"+
+"Use before telling the owner anything is done, true, sent, booked, or fixed.\n\n"+
+"1. **Check the thing itself, not the request.** Sent is proven by the sent message existing, not by having pressed send. Created is proven by reading it back.\n"+
+"2. **State your proof level.** Distinguish plainly: *I set this up* / *I tested it and it worked* / *someone else confirmed it*. Never upgrade a level in the telling.\n"+
+"3. **If you can't verify, say so.** \"I couldn't check\" is a complete and acceptable answer; a confident guess is not.\n"+
+"4. **Errors are shown, not smoothed over.** When a provider refuses something, report its actual message and the likely fix.\n";
+}
+function tplSkillImport(){
+return "# Skill: import and reconcile\n\n"+
+"Use when bringing memories in from another tool or file set (Claude, ChatGPT, Grok, local notes).\n\n"+
+"1. **Nothing is silently overwritten.** Ever. Imports add; conflicts are surfaced.\n"+
+"2. **Dedupe exact duplicates** — same content, same meaning: keep one, record the drop in the import report.\n"+
+"3. **Conflicts go to the owner.** Same topic, different values: present both, with their sources, and let the owner pick — keep one, or keep both flagged as contested.\n"+
+"4. **Every import leaves a report** (`IMPORT-REPORT.md`): what came from where, duplicates dropped, conflicts and their resolutions.\n"+
+"5. **Existing corrections win.** If the owner already corrected a fact, an imported older version must not refill it.\n";
+}
+function tplOrchestration(){
+return "# ORCHESTRATION.md — how work runs in this home\n\n"+
+"The operating system for this agent home, learned from building it. Any assistant working here follows it.\n\n"+
+"## One ledger\n"+
+"Every open item lives in ONE register (the open-loops section of `MEMORY.md`, mirrored to the `goals`/`conversations` tables): what it is, who owns it, what is left. **Never duplicate an item — update it.** An item is struck through when done, not deleted, so history survives.\n\n"+
+"## Boards\n"+
+"- **Needs you** — things only the owner can decide or unblock. Keep it short; every item says exactly what decision is needed.\n"+
+"- **In motion** — work an assistant is actively doing, with the next step written down.\n"+
+"- **Done, with proof** — finished items, each with its evidence (a link, a read-back, a measured result). A claim without proof is not done.\n\n"+
+"## Rules of work\n"+
+"1. **Verify before done.** An item moves to Done only with proof attached (see `skills/verify-before-claiming.md`).\n"+
+"2. **Highest value first; small slices.** Ship the smallest useful piece, show it, continue.\n"+
+"3. **Blocked means named.** If something is stuck, the ledger says what exactly is needed and from whom — then work moves to the next item instead of waiting idle.\n"+
+"4. **Open loops carry forward.** Nothing silently expires. An open item stays visible in every review until it closes or the owner drops it.\n"+
+"5. **Learn at every stage.** When something fails, the fix is not just the instance — the lesson goes into `BEST-PRACTICES.md` or a skill file so it cannot recur quietly.\n";
+}
+function tplBestPractices(v){
+return "# BEST-PRACTICES.md — the register\n\n"+
+"A single shared scoreboard of the best practices learned creating this system. One row per practice — never duplicate a row, update it. “Status for you” is set at setup and updated as your assistant verifies more in daily use.\n\n"+
+"| Practice | Why | Status for you | Verified how |\n"+
+"|---|---|---|---|\n"+
+"| Private repo, verified by read-back | Your files are personal; “private” must be proven, not assumed | Applied at setup | The setup page read the repo back from GitHub and checked it is private |\n"+
+"| Database is canonical | Files scatter and drift; one store of record keeps every tool in sync | Applied at setup | Stated in README.md and AGENTS.md; config points every tool at the database |\n"+
+"| Owner-only row-level security, verified by query | Memory is only safe if the database itself refuses other people's access | Applied at setup | The setup page queried the database and confirmed security is on for every table |\n"+
+"| Credentials never in the repo | Repos get shared, cloned and backed up; keys must live outside them | Applied at setup | The committed config was read back and contains only a project reference and a public address — no keys |\n"+
+"| A correction blocks the stale source | Otherwise the assistant relearns the wrong fact from the old note forever | In the template | MEMORY.md and skills/memory-hygiene.md carry the rule |\n"+
+"| The agent's own words never count as evidence | An assistant agreeing with itself manufactures false certainty | In the template | AGENTS.md and skills/memory-hygiene.md carry the rule |\n"+
+"| Verify before claiming done | “Done” without proof is how things silently break | In the template | skills/verify-before-claiming.md; setup checklists only turn green on read-back |\n"+
+"| One ledger, no duplicate items | Scattered lists are how things get forgotten | In the template | ORCHESTRATION.md sets the single-register rule |\n"+
+"| Imports reconciled, never silently overwritten | Your history belongs to you; a tool must not quietly replace it | In the template | skills/import-and-reconcile.md; every import leaves IMPORT-REPORT.md |\n";
+}
+function templateFiles(v){
+  var files=[
+    {path:"README.md",content:tplReadme(v)},
+    {path:"SOUL.md",content:tplSoul(v)},
+    {path:"IDENTITY.md",content:tplIdentity(v)},
+    {path:"USER.md",content:tplUser(v)},
+    {path:"AGENTS.md",content:tplAgents(v)},
+    {path:"MEMORY.md",content:tplMemory(v)},
+    {path:"DECISIONS.md",content:tplDecisions(v)},
+    {path:"CONNECT.md",content:tplConnect(v)},
+    {path:"agent.config.example.json",content:tplConfigExample(v)},
+    {path:".env.example",content:tplEnvExample(v)},
+    {path:".gitignore",content:tplGitignore()},
+    {path:"db/001_starter_schema.sql",content:tplSchema()},
+    {path:"tools/import_md.py",content:tplImportPy()},
+    {path:"ORCHESTRATION.md",content:tplOrchestration()},
+    {path:"BEST-PRACTICES.md",content:tplBestPractices(v)},
+    {path:"skills/README.md",content:tplSkillsIndex()},
+    {path:"skills/memory-hygiene.md",content:tplSkillMemory()},
+    {path:"skills/verify-before-claiming.md",content:tplSkillVerify()},
+    {path:"skills/import-and-reconcile.md",content:tplSkillImport()}
+  ];
+  if(S.importState&&S.importState.mergedMd){
+    for(var i=0;i<files.length;i++){
+      if(files[i].path==="MEMORY.md")files[i].content+=S.importState.mergedMd;
+    }
+    files.push({path:"IMPORT-REPORT.md",content:S.importState.reportMd});
+  }
+  return files;
+}
+function currentVars(){
+  return {name:S.name,email:S.email,repoName:S.repoName,repoUrl:S.repoUrl,projectRef:S.projectRef,projectUrl:S.projectUrl,verificationPhrase:verificationPhrase()};
+}
+function renderBlocks(containerId,v){
+  var c=$(containerId); c.innerHTML="";
+  TOOLS.forEach(function(t){
+    var head=document.createElement("div"); head.className="block-head";
+    var h=document.createElement("h3"); h.textContent=t.label;
+    var b=document.createElement("button"); b.className="btn small-btn secondary"; b.type="button"; b.textContent="Copy";
+    var pre=document.createElement("pre"); pre.textContent=connectBlock(t,v);
+    b.addEventListener("click",function(){
+      copyText(pre.textContent,b);
+    });
+    head.appendChild(h); head.appendChild(b); c.appendChild(head); c.appendChild(pre);
+  });
+}
+function copyText(text,btn){
+  function done(){ if(btn){var o=btn.textContent; btn.textContent="Copied"; setTimeout(function(){btn.textContent=o;},1600);} }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(function(){fallback();});
+  } else fallback();
+  function fallback(){
+    var ta=document.createElement("textarea"); ta.value=text; ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.select();
+    try{document.execCommand("copy"); done();}catch(e){}
+    document.body.removeChild(ta);
+  }
+}
+document.querySelectorAll("[data-copy]").forEach(function(b){
+  b.addEventListener("click",function(){ copyText($(b.getAttribute("data-copy")).textContent,b); });
+});
+
+/* ============ GitHub ============ */
+function readBasics(){
+  S.name=$("fName").value.trim();
+  S.email=$("fEmail").value.trim();
+  var rn=$("fRepo").value.trim().toLowerCase();
+  S.repoName=/^[a-z0-9][a-z0-9._-]*$/.test(rn)?rn:"agent-home";
+  return S.repoName;
+}
+async function ghFetch(path,opts){
+  opts=opts||{};
+  opts.headers=Object.assign({
+    "Authorization":"Bearer "+S.ghToken,
+    "Accept":"application/vnd.github+json",
+    "X-GitHub-Api-Version":"2022-11-28",
+    "Content-Type":"application/json"
+  },opts.headers||{});
+  var res=await fetch("https://api.github.com"+path,opts);
+  var body=null; try{body=await res.json();}catch(e){}
+  if(!res.ok) throw new Error(providerErr("GitHub said no",body,res.status));
+  return body;
+}
+async function ghCreate(){
+  clearErr("ghErr"); $("ghOk").classList.remove("show");
+  readBasics();
+  if(!S.ghToken)S.ghToken=$("ghToken").value.trim();
+  if(!S.ghToken){showErr("ghErr","Connect GitHub first — use the Connect button, or the code under “Advanced / having trouble?” below.");return;}
+  var btn=$("ghBtn"); btn.disabled=true; btn.textContent="Working — talking to GitHub…";
+  try{
+    setCheck("ghCheck","gh-verify","doing","checking…");
+    var user=await ghFetch("/user");
+    S.ghUser=user.login;
+    setCheck("ghCheck","gh-verify","done","@"+user.login);
+
+    setCheck("ghCheck","gh-create","doing","creating…");
+    var repo=await ghFetch("/user/repos",{method:"POST",body:JSON.stringify({
+      name:S.repoName,private:true,auto_init:false,
+      description:"My agent home — private memory and instructions for my AI tools."
+    })});
+    S.repoFull=repo.full_name; S.repoUrl=repo.html_url;
+    setCheck("ghCheck","gh-create","done",repo.full_name);
+
+    var files=templateFiles(currentVars());
+    setCheck("ghCheck","gh-upload","doing","0 / "+files.length+" files");
+    for(var i=0;i<files.length;i++){
+      await ghFetch("/repos/"+S.repoFull+"/contents/"+files[i].path,{method:"PUT",body:JSON.stringify({
+        message:"Add "+files[i].path+" (Agent Home Setup)",
+        content:b64encode(files[i].content)
+      })});
+      setCheck("ghCheck","gh-upload","doing",(i+1)+" / "+files.length+" files");
+    }
+    setCheck("ghCheck","gh-upload","done",files.length+" files");
+
+    setCheck("ghCheck","gh-readback","doing","reading back…");
+    var back=await ghFetch("/repos/"+S.repoFull);
+    if(back.private!==true) throw new Error("GitHub read-back says the repo is NOT private. Stop and check github.com/"+S.repoFull+" settings before putting anything personal in it.");
+    var root=await ghFetch("/repos/"+S.repoFull+"/contents/");
+    var names=root.map(function(x){return x.name;});
+    ["README.md","USER.md","AGENTS.md","MEMORY.md"].forEach(function(n){
+      if(names.indexOf(n)===-1) throw new Error("Read-back could not find "+n+" in the new repo.");
+    });
+    setCheck("ghCheck","gh-readback","done","private ✓, files ✓");
+    S.verified.repoPrivate="Read back from GitHub after creation — the repo itself reported private: true";
+    S.verified.filesPresent="Read back from GitHub — the file list contains README.md, USER.md, AGENTS.md and MEMORY.md";
+    S.repoDone=true;
+    $("ghToken").value="";
+    showOk("ghOk","<strong>Done — verified.</strong> Your private repo is live: <a href=\""+esc(S.repoUrl)+"\" target=\"_blank\" rel=\"noopener\">"+esc(S.repoUrl)+"</a>. The token field has been cleared on this page; you can revoke the token in GitHub settings whenever you like.");
+    updateWireBtn();
+  }catch(e){
+    ["gh-verify","gh-create","gh-upload","gh-readback"].forEach(function(k){
+      var li=document.querySelector("#ghCheck li[data-k='"+k+"']");
+      if(li&&li.classList.contains("doing"))setCheck("ghCheck",k,"failed","failed");
+    });
+    showErr("ghErr",e.message);
+  }finally{
+    btn.disabled=false; btn.textContent="Create my private folder";
+  }
+}
+
+/* ============ Supabase ============ */
+async function sbFetch(path,opts){
+  opts=opts||{};
+  opts.headers=Object.assign({
+    "Authorization":"Bearer "+S.sbToken,
+    "Content-Type":"application/json"
+  },opts.headers||{});
+  var res=await fetch("https://api.supabase.com/v1"+path,opts);
+  var body=null; try{body=await res.json();}catch(e){}
+  if(!res.ok) throw new Error(providerErr("Supabase said no",body,res.status));
+  return body;
+}
+async function sbLoadOrgs(){
+  clearErr("sbErr");
+  if(!S.sbToken)S.sbToken=$("sbToken").value.trim();
+  if(!S.sbToken){showErr("sbErr","Connect Supabase first — use the Connect button, or the code under “Advanced / having trouble?” below.");return;}
+  try{
+    var orgs=await sbFetch("/organizations");
+    if(!orgs||!orgs.length) throw new Error("Supabase returned no organisations for this token. Create one in the Supabase dashboard first, then try again.");
+    var sel=$("sbOrg"); sel.innerHTML="";
+    orgs.forEach(function(o){
+      var op=document.createElement("option"); op.value=o.id; op.textContent=o.name; sel.appendChild(op);
+    });
+    S.sbOrgId=sel.value;
+    setCheck("sbCheck","sb-verify","done",orgs.length+" org"+(orgs.length>1?"s":""));
+    showOk("sbOk","Token verified — "+orgs.length+" organisation"+(orgs.length>1?"s":"")+" found. Pick one (if you have several), check the region, then create the database.");
+  }catch(e){ showErr("sbErr",e.message); }
+}
+async function sbQuery(ref,sql){
+  return sbFetch("/projects/"+ref+"/database/query",{method:"POST",body:JSON.stringify({query:sql})});
+}
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
+async function sbCreate(){
+  clearErr("sbErr"); $("sbOk").classList.remove("show");
+  readBasics();
+  if(!S.sbToken)S.sbToken=$("sbToken").value.trim();
+  S.sbRegion=$("sbRegion").value;
+  if(!S.sbToken){showErr("sbErr","Connect Supabase first — use the Connect button, or the code under “Advanced / having trouble?” below.");return;}
+  var btn=$("sbBtn"); btn.disabled=true; btn.textContent="Working — this can take a couple of minutes…";
+  try{
+    if(!S.sbOrgId){
+      var orgs=await sbFetch("/organizations");
+      if(!orgs||!orgs.length) throw new Error("Supabase returned no organisations for this token.");
+      var sel=$("sbOrg"); sel.innerHTML="";
+      orgs.forEach(function(o){var op=document.createElement("option");op.value=o.id;op.textContent=o.name;sel.appendChild(op);});
+      S.sbOrgId=sel.value;
+    }
+    setCheck("sbCheck","sb-verify","done","org ready");
+
+    S.dbPassword=genPassword();
+    setCheck("sbCheck","sb-create","doing","creating…");
+    var proj=await sbFetch("/projects",{method:"POST",body:JSON.stringify({
+      name:S.repoName,organization_id:S.sbOrgId,region:S.sbRegion,plan:"free",db_pass:S.dbPassword
+    })});
+    S.projectRef=proj.id||proj.ref;
+    if(!S.projectRef) throw new Error("Supabase created something but returned no project reference — check your Supabase dashboard before retrying.");
+    S.projectUrl="https://"+S.projectRef+".supabase.co";
+    setCheck("sbCheck","sb-create","done",S.projectRef);
+    $("sbPw").textContent=S.dbPassword;
+    $("sbPwBox").classList.remove("hidden");
+
+    setCheck("sbCheck","sb-active","doing","waiting…");
+    var deadline=Date.now()+6*60*1000, status="";
+    while(Date.now()<deadline){
+      var p=await sbFetch("/projects/"+S.projectRef);
+      status=p.status||"";
+      if(status==="ACTIVE_HEALTHY")break;
+      if(/FAIL/i.test(status)) throw new Error("Supabase reports the project status as "+status+". Check the Supabase dashboard for details.");
+      setCheck("sbCheck","sb-active","doing",status||"starting…");
+      await sleep(6000);
+    }
+    if(status!=="ACTIVE_HEALTHY") throw new Error("The project did not reach ACTIVE_HEALTHY within 6 minutes (last status: "+(status||"unknown")+"). It may still finish — check supabase.com/dashboard, then paste the blocks from the done screen manually.");
+    setCheck("sbCheck","sb-active","done","ACTIVE_HEALTHY");
+
+    setCheck("sbCheck","sb-schema","doing","applying…");
+    await sbQuery(S.projectRef,tplSchema());
+    setCheck("sbCheck","sb-schema","done","applied");
+
+    setCheck("sbCheck","sb-readback","doing","querying…");
+    var rows=await sbQuery(S.projectRef,"select table_name from information_schema.tables where table_schema='public' and table_name in ('memories','people','goals','conversations','sources') order by table_name;");
+    var found=(rows||[]).map(function(r){return r.table_name;});
+    var need=["conversations","goals","memories","people","sources"];
+    var missing=need.filter(function(n){return found.indexOf(n)===-1;});
+    if(missing.length) throw new Error("Schema verification failed — tables missing after apply: "+missing.join(", ")+". The SQL is in db/001_starter_schema.sql in your repo; you can run it in the Supabase SQL editor.");
+    var rls=await sbQuery(S.projectRef,"select count(*)::int as n from pg_tables where schemaname='public' and rowsecurity=true and tablename in ('memories','people','goals','conversations','sources');");
+    if(!rls||!rls[0]||rls[0].n!==5) throw new Error("Tables exist, but row-level security is not confirmed on all 5 tables. Run db/001_starter_schema.sql in the Supabase SQL editor to finish hardening.");
+    setCheck("sbCheck","sb-readback","done","5 tables, RLS on");
+    S.verified.tablesExist="Queried your database — all five tables (memories, people, goals, conversations, sources) are there";
+    S.verified.rlsOn="Queried your database — owner-only locking (row-level security) is switched on for all five tables";
+
+    try{
+      var keys=await sbFetch("/projects/"+S.projectRef+"/api-keys");
+      (keys||[]).forEach(function(k){
+        if(k.name==="anon")S.anonKey=k.api_key;
+        if(k.name==="service_role")S.serviceKey=k.api_key;
+      });
+    }catch(e){ /* keys can also be copied from the dashboard; not fatal */ }
+
+    S.dbDone=true; S.dbSkipped=false;
+    $("sbToken").value="";
+    showOk("sbOk","<strong>Done — verified by querying your database.</strong> Project <code>"+esc(S.projectRef)+"</code> is live at "+esc(S.projectUrl)+" with all five tables and owner-only row-level security on. Dashboard: <a href=\"https://supabase.com/dashboard/project/"+esc(S.projectRef)+"\" target=\"_blank\" rel=\"noopener\">supabase.com/dashboard/project/"+esc(S.projectRef)+"</a>. Save the database password above now — it is shown only here.");
+    updateWireBtn();
+  }catch(e){
+    ["sb-verify","sb-create","sb-active","sb-schema","sb-readback"].forEach(function(k){
+      var li=document.querySelector("#sbCheck li[data-k='"+k+"']");
+      if(li&&li.classList.contains("doing"))setCheck("sbCheck",k,"failed","failed");
+    });
+    showErr("sbErr",e.message);
+  }finally{
+    btn.disabled=false; btn.textContent="Create my memory store";
+  }
+}
+
+/* ============ Wiring + done screen ============ */
+function updateWireBtn(){
+  $("wireBtn").disabled=!(S.repoDone&&(S.dbDone||S.dbSkipped));
+  if(S.repoDone&&!S.dbDone&&!S.dbSkipped){
+    /* repo only: allow wiring too — config will carry an empty db section */
+    $("wireBtn").disabled=false;
+  }
+}
+async function putFile(path,content,msg){
+  var sha=null;
+  try{ var ex=await ghFetch("/repos/"+S.repoFull+"/contents/"+path); sha=ex.sha; }catch(e){}
+  var payload={message:msg,content:b64encode(content)};
+  if(sha)payload.sha=sha;
+  return ghFetch("/repos/"+S.repoFull+"/contents/"+path,{method:"PUT",body:JSON.stringify(payload)});
+}
+function envContents(){
+  return "# .env — LOCAL ONLY. Never commit this file. .gitignore already excludes it.\n"+
+  "# This file holds only what apps may see: the project URL, SUPABASE_ANON_KEY and your owner id.\n"+
+  "# The service-role key is NOT here — it lives in .env.service-role (importer only).\n"+
+  "SUPABASE_URL="+(S.projectUrl||"")+"\n"+
+  "SUPABASE_ANON_KEY="+(S.anonKey||"")+"\n"+
+  "OWNER_ID="+(S.ownerId||"")+"\n"+
+  "# SUPABASE_ANON_KEY lives at: https://supabase.com/dashboard/project/"+(S.projectRef||"YOUR-REF")+"/settings/api\n"+
+  "# OWNER_ID is your Supabase auth user id (dashboard → Authentication → Users).\n";
+}
+function envServiceContents(){
+  return "# .env.service-role — LOCAL ONLY. Importer only — never give this to any AI app. Never commit this file.\n"+
+  "# Full database access. Used only by tools/import_md.py running on your own machine.\n"+
+  "SUPABASE_URL="+(S.projectUrl||"")+"\n"+
+  "SUPABASE_SERVICE_ROLE_KEY="+(S.serviceKey||"")+"\n"+
+  "OWNER_ID="+(S.ownerId||"")+"\n"+
+  "# Get the key from: https://supabase.com/dashboard/project/"+(S.projectRef||"YOUR-REF")+"/settings/api\n";
+}
+async function wire(){
+  clearErr("wireErr"); $("wireOk").classList.remove("show");
+  if(!S.repoDone){showErr("wireErr","Create the repo in step 1 first.");return;}
+  if(!S.ghToken){
+    S.ghToken=$("ghToken").value.trim();
+    if(!S.ghToken){showErr("wireErr","The GitHub token field was cleared after step 1 for safety. Paste the token again here (step 1 field), then click Wire again — it is used only for these last commits.");$("ghToken").focus();return;}
+  }
+  var btn=$("wireBtn"); btn.disabled=true; btn.textContent="Committing…";
+  try{
+    var v=currentVars();
+    setCheck("wireCheck","wire-config","doing","committing…");
+    await putFile("agent.config.json",tplConfig(v),"Wire agent home config (ref + URL only, no keys)");
+    setCheck("wireCheck","wire-config","done","committed");
+    setCheck("wireCheck","wire-connect","doing","committing…");
+    await putFile("CONNECT.md",tplConnect(v),"Personalise CONNECT.md for "+(S.name||"owner"));
+    await putFile(".env.example",tplEnvExample(v),".env.example with project URL");
+    setCheck("wireCheck","wire-connect","done","committed");
+    setCheck("wireCheck","wire-readback","doing","reading back…");
+    var cfg=await ghFetch("/repos/"+S.repoFull+"/contents/agent.config.json");
+    if(!cfg||!cfg.content) throw new Error("Could not read agent.config.json back from the repo.");
+    var decoded=JSON.parse(decodeURIComponent(escape(atob(cfg.content.replace(/\n/g,"")))));
+    if(S.projectRef&&decoded.supabase.project_ref!==S.projectRef) throw new Error("Read-back config does not match your database project — wiring not confirmed.");
+    setCheck("wireCheck","wire-readback","done","verified");
+    S.verified.configNoKeys="Read back from GitHub — agent.config.json holds only the project reference and public address, no keys";
+    if(S.projectRef)S.verified.dbCanonical="Read back from GitHub — the config every tool reads points at your database as the canonical store";
+    S.wired=true;
+    $("envPre").textContent=envContents();
+    $("envBox").classList.remove("hidden");
+    $("envServicePre").textContent=envServiceContents();
+    $("envServiceBox").classList.remove("hidden");
+    showOk("wireOk","<strong>Wired — and read back from GitHub to prove it.</strong> The repo holds only the project reference and public URL. Your keys exist only in the boxes below, for your local files. If an app needs a key, the exact variable it may receive is <code>SUPABASE_ANON_KEY</code> — never the service-role key.");
+    fullSetReturn="step4";
+    showScreen("stepFullSet");
+  }catch(e){
+    ["wire-config","wire-connect","wire-readback"].forEach(function(k){
+      var li=document.querySelector("#wireCheck li[data-k='"+k+"']");
+      if(li&&li.classList.contains("doing"))setCheck("wireCheck",k,"failed","failed");
+    });
+    showErr("wireErr",e.message);
+  }finally{
+    btn.disabled=false; btn.textContent="Wire it together";
+  }
+}
+function confirmBlock(tool,v){
+  var repo=v.repoUrl||"https://github.com/YOUR-USERNAME/"+v.repoName;
+  var hasDb=/^https?:\/\//.test(v.projectUrl||"");
+  return "Quick sync check — please do exactly this:\n\n"+
+  "1. Open my private agent home: "+repo+"\n"+
+  "2. Read these files: README.md, USER.md, MEMORY.md and AGENTS.md.\n"+
+  "3. Then reply with these four things, in this order, so I can check you're really reading my home:\n"+
+  "   (1) FIRST, the verification phrase from MEMORY.md: find the line beginning “Verification phrase:” and quote the phrase after it exactly, word for word;\n"+
+  "   (2) my name, as written in USER.md;\n"+
+  "   (3) one fact about me from MEMORY.md, quoted word for word;\n"+
+  "   (4) "+(hasDb?"the line: Canonical store: database":"the line: Canonical store: files (no database yet)")+"\n\n"+
+  "Two honest fallbacks — use them instead of guessing:\n"+
+  "- If you can't read my agent home, or MEMORY.md has no “Verification phrase:” line, reply exactly: I can't read your agent home yet.\n"+
+  "- If a field you need is blank, name the blank field (for example: “Your name in USER.md is blank”). That means I'm wired, just not filled in yet — it is not a failure.\n\n"+
+  "Never invent a name, a fact, or a verification phrase to fill a blank.";
+}
+function renderConfirm(containerId,v){
+  var c=$(containerId); c.innerHTML="";
+  TOOLS.slice(0,5).forEach(function(t){
+    var head=document.createElement("div"); head.className="block-head";
+    var h=document.createElement("h3"); h.textContent=t.label;
+    var b=document.createElement("button"); b.className="btn small-btn secondary"; b.type="button"; b.textContent="Copy";
+    var pre=document.createElement("pre"); pre.textContent=confirmBlock(t,v);
+    b.addEventListener("click",function(){ copyText(pre.textContent,b); });
+    head.appendChild(h); head.appendChild(b); c.appendChild(head); c.appendChild(pre);
+  });
+}
+function renderScoreboard(){
+  var rows=[
+    ["Private repo, verified by read-back",S.verified.repoPrivate],
+    ["Template files present in the repo",S.verified.filesPresent],
+    ["Database tables exist",S.verified.tablesExist],
+    ["Owner-only locking on, on every table",S.verified.rlsOn],
+    ["No keys in the repo — config holds only a reference and a public address",S.verified.configNoKeys],
+    ["Database is the canonical store every tool points at",S.verified.dbCanonical]
+  ].filter(function(r){return !!r[1];});
+  var c=$("scoreboard");
+  if(!rows.length){c.innerHTML="<p class=\"small\">No checks verified yet in this session.</p>";return;}
+  var html="<ul class=\"check\">";
+  rows.forEach(function(r){
+    html+="<li class=\"done\"><span class=\"dot\">✓</span><span><strong>"+esc(r[0])+"</strong><br><span class=\"small\">How it was checked: "+esc(r[1])+"</span></span></li>";
+  });
+  c.innerHTML=html+"</ul>";
+}
+function showDone(){
+  var v=currentVars();
+  var links="";
+  if(S.repoUrl)links+="<p><strong>Your repo:</strong> <a href=\""+esc(S.repoUrl)+"\" target=\"_blank\" rel=\"noopener\">"+esc(S.repoUrl)+"</a> (private)</p>";
+  if(S.projectRef)links+="<p><strong>Your database:</strong> <a href=\"https://supabase.com/dashboard/project/"+esc(S.projectRef)+"\" target=\"_blank\" rel=\"noopener\">Supabase project "+esc(S.projectRef)+"</a> — "+esc(S.projectUrl)+"</p>";
+  else links+="<p><strong>Database:</strong> not added yet — files only for now. You can run step 2 any time and re-wire.</p>";
+  $("doneLinks").innerHTML=links;
+  maybeRegister();
+  renderScoreboard();
+  updateNotionMirror();
+  renderConfirm("confirmBlocks",v);
+  renderBlocks("doneBlocks",v);
+  loadProofBubble();
+  showScreen("step4");
+}
+
+/* ============ manual / download path ============ */
+function manualVars(){
+  readBasics();
+  return {name:S.name,repoName:S.repoName,repoUrl:$("mRepo").value.trim(),projectRef:"",projectUrl:$("mDb").value.trim(),verificationPhrase:verificationPhrase()};
+}
+function refreshManual(){ renderBlocks("manualBlocks",manualVars()); }
+function downloadAll(){
+  var v=manualVars();
+  var files=templateFiles(v);
+  files.forEach(function(f,i){
+    setTimeout(function(){
+      var blob=new Blob([f.content],{type:"text/plain;charset=utf-8"});
+      var a=document.createElement("a");
+      a.href=URL.createObjectURL(blob);
+      a.download=f.path.split("/").pop();
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){URL.revokeObjectURL(a.href); a.remove();},400);
+    },i*350);
+  });
+}
+
+/* ============ OAuth — the primary, one-click connect path ============ */
+function pageUrl(){ return CONFIG.oauthRedirectUri || ""; }
+function oauthConfigured(provider){
+  if(provider==="github")return !!(CONFIG.githubOAuthClientId&&CONFIG.oauthExchangeUrl);
+  return !!(CONFIG.supabaseOAuthClientId&&CONFIG.oauthExchangeUrl);
+}
+function startOAuth(provider){
+  if(!pageUrl()){
+    showErr(provider==="supabase"?"sbErr":"ghErr","This copy is missing its return address (CONFIG.oauthRedirectUri) — the person who published it needs to set that before one-click sign-in can work. The code option under “Advanced / having trouble?” works meanwhile.");
+    return;
+  }
+  var clientId=provider==="github"?CONFIG.githubOAuthClientId:CONFIG.supabaseOAuthClientId;
+  var arr=new Uint32Array(8); crypto.getRandomValues(arr); var state="";
+  for(var i=0;i<arr.length;i++)state+=arr[i].toString(16);
+  try{sessionStorage.setItem("ah_oauth",JSON.stringify({state:state,provider:provider}));}catch(e){}
+  var url;
+  if(provider==="github"){
+    url="https://github.com/login/oauth/authorize?client_id="+encodeURIComponent(clientId)+
+      "&scope=repo&state="+state+"&redirect_uri="+encodeURIComponent(pageUrl());
+  }else{
+    url="https://api.supabase.com/v1/oauth/authorize?client_id="+encodeURIComponent(clientId)+
+      "&response_type=code&state="+state+"&redirect_uri="+encodeURIComponent(pageUrl());
+  }
+  location.assign(url);
+}
+async function exchangeCode(provider,code){
+  var res=await fetch(CONFIG.oauthExchangeUrl,{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({provider:provider,code:code})});
+  var body=null; try{body=await res.json();}catch(e){}
+  if(!res.ok||!body||!body.access_token)
+    throw new Error("The sign-in helper couldn't finish connecting"+(body&&body.error?": "+body.error:"")+". Try again, or use the code option under “Advanced / having trouble?”");
+  return body.access_token;
+}
+async function sbAfterConnect(){
+  var orgs=await sbFetch("/organizations");
+  if(orgs&&orgs.length){
+    var sel=$("sbOrg"); sel.innerHTML="";
+    orgs.forEach(function(o){var op=document.createElement("option");op.value=o.id;op.textContent=o.name;sel.appendChild(op);});
+    S.sbOrgId=sel.value;
+  }
+  setCheck("sbCheck","sb-verify","done","connected");
+}
+async function handleOAuthReturn(){
+  var q=new URLSearchParams(location.search);
+  var code=q.get("code"), state=q.get("state");
+  if(!code)return;
+  var saved=null;
+  try{saved=JSON.parse(sessionStorage.getItem("ah_oauth")||"null"); sessionStorage.removeItem("ah_oauth");}catch(e){}
+  if(pageUrl()){ try{history.replaceState(null,"",pageUrl()+(location.hash||""));}catch(e){} }
+  if(!saved||saved.state!==state){
+    showErr(saved&&saved.provider==="supabase"?"sbErr":"ghErr",
+      "That sign-in didn't check out — a safety code didn't match, so nothing was connected. Please click Connect and try again.");
+    return;
+  }
+  try{
+    var token=await exchangeCode(saved.provider,code);
+    if(saved.provider==="github"){
+      S.ghToken=token;
+      var u=await ghFetch("/user"); S.ghUser=u.login;
+      setCheck("ghCheck","gh-verify","done","@"+u.login);
+      showOk("ghConnected","✓ You're connected as <strong>@"+esc(u.login)+"</strong>. Your folder is being created now.");
+      showScreen("step1"); setTimeout(function(){runGithubFlow();},400);
+    }else{
+      S.sbToken=token;
+      await sbAfterConnect();
+      showOk("sbConnected","✓ You're connected to Supabase. Your memory store is being created now.");
+      showScreen("step2"); setTimeout(function(){runSupabaseFlow();},400);
+    }
+  }catch(e){
+    showErr(saved.provider==="supabase"?"sbErr":"ghErr",e.message);
+  }
+}
+function initConnect(){
+  var ghPill=$("ghPill"), sbPill=$("sbPill");
+  if(ghPill){ if(oauthConfigured("github")){ghPill.textContent="One click";} else {ghPill.textContent="Demo mode — code fallback"; ghPill.classList.add("paste");} }
+  if(sbPill){ if(oauthConfigured("supabase")){sbPill.textContent="One click";} else {sbPill.textContent="Demo mode — code fallback"; sbPill.classList.add("paste");} }
+  var gdl=$("ghDemoLine"); if(gdl){ if(oauthConfigured("github"))gdl.classList.add("hidden"); else gdl.classList.remove("hidden"); }
+  var sdl=$("sbDemoLine"); if(sdl){ if(oauthConfigured("supabase"))sdl.classList.add("hidden"); else sdl.classList.remove("hidden"); }
+  var gb=$("ghConnectBtn"), gn=$("ghConnectNote");
+  if(oauthConfigured("github")){
+    gb.textContent="Connect GitHub";
+    gn.textContent="This opens GitHub's own sign-in screen. You approve there — this page never sees your password.";
+    gb.addEventListener("click",function(){ startOAuth("github"); });
+  }else{
+    gb.textContent="Demo mode: OAuth isn't switched on for this copy of the page yet";
+    gn.textContent="When the person who published this page adds the small sign-in helper, this button connects GitHub in one click. For now, the code option under “Advanced / having trouble?” below does exactly the same job.";
+    gb.addEventListener("click",function(){ $("ghAdvanced").open=true; $("ghAdvanced").scrollIntoView({behavior:"smooth",block:"center"}); });
+  }
+  var sb=$("sbConnectBtn"), sn=$("sbConnectNote");
+  if(oauthConfigured("supabase")){
+    sb.textContent="Connect Supabase";
+    sn.textContent="This opens Supabase's own sign-in screen. You approve there — this page never sees your password.";
+    sb.addEventListener("click",function(){ startOAuth("supabase"); });
+  }else{
+    sb.textContent="Demo mode: OAuth isn't switched on for this copy of the page yet";
+    sn.textContent="When the person who published this page adds the small sign-in helper, this button connects Supabase in one click. For now, the code option under “Advanced / having trouble?” below does exactly the same job.";
+    sb.addEventListener("click",function(){ $("sbAdvanced").open=true; $("sbAdvanced").scrollIntoView({behavior:"smooth",block:"center"}); });
+  }
+}
+
+/* ============ code fallback: checked the moment it's pasted ============ */
+function debounce(fn,ms){var t;return function(){clearTimeout(t);var self=this,args=arguments;t=setTimeout(function(){fn.apply(self,args);},ms);};}
+async function verifyGhToken(){
+  var v=$("ghToken").value.trim();
+  clearErr("ghTokenErr"); $("ghTokenStatus").classList.remove("show");
+  if(v.length<10)return;
+  S.ghToken=v;
+  try{
+    var u=await ghFetch("/user"); S.ghUser=u.login;
+    setCheck("ghCheck","gh-verify","done","@"+u.login);
+    showOk("ghTokenStatus","✓ This works — you're connected as <strong>@"+esc(u.login)+"</strong>. Now click “Create my private folder” above.");
+  }catch(e){
+    S.ghToken="";
+    showErr("ghTokenErr","That code didn't work. The usual reason: it was copied incompletely, or it has expired. The fix: make a fresh code using the steps above, copy the whole thing, and paste it here. (GitHub's exact reply: "+e.message+")");
+  }
+}
+async function verifySbToken(){
+  var v=$("sbToken").value.trim();
+  clearErr("sbTokenErr"); $("sbTokenStatus").classList.remove("show");
+  if(v.length<10)return;
+  S.sbToken=v;
+  try{
+    await sbAfterConnect();
+    showOk("sbTokenStatus","✓ This works — you're connected. Now pick your group and area above and click “Create my memory store”.");
+  }catch(e){
+    S.sbToken="";
+    showErr("sbTokenErr","That code didn't work. The usual reason: it was copied incompletely, or it has expired. The fix: make a fresh code using the steps above, copy the whole thing, and paste it here. (Supabase's exact reply: "+e.message+")");
+  }
+}
+
+/* ============ identity: Google + name/email prefill ============ */
+function suggestRepo(){
+  if(S.repoTouched)return;
+  var first=(S.name||"").trim().split(/\s+/)[0].toLowerCase().replace(/[^a-z0-9-]/g,"");
+  $("fRepo").value=first?first+"-agent-home":"agent-home";
+}
+function updateIdentitySummary(){
+  readBasics();
+  if(!S.name&&!S.email){$("identitySummary").classList.remove("show");return;}
+  showOk("identitySummary","Setting up for <strong>"+esc(S.name||"")+"</strong>"+(S.email?" ("+esc(S.email)+")":"")+" — use this same name and email when you sign up for GitHub and Supabase, so all the accounts line up as yours.");
+}
+function applyIdentity(name,email){
+  if(name)$("fName").value=name;
+  if(email)$("fEmail").value=email;
+  readBasics(); suggestRepo(); readBasics(); updateIdentitySummary(); refreshManual();
+}
+function decodeJwt(t){
+  var p=t.split(".")[1].replace(/-/g,"+").replace(/_/g,"/");
+  return JSON.parse(decodeURIComponent(escape(atob(p))));
+}
+function initGoogle(){
+  if(!CONFIG.googleClientId){
+    $("googleWrap").classList.add("hidden");
+    return;
+  }
+  $("googleNote").textContent="Opens Google's own sign-in. This page reads only your name and email from it, to fill in the boxes below — they are never sent anywhere else.";
+  var s=document.createElement("script");
+  s.src="https://accounts.google.com/gsi/client"; s.async=true; s.defer=true;
+  s.onload=function(){
+    try{
+      google.accounts.id.initialize({client_id:CONFIG.googleClientId,callback:function(resp){
+        try{var p=decodeJwt(resp.credential); applyIdentity(p.name||"",p.email||"");}catch(e){}
+      }});
+      google.accounts.id.renderButton($("googleBtnReal"),{theme:"outline",size:"large",text:"continue_with"});
+      $("googleBtn").classList.add("hidden");
+    }catch(e){}
+  };
+  document.head.appendChild(s);
+}
+
+/* ============ import & reconcile ============ */
+function candidateFromLine(raw,file){
+  var t=raw.replace(/^[-*#>\s]+/,"").trim();
+  if(t.length<8||t.length>400)return null;
+  if(/^https?:\/\//.test(t))return null;
+  var m=t.match(/^([^:]{2,60}):\s*(.+)$/);
+  if(m)return {topic:m[1].trim(),value:m[2].trim(),content:t,source:file};
+  var words=t.split(/\s+/);
+  return {topic:words.slice(0,3).join(" "),value:t,content:t,source:file};
+}
+function parseImportText(text,file){
+  var out=[];
+  if(file.toLowerCase().slice(-5)===".json"){
+    try{
+      var data=JSON.parse(text);
+      var walk=function(o){
+        if(typeof o==="string"){var c=candidateFromLine(o,file); if(c)out.push(c);}
+        else if(Array.isArray(o))o.forEach(walk);
+        else if(o&&typeof o==="object")Object.keys(o).forEach(function(k){
+          if(typeof o[k]==="string")out.push({topic:k,value:o[k],content:k+": "+o[k],source:file});
+          else walk(o[k]);
+        });
+      };
+      walk(data); return out;
+    }catch(e){ /* fall through to line parsing */ }
+  }
+  text.split(/\r?\n/).forEach(function(line){ var c=candidateFromLine(line,file); if(c)out.push(c); });
+  return out;
+}
+async function handleImportFiles(){
+  clearErr("importErr");
+  var files=$("importFiles").files;
+  if(!files||!files.length)return;
+  var all=[], perFile={};
+  for(var i=0;i<files.length;i++){
+    var text=await files[i].text();
+    var cs=parseImportText(text,files[i].name);
+    perFile[files[i].name]=cs.length; all=all.concat(cs);
+  }
+  var seen={}, deduped=[], dropped=0;
+  all.forEach(function(c){
+    var k=c.content.toLowerCase().replace(/\s+/g," ");
+    if(seen[k])dropped++; else {seen[k]=1; deduped.push(c);}
+  });
+  var byTopic={};
+  deduped.forEach(function(c){ var k=c.topic.toLowerCase(); (byTopic[k]=byTopic[k]||[]).push(c); });
+  var conflicts=[], accepted=[];
+  Object.keys(byTopic).forEach(function(k){
+    var g=byTopic[k], vals={};
+    g.forEach(function(c){ vals[c.value.toLowerCase()]=1; });
+    if(Object.keys(vals).length>1)conflicts.push({topic:g[0].topic,items:g});
+    else accepted=accepted.concat(g);
+  });
+  S.importState={accepted:accepted,conflicts:conflicts,resolutions:{},dropped:dropped,perFile:perFile,mergedMd:"",reportMd:""};
+  conflicts.forEach(function(c,i){ S.importState.resolutions[i]="both"; });
+  renderImport();
+}
+function finalMemories(){
+  var st=S.importState, out=st.accepted.slice();
+  st.conflicts.forEach(function(c,i){
+    var r=st.resolutions[i];
+    if(r==="both"||r==="scoped")out=out.concat(c.items);
+    else out.push(c.items[parseInt(r,10)||0]);
+  });
+  return out;
+}
+function buildImportDocs(){
+  var st=S.importState, mems=finalMemories(), date=new Date().toISOString().slice(0,10);
+  var md="\n\n## Imported memories ("+date+")\n\n";
+  mems.forEach(function(m){ md+="- "+m.content+" _(from "+m.source+")_\n"; });
+  st.mergedMd=md;
+  var rep="# IMPORT-REPORT.md — what was brought in, and what was decided\n\nImported on "+date+". Nothing was silently overwritten.\n\n## Sources\n\n";
+  Object.keys(st.perFile).forEach(function(f){ rep+="- `"+f+"` — "+st.perFile[f]+" candidate memories found\n"; });
+  rep+="\n## Duplicates dropped\n\n"+st.dropped+" exact duplicate"+(st.dropped===1?"":"s")+" removed.\n\n## Conflicts and resolutions\n\n";
+  if(!st.conflicts.length)rep+="None found.\n";
+  st.conflicts.forEach(function(c,i){
+    var r=st.resolutions[i];
+    rep+="- **"+c.topic+"** — "+c.items.map(function(x){return "“"+x.value+"” ("+x.source+")";}).join(" vs ")+
+      " → resolution: "+(r==="scoped"?"kept both — intentionally separate, scoped ("+scopeLabel(c)+"), never re-flagged":r==="both"?"kept both, flagged as contested":"kept “"+c.items[parseInt(r,10)||0].value+"”")+"\n";
+  });
+  rep+="\n## Imported\n\n"+mems.length+" memories written to MEMORY.md and prepared as rows for the `memories` table.\n";
+  st.reportMd=rep;
+}
+function scopeLabel(cf){
+  return cf.items.map(function(it){
+    var src=String(it.source||"one app").replace(/\.[a-z0-9]+$/i,"").replace(/[-_]+/g," ");
+    return src+" only";
+  }).join(" / ");
+}
+function renderImport(){
+  var st=S.importState; buildImportDocs();
+  var kept=finalMemories().length;
+  showOk("importSummary","Read "+Object.keys(st.perFile).length+" file(s): <strong>"+kept+" memories</strong> after settling, "+st.dropped+" exact duplicates dropped, "+st.conflicts.length+" conflict(s)"+(st.conflicts.length?" to settle below":"")+". Nothing has been overwritten.");
+  var c=$("conflictList"); c.innerHTML="";
+  st.conflicts.forEach(function(cf,i){
+    var box=document.createElement("div");
+    box.style.cssText="border:1px solid var(--line);border-radius:10px;padding:16px;margin:12px 0;background:var(--surface2)";
+    var h=document.createElement("h3"); h.style.margin="0 0 4px"; h.textContent=tt("Your files disagree: "+cf.topic,"파일이 서로 달라요: "+cf.topic,"Tus archivos no coinciden: "+cf.topic);
+    var p=document.createElement("p"); p.className="small"; p.textContent=tt("Pick what your assistant should believe. Nothing changes until you choose.","AI가 뭘 믿을지 골라 주세요. 고르기 전엔 안 바뀌어요.","Elige qué debe creer tu asistente. Nada cambia hasta que elijas.");
+    var p2=document.createElement("p"); p2.className="small"; p2.textContent=tt("Same everywhere is the default. Separate is fine when it's on purpose — choose “different on purpose” and it's recorded as intentionally separate ("+scopeLabel(cf)+"), never flagged again.","기본은 어디서나 같아요. 일부러 다르면 괜찮아요 — “일부러 달라요”를 고르면 나눠 둔 것으로 기록돼요 ("+scopeLabel(cf)+"). 다시 문제로 뜨지 않아요.","Lo normal es lo mismo en todas partes. Separado está bien cuando es a propósito — elige «diferente a propósito» y queda registrado como intencional ("+scopeLabel(cf)+"), sin volver a marcarse.");
+    box.appendChild(h); box.appendChild(p); box.appendChild(p2);
+    cf.items.forEach(function(it,j){
+      var b=document.createElement("button"); b.className="btn secondary small-btn"; b.type="button";
+      b.style.margin="4px 6px 4px 0"; b.textContent=tt("Keep: “"+it.value+"” ("+it.source+")","이걸 유지해요: “"+it.value+"” ("+it.source+")","Quedarme con: «"+it.value+"» ("+it.source+")");
+      b.addEventListener("click",function(){ st.resolutions[i]=String(j); renderImport(); });
+      box.appendChild(b);
+    });
+    var both=document.createElement("button"); both.className="btn secondary small-btn"; both.type="button";
+    both.style.margin="4px 0"; both.textContent=tt("Keep both, flagged","둘 다 유지해요, 표시해 둬요","Quedarme con los dos, marcados");
+    both.addEventListener("click",function(){ st.resolutions[i]="both"; renderImport(); });
+    box.appendChild(both);
+    var scoped=document.createElement("button"); scoped.className="btn secondary small-btn"; scoped.type="button";
+    scoped.style.margin="4px 0"; scoped.textContent=tt("Keep both — different on purpose","둘 다 유지해요 — 일부러 달라요","Los dos — diferente a propósito");
+    scoped.addEventListener("click",function(){ st.resolutions[i]="scoped"; renderImport(); });
+    box.appendChild(scoped);
+    var cur=document.createElement("p"); cur.className="small"; var r=st.resolutions[i];
+    cur.textContent=tt("Your choice so far: ","지금 선택: ","Tu elección hasta ahora: ")+(r==="scoped"?tt("keep both — intentionally separate ("+scopeLabel(cf)+")","둘 다 유지 — 일부러 나눠 뒀어요 ("+scopeLabel(cf)+")","los dos — separados a propósito ("+scopeLabel(cf)+")"):r==="both"?tt("keep both, flagged as contested","둘 다 유지, 표시해 뒀어요","los dos, marcados en disputa"):tt("keep “"+cf.items[parseInt(r,10)||0].value+"”","이걸 유지해요 “"+cf.items[parseInt(r,10)||0].value+"”","quedarme con «"+cf.items[parseInt(r,10)||0].value+"»"));
+    box.appendChild(cur);
+    c.appendChild(box);
+  });
+  $("importActions").classList.remove("hidden");
+}
+async function writeImportToRepo(){
+  clearErr("importErr");
+  if(!S.importState)return;
+  buildImportDocs();
+  if(!S.repoDone){
+    showOk("importSummary","All settled and ready. Your folder isn't created yet, so this import will be included automatically when you create it in step 1 — nothing extra to do.");
+    return;
+  }
+  if(!S.ghToken){ showErr("importErr","Your GitHub connection isn't live in this tab any more. Reconnect in step 1 (Connect button, or the code under Advanced), then click this again."); return; }
+  try{
+    await putFile("MEMORY.md",tplMemory(currentVars())+S.importState.mergedMd,"Add reconciled imported memories");
+    await putFile("IMPORT-REPORT.md",S.importState.reportMd,"Add import report");
+    var chk=await ghFetch("/repos/"+S.repoFull+"/contents/IMPORT-REPORT.md");
+    if(!chk)throw new Error("The report didn't read back from GitHub, so this isn't confirmed.");
+    S.verified.importReconciled="Read back from GitHub — IMPORT-REPORT.md is in your folder, listing sources, dropped duplicates and your conflict choices";
+    showOk("importSummary","Done — checked. Your settled memories are in MEMORY.md, and IMPORT-REPORT.md in your folder shows exactly what came from where.");
+  }catch(e){ showErr("importErr",e.message); }
+}
+
+/* ============ optional registration (only if the register is configured) ============ */
+function maybeRegister(){
+  var note=$("regNote"); if(!note)return;
+  if(!CONFIG.registryUrl){
+    note.textContent="Not switched on in this copy yet — the person who shared this page hasn't turned on setup notifications, so nothing is sent.";
+    var t=$("regTick"); if(t)t.disabled=true;
+    return;
+  }
+  if(S.registered)return;
+  var tick=$("regTick");
+  if(tick&&!tick.checked){ note.textContent="Unticked — nothing will be sent."; return; }
+  var payload={name:S.name,github_login:S.ghUser,repo_url:S.repoUrl,has_db:!!S.dbDone,
+    verified_count:Object.keys(S.verified).length,ts:new Date().toISOString()};
+  fetch(CONFIG.registryUrl,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
+    .then(function(r){
+      if(r.ok){ S.registered=true; note.textContent="Sent — the person who shared this with you can now see you're set up (your name and repo link only)."; }
+      else note.textContent="The note couldn't be sent (the register replied "+r.status+"). Your setup itself is complete and yours either way.";
+    })
+    .catch(function(){ note.textContent="The note couldn't be sent (couldn't reach the register). Your setup itself is complete and yours either way."; });
+}
+
+/* ============ admin view (the owner's list, protected by the server) ============ */
+async function loadAdmin(){
+  var note=$("adminNote"), wrap=$("adminTableWrap");
+  if(!CONFIG.registryUrl){
+    note.textContent="The register isn't switched on in this copy yet. To turn it on, the operator deploys the sign-in/register helper (a small worker with KV storage and the admin key set) and puts its /register address in this page's CONFIG — then this list and the done-screen notifications both work.";
+    return;
+  }
+  if(!S.adminKey){ note.textContent="That admin link isn't right."; return; }
+  var adminUrl=CONFIG.registryUrl.replace(/\/register\/?$/,"/admin")+"?key="+encodeURIComponent(S.adminKey);
+  note.textContent="Loading…";
+  try{
+    var res=await fetch(adminUrl);
+    var body=null; try{body=await res.json();}catch(e){}
+    if(res.status===403||res.status===401){ note.textContent="That admin link isn't right."; wrap.innerHTML=""; return; }
+    if(!res.ok)throw new Error("the register replied "+res.status);
+    var rows=Array.isArray(body)?body:(body.registrations||body.items||body.rows||[]);
+    if(!rows.length){ note.textContent="Nobody has registered a setup yet — setups appear here when someone finishes and leaves the tick-box on."; wrap.innerHTML=""; return; }
+    note.textContent="";
+    var html="<table style=\"width:100%;border-collapse:collapse;font-size:18px\"><tr>"+
+      "<th style=\"text-align:left;padding:8px;border-bottom:1px solid var(--line)\">Name</th>"+
+      "<th style=\"text-align:left;padding:8px;border-bottom:1px solid var(--line)\">Repo</th>"+
+      "<th style=\"text-align:left;padding:8px;border-bottom:1px solid var(--line)\">Database</th>"+
+      "<th style=\"text-align:left;padding:8px;border-bottom:1px solid var(--line)\">Best practices checked</th>"+
+      "<th style=\"text-align:left;padding:8px;border-bottom:1px solid var(--line)\">When</th></tr>";
+    rows.forEach(function(r){
+      html+="<tr><td style=\"padding:8px;border-bottom:1px solid var(--line)\">"+esc(r.name||"")+"</td>"+
+        "<td style=\"padding:8px;border-bottom:1px solid var(--line)\">"+(r.repo_url?"<a href=\""+esc(r.repo_url)+"\" target=\"_blank\" rel=\"noopener\">"+esc(r.repo_url.replace("https://github.com/",""))+"</a>":"")+"</td>"+
+        "<td style=\"padding:8px;border-bottom:1px solid var(--line)\">"+(r.has_db?"Yes":"No")+"</td>"+
+        "<td style=\"padding:8px;border-bottom:1px solid var(--line)\">"+(r.verified_count!=null?r.verified_count:0)+" of 10</td>"+
+        "<td style=\"padding:8px;border-bottom:1px solid var(--line)\">"+esc(r.ts?new Date(r.ts).toLocaleString():"")+"</td></tr>";
+    });
+    wrap.innerHTML=html+"</table>";
+  }catch(e){ note.textContent="Couldn't load the list: "+e.message+"."; }
+}
+function showAdmin(){
+  showScreen("adminView");
+  loadAdmin();
+}
+function checkAdminHash(){
+  var m=(location.hash||"").match(/^#admin-(.+)$/);
+  if(!m)return;
+  S.adminKey=m[1];
+  try{history.replaceState(null,"",pageUrl()?pageUrl()+"#admin":"#admin");}catch(e){}
+  showAdmin();
+}
+
+function updateNotionMirror(){
+  var pre=$("notionMirrorPre"); if(!pre)return;
+  var home=S.repoUrl?("My home (the original): "+S.repoUrl):"My home (the original) is the private repo and database from my setup.";
+  pre.textContent="Keep a mirror of my agent home in Notion, one way only.\n\n"+home+"\n\n"+
+  "1. Read MEMORY.md, USER.md and DECISIONS.md in my home.\n"+
+  "2. Update my Notion page titled “My agent home — mirror” so it matches them as a clean, readable summary.\n"+
+  "3. Mirror only: never edit my home based on the Notion page, and if the two disagree, my home wins.\n"+
+  "4. Tell me in one line what changed.";
+}
+/* ============ wiring of controls ============ */
+$("startBtn").addEventListener("click",function(){ showScreen("step0"); $("fName").focus({preventScroll:true}); });
+$("ghBtn").addEventListener("click",ghCreate);
+$("sbOrgBtn").addEventListener("click",sbLoadOrgs);
+$("sbOrg").addEventListener("change",function(){ S.sbOrgId=this.value; });
+$("sbBtn").addEventListener("click",sbCreate);
+$("sbSkip").addEventListener("click",function(){
+  S.dbSkipped=true;
+  showOk("sbOk","Skipped — no database yet. Your tools will work from the files alone; run this step later and re-wire (step 3) when you're ready.");
+  updateWireBtn();
+});
+$("sbPwCopy").addEventListener("click",function(){ copyText($("sbPw").textContent,this); });
+$("wireBtn").addEventListener("click",wire);
+$("dlBtn").addEventListener("click",downloadAll);
+["mRepo","mDb","fName","fRepo"].forEach(function(id){
+  $(id).addEventListener("input",function(){ if(id==="fName"||id==="fRepo")readBasics(); refreshManual(); });
+});
+$("fName").addEventListener("input",function(){ readBasics(); suggestRepo(); readBasics(); updateIdentitySummary(); });
+$("fEmail").addEventListener("input",function(){ updateIdentitySummary(); refreshManual(); });
+$("fRepo").addEventListener("input",function(){ S.repoTouched=true; });
+$("ghHaveBtn").addEventListener("click",function(){ showScreen("step1"); });
+$("ghNewBtn").addEventListener("click",function(){ showScreen("step1signup"); });
+$("ghSignupHaveBtn").addEventListener("click",function(){ showScreen("step1"); });
+$("ghToken").addEventListener("input",debounce(verifyGhToken,700));
+$("sbToken").addEventListener("input",debounce(verifySbToken,700));
+$("importFiles").addEventListener("change",function(){ handleImportFiles().catch(function(e){ showErr("importErr",e.message); }); });
+$("importRepoBtn").addEventListener("click",writeImportToRepo);
+$("importRowsBtn").addEventListener("click",function(){
+  buildImportDocs();
+  var rows=finalMemories().map(function(m){return {owner_id:"YOUR-AUTH-USER-ID",kind:"note",content:m.content,source:"import:"+m.source,tags:["import"]};});
+  $("importRowsPre").textContent=JSON.stringify(rows,null,2);
+  $("importRowsBox").classList.remove("hidden");
+});
+$("importRowsCopy").addEventListener("click",function(){ copyText($("importRowsPre").textContent,this); });
+var dcb=$("decisionsCopyBtn"); if(dcb)dcb.addEventListener("click",function(){ copyText($("decisionsPre").textContent,this); });
+var ncb=$("notionMirrorCopyBtn"); if(ncb)ncb.addEventListener("click",function(){ updateNotionMirror(); copyText($("notionMirrorPre").textContent,this); });
+$("regTick").addEventListener("change",function(){ if(this.checked)maybeRegister(); else {var n=$("regNote"); if(n&&CONFIG.registryUrl)n.textContent="Unticked — nothing will be sent.";} });
+initConnect();
+initGoogle();
+handleOAuthReturn();
+checkAdminHash();
+refreshManual();
+
+/* ============ language (EN / KO / ES) + session restore ============
+   Priority: ?lang= in the link wins over everything (the sharer pre-localises
+   for the recipient), then the saved toggle, then the browser language. */
+var LANG="en";
+var ES_DICT={
+"Every AI you use. One memory.":"Todos los IA que usas. Una sola memoria.",
+"One private home, so every AI helper knows you.":"Un solo espacio privado, para que cada IA te conozca.",
+"Set up my agent home":"Crear mi espacio de IA",
+"One click. One time. Done.":"Un toque. Una sola vez. Listo.",
+"Do this once. You never need to come back — extras later? Just ask your AI.":"Hazlo una sola vez. No tienes que volver — ¿algo más después? Pregúntale a tu IA.",
+"PowerUpMyAI · powerupmyai.com · Free for the first members · Everything created is yours":"PowerUpMyAI · powerupmyai.com · Gratis para los primeros · Todo lo creado es tuyo",
+"What's your name?":"¿Cómo te llamas?",
+"This fills your home with your details.":"Esto llena tu espacio con tus datos.",
+"Continue with Google":"Continuar con Google",
+"Continue":"Continuar",
+"Please type your name first.":"Escribe tu nombre primero, por favor.",
+"Your name":"Tu nombre",
+"Your email":"Tu correo",
+"Do you have GitHub?":"¿Tienes GitHub?",
+"If not, we'll show you how.":"Si no, te mostramos cómo.",
+"I have GitHub":"Sí, tengo",
+"I don't have GitHub":"No tengo",
+"Nothing is public, ever.":"Nada es público, nunca.",
+"Create a GitHub account":"Crear una cuenta de GitHub",
+"It's free and takes two minutes.":"Es gratis y toma dos minutos.",
+"Open GitHub signup":"Abrir el registro de GitHub",
+"I have GitHub now":"Ya tengo GitHub",
+"Your private folder":"Tu carpeta privada",
+"Only you can ever see what's inside.":"Solo tú puedes ver lo que hay dentro.",
+"Connect and create it":"Conectar y crearla",
+"So your AIs share one memory.":"Para que tus IA compartan una memoria.",
+"Demo mode — use a code instead (in Details).":"Modo demo — usa un código (en Detalles).",
+"Connect GitHub":"Conectar GitHub",
+"Create my private folder":"Crear mi carpeta privada",
+"Your private memory":"Tu memoria privada",
+"Locked away, and only you hold the key.":"Guardada bajo llave, y solo tú tienes la llave.",
+"Create my private memory":"Crear mi memoria privada",
+"So they remember between chats.":"Para que recuerden entre chats.",
+"Skip for now":"Saltar por ahora",
+"Connect Supabase":"Conectar Supabase",
+"Create my memory store":"Crear mi espacio de memoria",
+"Load my groups":"Cargar mis grupos",
+"That didn't work":"No funcionó",
+"Try again":"Intentar de nuevo",
+"Go back":"Volver",
+"Get the full set. Free.":"Consigue el set completo. Gratis.",
+"Most people use just one AI. The others are free too.":"La mayoría usa una sola IA. Las demás también son gratis.",
+"You can add more AIs anytime — just ask your AI.":"Puedes agregar más IA cuando quieras — pregúntale a tu IA.",
+"Get it free":"Gratis",
+"You're done 🎉":"Ya terminaste 🎉",
+"You never need to come back here. Everything lives in your own accounts now — want extras later, just ask your AI.":"No tienes que volver aquí. Todo vive en tus propias cuentas — ¿algo más después? Pregúntale a tu IA.",
+"Your AIs can now remember you properly — expert-level setup, done once.":"Ahora tus IA te recuerdan bien — nivel experto, en una sola vez.",
+"Show my copy-paste messages":"Ver mis textos para pegar",
+"Hide my copy-paste messages":"Ocultar mis textos para pegar",
+"Paste once into each app.":"Pega una vez en cada app.",
+"Bring old memories (optional)":"Traer recuerdos viejos (opcional)",
+"Get more AIs (free)":"Más IA (gratis)",
+"Extras, if you want them":"Extras, si los quieres",
+"Optional, forever. Your setup already works without these — and your AI can do any of them with you, anytime. You never need to come back here for them.":"Opcional, siempre. Tu configuración ya funciona sin esto — y tu IA puede hacer cualquiera contigo, cuando quieras. No tienes que volver aquí.",
+"Back":"Volver",
+"Your home starts with expert defaults, saved in DECISIONS.md, plus a few open choices. You can change any of them anytime — just ask your AI.":"Tu espacio empieza con valores expertos, guardados en DECISIONS.md, y algunas decisiones abiertas. Puedes cambiar cualquiera cuando quieras — pregúntale a tu IA.",
+"Settle them one at a time":"Decídelas una por una",
+"Copy":"Copiar",
+"Notion — bring it in as files":"Notion — tráelo como archivos",
+"Honest label: this is a file import, not a live connection. You export once, and the files join the same reconcile below.":"Con honestidad: es importar archivos, no una conexión en vivo. Exportas una vez y los archivos se unen abajo.",
+"Two honest paths — pick either, both, or neither. Your home stays the original either way.":"Dos caminos honestos — elige uno, los dos o ninguno. Tu espacio sigue siendo el original.",
+"1. Import what Notion already holds":"1. Importa lo que Notion ya tiene",
+"Use “Bring what your tools already know” above: export from Notion (app → Settings → Export all workspace content) and add the .md files. A one-time file import — not a live link.":"Usa «Traer lo que tus herramientas ya saben» arriba: exporta de Notion (app → Ajustes → Exportar todo el contenido) y agrega los archivos .md. Es una sola vez — no es un enlace en vivo.",
+"2. Keep a Notion page as a mirror (optional)":"2. Deja una página de Notion como espejo (opcional)",
+"Mirror only — your home stays the original":"Solo espejo — tu espacio es el original",
+"Paste this into your AI app. It keeps one Notion page updated as a readable copy of your home. Changes flow one way only — home → Notion — never back.":"Pega esto en tu app de IA. Mantiene una página de Notion como copia fácil de leer de tu espacio. Los cambios van en un solo sentido — espacio → Notion — nunca al revés.",
+"Notion mirror":"Espejo de Notion",
+"Wire it together":"Conectar las dos partes",
+"Download all template files":"Descargar todos los archivos",
+"Details":"Detalles",
+"Having trouble? Connect with a code instead":"¿Problemas? Conecta con un código",
+"Copy-paste messages":"Textos para pegar",
+"Your best-practices scoreboard":"Tu lista verificada",
+"Bring what your tools already know":"Traer lo que tus herramientas ya saben",
+"Wire the two together":"Conectar las dos partes",
+"Just want the template?":"¿Solo quieres los archivos?",
+"Save this database password now":"Guarda esta contraseña ahora",
+"Choices we made for you":"Decisiones que tomamos por ti",
+"Someone shared this page with you so your AI helpers can actually remember you. It sets up two things in your own name, both private: a folder for your files, and a safe store for what your helpers learn about you — instead of every app forgetting you between chats.":"Alguien te compartió esta página para que tus IA te recuerden de verdad. Crea dos cosas a tu nombre, ambas privadas: una carpeta para tus archivos y un lugar seguro para lo que aprenden de ti — en vez de que cada app te olvide entre chats.",
+"<strong>Use this page once.</strong> After that, your AIs just work better — there is nothing here to come back to, no account with us, no app to download.":"<strong>Usa esta página una sola vez.</strong> Después, tus IA simplemente funcionan mejor — no hay nada a lo que volver, ni cuenta con nosotros, ni app que descargar.",
+"We'll open the right page — just tap Allow/Create, then come back.":"Abriremos la página correcta — toca Permitir/Crear y vuelve aquí.",
+"Read back from your home just now.":"Leído de tu espacio hace un momento.",
+"Done":"Listo",
+"Working…":"Trabajando…"
+};
+function urlLangParam(){ try{var v=new URLSearchParams(location.search).get("lang"); if(v){v=v.toLowerCase(); if(v==="ko"||v==="es"||v==="en")return v;} }catch(e){} return null; }
+try{
+  var _ul=urlLangParam();
+  if(_ul){ LANG=_ul; try{sessionStorage.setItem("ah_lang",LANG);}catch(e){} }
+  else{ var _sl=null; try{_sl=sessionStorage.getItem("ah_lang");}catch(e){}
+    if(_sl==="ko"||_sl==="es"||_sl==="en")LANG=_sl;
+    else{ var _bl=(navigator.language||"").toLowerCase(); if(_bl.indexOf("ko")===0)LANG="ko"; else if(_bl.indexOf("es")===0)LANG="es"; }
+  }
+}catch(e){}
+function isKo(){return LANG==="ko";}
+function isEs(){return LANG==="es";}
+function tt(en,ko,es){ if(LANG==="es")return es||((typeof ES_DICT!=="undefined"&&ES_DICT)?ES_DICT[en]:null)||en; return LANG==="ko"?ko:en; }
+function savePlace(screenId){
+  try{var cur={}; try{cur=JSON.parse(sessionStorage.getItem("ah_state")||"{}");}catch(e){}
+    if(screenId)cur.screen=screenId;
+    var fn=$("fName"), fe=$("fEmail"); if(fn&&fn.value)cur.name=fn.value; if(fe&&fe.value)cur.email=fe.value;
+    cur.lang=LANG; sessionStorage.setItem("ah_state",JSON.stringify(cur)); sessionStorage.setItem("ah_lang",LANG);
+  }catch(e){}
+}
+function setText(sel,txt){var el=document.querySelector(sel); if(el&&txt!=null)el.textContent=txt;}
+function setTextId(id,txt){var el=$(id); if(el&&txt!=null)el.textContent=txt;}
+function applyLang(){
+  document.documentElement.lang=LANG;
+  var ko=isKo();
+  // Welcome
+  setTextId("welcomeH1",tt("Every AI you use. One memory.","쓰는 AI는 달라도, 기억은 하나예요."));
+  setTextId("welcomeLede",tt("One private home, so every AI helper knows you.","나만의 공간 하나면, 모든 AI가 나를 기억해요."));
+  setTextId("startBtn",tt("Set up my agent home","내 AI 공간 만들기"));
+  setTextId("welcomeWhy",tt("One click. One time. Done.","한 번만 누르세요. 한 번이면 끝나요."));
+  setTextId("welcomeOnce",tt("Do this once. You never need to come back — extras later? Just ask your AI.","한 번만 하세요. 다시 올 필요 없어요 — 나중에 더 필요하면 AI에게 물어보세요."));
+  setTextId("footerLine",tt("PowerUpMyAI · powerupmyai.com · Free for the first members · Everything created is yours","PowerUpMyAI · powerupmyai.com · 처음 오신 분은 무료예요 · 만든 건 모두 내 거예요"));
+  // Step 0
+  setTextId("step0H1",tt("What's your name?","이름이 뭐예요?"));
+  setTextId("step0Lede",tt("This fills your home with your details.","내 정보로 공간을 채워요."));
+  setTextId("googleBtn",tt("Continue with Google","Google로 계속하기"));
+  setTextId("nameContinueBtn",tt("Continue","계속하기"));
+  setTextId("nameErr",tt("Please type your name first.","이름을 먼저 써 주세요."));
+  var ln=document.querySelector("label[for='fName']"); if(ln)ln.textContent=tt("Your name","이름");
+  var le=document.querySelector("label[for='fEmail']"); if(le)le.textContent=tt("Your email","이메일");
+  // Choice + signup
+  setTextId("choiceH1",tt("Do you have GitHub?","GitHub가 있어요?"));
+  setTextId("choiceLede",tt("If not, we'll show you how.","없으면 알려드릴게요."));
+  setTextId("ghHaveBtn",tt("I have GitHub","있어요"));
+  setTextId("ghNewBtn",tt("I don't have GitHub","없어요"));
+  setTextId("choiceWhy",tt("Nothing is public, ever.","절대 공개 안 돼요."));
+  setTextId("signupH1",tt("Create a GitHub account","GitHub 계정 만들기"));
+  setTextId("signupLede",tt("It's free and takes two minutes.","무료예요. 2분이면 돼요."));
+  var sLink=document.querySelector("#step1signup a.btn"); if(sLink)sLink.textContent=tt("Open GitHub signup","GitHub 가입 열기");
+  setTextId("ghSignupHaveBtn",tt("I have GitHub now","이제 있어요"));
+  // Step1 GitHub
+  setTextId("step1H1",tt("Your private folder","나만의 비밀 폴더"));
+  setTextId("step1Lede",tt("Only you can ever see what's inside.","나만 볼 수 있어요."));
+  setTextId("ghPrimaryBtn",tt("Connect and create it","연결하고 만들기"));
+  setTextId("step1Why",tt("So your AIs share one memory.","AI들이 기억을 함께 써요."));
+  setTextId("ghDemoLine",tt("Demo mode — use a code instead (in Details).","데모예요 — 아래 자세히 보기에서 코드로 해요."));
+  setTextId("ghConnectBtn",tt("Connect GitHub","GitHub 연결하기"));
+  setTextId("ghBtn",tt("Create my private folder","내 폴더 만들기"));
+  // Step2 Supabase - stay invisible except token field
+  setTextId("step2H1",tt("Your private memory","나만의 비밀 기억"));
+  setTextId("step2Lede",tt("Locked away, and only you hold the key.","잠겨 있어요. 열쇠는 나만 있어요."));
+  setTextId("sbPrimaryBtn",tt("Create my private memory","내 기억 만들기"));
+  setTextId("step2Why",tt("So they remember between chats.","대화가 끝나도 기억해요."));
+  setTextId("sbSkip",tt("Skip for now","나중에 하기"));
+  setTextId("sbDemoLine",tt("Demo mode — use a code instead (in Details).","데모예요 — 아래 자세히 보기에서 코드로 해요."));
+  setTextId("sbConnectBtn",tt("Connect Supabase","Supabase 연결하기"));
+  setTextId("sbBtn",tt("Create my memory store","기억 공간 만들기"));
+  setTextId("sbOrgBtn",tt("Load my groups","내 그룹 불러오기"));
+  // Working / success / failed defaults (dynamic callers also pass through tt at call sites via DYN map below)
+  setTextId("failedH1",tt("That didn't work","안 됐어요"));
+  setTextId("failedRetryBtn",tt("Try again","다시 하기"));
+  setTextId("failedBackBtn",tt("Go back","돌아가기"));
+  setTextId("successContinueBtn",tt("Continue","계속하기"));
+  // Full set - short strings to fit phone buttons
+  setTextId("fullSetH1",tt("Get the full set. Free.","전부 무료로 받기"));
+  setTextId("fullSetLede",tt("Most people use just one AI. The others are free too.","보통 하나만 써요. 나머지도 무료예요."));
+  setTextId("fullSetContinueBtn",tt("Continue","계속하기"));
+  setTextId("fullSetWhy",tt("You can add more AIs anytime — just ask your AI.","언제든 더 추가해요 — AI에게 물어보세요."));
+  document.querySelectorAll(".fs-row .btn").forEach(function(b){b.textContent=tt("Get it free","무료로 받기");});
+  // Done
+  setTextId("doneH1",tt("You're done 🎉","다 됐어요 🎉"));
+  setTextId("doneLede",tt("You never need to come back here. Everything lives in your own accounts now — want extras later, just ask your AI.","여기 다시 올 필요 없어요. 전부 내 계정에 있어요 — 나중에 더 필요하면 AI에게 물어보세요."));
+  setTextId("doneSub",tt("Your AIs can now remember you properly — expert-level setup, done once.","이제 AI가 나를 잘 기억해요 — 전문가처럼, 한 번에 끝냈어요."));
+  setTextId("showPastesBtn",tt("Show my copy-paste messages","붙여넣기 글 보기"));
+  var dw=document.querySelector("#step4 .why"); if(dw)dw.textContent=tt("Paste once into each app.","앱마다 한 번만 붙여넣어요.");
+  setTextId("doneExtrasBtn",tt("Bring old memories (optional)","옛 기억 가져오기 (선택)"));
+  setTextId("pastesFullSetBtn",tt("Get more AIs (free)","AI 더 받기 (무료)"));
+  // Extras
+  setTextId("extrasH1",tt("Extras, if you want them","원하면, 추가 기능"));
+  setTextId("extrasLede",tt("Optional, forever. Your setup already works without these — and your AI can do any of them with you, anytime. You never need to come back here for them.","선택이에요. 없어도 잘 돼요 — 필요하면 언제든 AI와 함께 해요. 여기로 돌아올 필요 없어요."));
+  setTextId("backToDoneBtn",tt("Back","돌아가기"));
+  setTextId("extrasFullSetBtn",tt("Get more AIs (free)","AI 더 받기 (무료)"));
+  setTextId("decisionsSentence",tt("Your home starts with expert defaults, saved in DECISIONS.md, plus a few open choices. You can change any of them anytime — just ask your AI.","전문가 기본값으로 시작해요. DECISIONS.md에 적어 뒀어요. 언제든 바꿀 수 있어요 — AI에게 말해 주세요."));
+  setTextId("decisionsBlockH",tt("Settle them one at a time","하나씩 정해요"));
+  setTextId("decisionsCopyBtn",tt("Copy","복사"));
+  setTextId("notionMirrorCopyBtn",tt("Copy","복사"));
+  setTextId("notionImportH",tt("Notion — bring it in as files","Notion — 파일로 가져오기"));
+  setTextId("notionImportNote",tt("Honest label: this is a file import, not a live connection. You export once, and the files join the same reconcile below.","솔직히 말하면, 실시간 연결이 아니라 파일 가져오기예요. 한 번 내보내서 아래에서 함께 맞춰요."));
+  setTextId("notionIntro",tt("Two honest paths — pick either, both, or neither. Your home stays the original either way.","두 가지 방법이에요 — 하나만, 둘 다, 안 해도 돼요. 어느 쪽이든 원본은 내 공간이에요."));
+  setTextId("notionImportPathH",tt("1. Import what Notion already holds","1. Notion에 있는 것 가져오기"));
+  setTextId("notionImportPathP",tt("Use “Bring what your tools already know” above: export from Notion (app → Settings → Export all workspace content) and add the .md files. A one-time file import — not a live link.","위 “이미 아는 기억 가져오기”를 써요: Notion 앱 → 설정 → 모든 콘텐츠 내보내기에서 받은 .md 파일을 넣어요. 한 번만 하는 파일 가져오기예요 — 실시간 연결은 아니에요."));
+  setTextId("notionMirrorPathH",tt("2. Keep a Notion page as a mirror (optional)","2. Notion 페이지를 거울처럼 두기 (선택)"));
+  setTextId("notionMirrorTag",tt("Mirror only — your home stays the original","거울만 해요 — 원본은 내 공간이에요"));
+  setTextId("notionMirrorP",tt("Paste this into your AI app. It keeps one Notion page updated as a readable copy of your home. Changes flow one way only — home → Notion — never back.","이걸 AI 앱에 붙여넣어요. Notion 페이지 하나를 내 공간의 읽기 쉬운 사본으로 유지해요. 변경은 한쪽으로만 가요 — 내 공간 → Notion, 반대는 없어요."));
+  setTextId("notionMirrorH",tt("Notion mirror","Notion 거울"));
+  var nis=$("notionImportSteps"); if(nis)nis.innerHTML=tt("<li>Open the Notion app → Settings → Export all workspace content.</li><li>If it arrives as a zip, unzip it.</li><li>Come back here and add the Markdown (.md) files with the picker below — they reconcile exactly like an AI app's export.</li>","<li>Notion 앱 → 설정 → 모든 콘텐츠 내보내기를 열어요.</li><li>zip 파일로 오면 풀어 주세요.</li><li>여기로 돌아와 아래에서 .md 파일을 넣어요 — AI 앱 파일과 똑같이 맞춰요.</li>","<li>Abre la app de Notion → Ajustes → Exportar todo el contenido.</li><li>Si llega como zip, descomprímelo.</li><li>Vuelve aquí y agrega los archivos .md abajo — se unen igual que los de una app de IA.</li>");
+  setTextId("wireBtn",tt("Wire it together","둘을 연결하기"));
+  setTextId("dlBtn",tt("Download all template files","파일 모두 받기"));
+  // Generic summaries: Details folds exist in Korean too (shorter essential prose below)
+  document.querySelectorAll("details>summary").forEach(function(s){
+    var t=s.textContent.trim();
+    if(t==="Details"||t==="자세히 보기"||t==="Detalles")s.textContent=tt("Details","자세히 보기");
+    else if(t==="Having trouble? Connect with a code instead"||t==="안 돼요? 코드로 연결하기"||t==="¿Problemas? Conecta con un código")s.textContent=tt("Having trouble? Connect with a code instead","안 돼요? 코드로 연결하기");
+    else if(t==="Copy-paste messages"||t==="붙여넣기 글"||t==="Textos para pegar")s.textContent=tt("Copy-paste messages","붙여넣기 글");
+    else if(t==="Your best-practices scoreboard"||t==="내 확인 목록"||t==="Tu lista verificada")s.textContent=tt("Your best-practices scoreboard","내 확인 목록");
+    else if(t==="Bring what your tools already know"||t==="이미 아는 기억 가져오기"||t==="Traer lo que tus herramientas ya saben")s.textContent=tt("Bring what your tools already know","이미 아는 기억 가져오기");
+    else if(t==="Wire the two together"||t==="둘 연결하기"||t==="Conectar las dos partes")s.textContent=tt("Wire the two together","둘 연결하기");
+    else if(t==="Just want the template?"||t==="파일만 원해요?"||t==="¿Solo quieres los archivos?")s.textContent=tt("Just want the template?","파일만 원해요?");
+    else if(t==="Save this database password now"||t==="비밀번호 저장하기"||t==="Guarda esta contraseña ahora")s.textContent=tt("Save this database password now","비밀번호 저장하기");
+    else if(t==="Choices we made for you"||t==="대신 정해 둔 선택"||t==="Decisiones que tomamos por ti")s.textContent=tt("Choices we made for you","대신 정해 둔 선택");
+    else if(t==="Notion")s.textContent="Notion";
+    else if(t==="Optional: GitHub Secrets (manual — this page does not do this for you)")s.textContent=tt("Optional: GitHub Secrets (manual — this page does not do this for you)","선택: GitHub Secrets (직접 하기)","Opcional: GitHub Secrets (manual — esta página no lo hace por ti)");
+  });
+  // Details essential prose (Korean: shorter, essential content only)
+  var wp=document.querySelector("#screen-welcome details p"); if(wp)wp.textContent=tt("Someone shared this page with you so your AI helpers can actually remember you. It sets up two things in your own name, both private: a folder for your files, and a safe store for what your helpers learn about you — instead of every app forgetting you between chats.","AI가 나를 기억하게 하려고 누가 이 페이지를 보냈어요. 내 이름으로 비밀 폴더와 기억 공간을 만들어요. 앱마다 잊어버리지 않게요.","Alguien te compartió esta página para que tus IA te recuerden de verdad. Crea dos cosas a tu nombre, ambas privadas: una carpeta para tus archivos y un lugar seguro para lo que aprenden de ti.");
+  var wp2=document.querySelectorAll("#screen-welcome details p")[1]; if(wp2)wp2.innerHTML=tt("<strong>Use this page once.</strong> After that, your AIs just work better — there is nothing here to come back to, no account with us, no app to download.","<strong>한 번만 쓰세요.</strong> 그 뒤엔 AI가 더 잘 도와요. 다시 올 곳도, 앱도 없어요.","<strong>Usa esta página una sola vez.</strong> Después, tus IA simplemente funcionan mejor — no hay nada a lo que volver, ni cuenta con nosotros, ni app que descargar.");
+  // Outbound deep-link guidance, in chosen language
+  document.querySelectorAll(".outbound-note").forEach(function(el){el.textContent=tt("We'll open the right page — just tap Allow/Create, then come back.","맞는 페이지를 열어요 — 허용/만들기만 누르고 돌아오세요.");});
+  var bl=document.querySelector(".bubble-label"); if(bl)bl.textContent=tt("Read back from your home just now.","방금 내 공간에서 읽어 왔어요.");
+  setTextId("successTitle",tt("Done","다 됐어요")); setTextId("workingTitle",tt("Working…","하고 있어요…"));
+  // Language toggle emphasis — the active language is unmistakable
+  [["langEnBtn","en"],["langKoBtn","ko"],["langEsBtn","es"],["langSheetEnBtn","en"],["langSheetKoBtn","ko"],["langSheetEsBtn","es"]].forEach(function(pair){var b=$(pair[0]); if(b)b.classList.toggle("on",LANG===pair[1]);});
+  var fab=$("langFabBtn"); if(fab)fab.textContent=LANG==="ko"?"🇰🇷":(LANG==="es"?"🇪🇸":"🇺🇸");
+  var sc=$("langSheetClose"); if(sc)sc.textContent=tt("Close","닫기","Cerrar");
+  renderFullSet();
+  renderFullSetLangOnly();
+}
+function renderFullSetLangOnly(){ /* fs buttons already re-texted above; full re-render keeps URLs */ }
+var DYN_KO={
+  "Working…":"하고 있어요…","Please keep this page open.":"이 페이지를 열어 두세요.",
+  "Creating your folder…":"폴더를 만들어요…","Checking your sign-in…":"로그인을 확인해요…",
+  "Creating your memory store…":"기억 공간을 만들어요…","Joining everything together…":"전부 연결해요…","Joining the two together…":"둘을 연결해요…",
+  "✓ Your folder is private":"✓ 내 폴더는 비밀예요","Checked on GitHub just now.":"방금 GitHub에서 확인했어요.",
+  "✓ Only you can open it":"✓ 나만 열 수 있어요","Checked in your database just now.":"방금 내 공간에서 확인했어요.",
+  "Continue":"계속하기","Done":"다 됐어요"
+};
+var DYN_ES={
+  "Working…":"Trabajando…","Please keep this page open.":"Deja esta página abierta, por favor.",
+  "Creating your folder…":"Creando tu carpeta…","Checking your sign-in…":"Verificando tu acceso…",
+  "Creating your memory store…":"Creando tu espacio de memoria…","Joining everything together…":"Uniendo todo…","Joining the two together…":"Uniendo las dos partes…",
+  "✓ Your folder is private":"✓ Tu carpeta es privada","Checked on GitHub just now.":"Verificado en GitHub hace un momento.",
+  "✓ Only you can open it":"✓ Solo tú puedes abrirla","Checked in your database just now.":"Verificado en tu espacio hace un momento.",
+  "Continue":"Continuar","Done":"Listo"
+};
+function dyn(t){ if(LANG==="es")return DYN_ES[t]||t; return (isKo()&&DYN_KO[t])?DYN_KO[t]:t; }
+
+/* ============ wizard: one screen at a time, four obvious states ============ */
+var WIZ_SCREENS=["screen-welcome","step0","step1choice","step1signup","step1","step2","screen-working","screen-success","screen-failed","stepFullSet","step4","screen-extras","adminView"];
+var wizBack="screen-welcome", wizRetry=null, wizSuccessNext=null, wizPoll=null;
+function showScreen(id){
+  WIZ_SCREENS.forEach(function(s){var el=$(s); if(el){el.classList.toggle("active",s===id); el.classList.remove("hidden");}});
+  var fab=$("langFabBtn"); if(fab)fab.classList.toggle("show",id!=="screen-welcome");
+  savePlace(id);
+  var stepMap={"step0":1,"step1":2,"step2":3};
+  var pw=$("progressWrap");
+  if(stepMap[id]){
+    pw.classList.remove("hidden");
+    $("progressLabel").textContent=isKo()?("3단계 중 "+stepMap[id]+"단계"):(isEs()?("Paso "+stepMap[id]+" de 3"):("Step "+stepMap[id]+" of 3"));
+    [1,2,3].forEach(function(n){
+      var d=$("dot"+n); d.className=n===stepMap[id]?"on":(n<stepMap[id]?"done":"");
+    });
+  } else pw.classList.add("hidden");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+var WIZ_WORK_TEXT={
+  "gh-verify":"Checking your sign-in…","gh-create":"Creating your private folder…",
+  "gh-upload":"Adding your starter files…","gh-readback":"Checking it's private…",
+  "sb-verify":"Checking your sign-in…","sb-create":"Creating your memory store…",
+  "sb-active":"Waiting for it to wake up…","sb-schema":"Locking it to only you…",
+  "sb-readback":"Checking everything is there…",
+  "wire-config":"Joining the two together…","wire-connect":"Joining the two together…","wire-readback":"Checking the join worked…"
+};
+var WIZ_WORK_TEXT_KO={
+  "gh-verify":"로그인을 확인해요…","gh-create":"비밀 폴더를 만들어요…",
+  "gh-upload":"파일을 넣어요…","gh-readback":"비밀인지 확인해요…",
+  "sb-verify":"로그인을 확인해요…","sb-create":"기억 공간을 만들어요…",
+  "sb-active":"깨어나길 기다려요…","sb-schema":"나만 열게 잠가요…",
+  "sb-readback":"다 있는지 확인해요…",
+  "wire-config":"둘을 연결해요…","wire-connect":"둘을 연결해요…","wire-readback":"연결을 확인해요…"
+};
+var WIZ_WORK_TEXT_ES={
+  "gh-verify":"Verificando tu acceso…","gh-create":"Creando tu carpeta privada…",
+  "gh-upload":"Agregando tus archivos…","gh-readback":"Verificando que sea privada…",
+  "sb-verify":"Verificando tu acceso…","sb-create":"Creando tu espacio de memoria…",
+  "sb-active":"Esperando a que despierte…","sb-schema":"Bloqueándola solo para ti…",
+  "sb-readback":"Verificando que todo esté…",
+  "wire-config":"Uniendo las dos partes…","wire-connect":"Uniendo las dos partes…","wire-readback":"Verificando la unión…"
+};
+function startWorkPoll(listIds){
+  stopWorkPoll();
+  wizPoll=setInterval(function(){
+    listIds.forEach(function(lid){
+      var li=document.querySelector("#"+lid+" li.doing");
+      if(li){var map=isEs()?WIZ_WORK_TEXT_ES:(isKo()?WIZ_WORK_TEXT_KO:WIZ_WORK_TEXT); var t=map[li.getAttribute("data-k")]; if(t)$("workingMsg").textContent=t;}
+    });
+  },350);
+}
+function stopWorkPoll(){ if(wizPoll){clearInterval(wizPoll); wizPoll=null;} }
+function showWorking(title,msg,backScreen){
+  wizBack=backScreen||wizBack;
+  $("workingTitle").textContent=dyn(title);
+  $("workingMsg").textContent=dyn(msg);
+  showScreen("screen-working");
+}
+function showSuccessState(title,line,nextLabel,nextFn){
+  stopWorkPoll();
+  $("successTitle").textContent=dyn(title);
+  $("successLine").textContent=dyn(line);
+  $("successContinueBtn").textContent=dyn(nextLabel||"Continue");
+  wizSuccessNext=nextFn;
+  showScreen("screen-success");
+}
+function plainError(tech,context){
+  var t=String(tech||""); var ko=isKo(), es=isEs();
+  if(/token|connect|401|403|unauthor/i.test(t))return es?"Primero necesitas conectar — está en Detalles, en la pantalla anterior.":(ko?"먼저 연결해 주세요 — 전 화면 자세히 보기에 있어요.":"You need to connect first — it's in Details on the previous screen.");
+  if(/already exists|422/i.test(t))return es?"Ese nombre ya está usado. Inténtalo de nuevo o cambia el nombre en Detalles.":(ko?"그 이름은 이미 있어요. 다시 하거나 이름을 바꿔 보세요.":"That name is already taken. Try again, or change the name in Details.");
+  if(/ACTIVE_HEALTHY|6 minutes/i.test(t))return es?"Tarda más de lo normal. Inténtalo en un minuto.":(ko?"평소보다 오래 걸려요. 1분 뒤 다시 해 보세요.":"It's taking longer than usual. Try again in a minute.");
+  if(/NOT private/i.test(t))return es?"GitHub dice que la carpeta no es privada. No la uses todavía — inténtalo de nuevo.":(ko?"폴더가 비밀이 아니래요. 아직 쓰지 말고 다시 해 보세요.":"GitHub says the folder isn't private. Don't use it yet — try again.");
+  if(context==="github")return es?"Tu carpeta no se creó. Nada se perdió — inténtalo de nuevo.":(ko?"폴더가 안 만들어졌어요. 잃은 건 없어요 — 다시 해 보세요.":"Your folder wasn't created. Nothing is lost — try again.");
+  if(context==="supabase")return es?"Tu espacio de memoria no se creó. Nada se perdió — inténtalo de nuevo.":(ko?"기억 공간이 안 만들어졌어요. 잃은 건 없어요 — 다시 해 보세요.":"Your memory store wasn't created. Nothing is lost — try again.");
+  if(context==="wire")return es?"Las dos partes no se unieron. Nada se perdió — inténtalo de nuevo.":(ko?"둘이 안 연결됐어요. 잃은 건 없어요 — 다시 해 보세요.":"The two halves didn't join. Nothing is lost — try again.");
+  return es?"Algo salió mal. Nada se perdió — inténtalo de nuevo.":(ko?"뭔가 잘못됐어요. 잃은 건 없어요 — 다시 해 보세요.":"Something went wrong. Nothing is lost — try again.");
+}
+function showFailedState(tech,context,retryFn,backScreen){
+  stopWorkPoll();
+  $("failedLine").textContent=plainError(tech,context);
+  $("failedTech").textContent=String(tech||"No technical message was provided.");
+  $("failedDetails").open=false;
+  wizRetry=retryFn; wizBack=backScreen||wizBack;
+  showScreen("screen-failed");
+}
+async function runGithubFlow(){
+  if(!S.ghToken)S.ghToken=$("ghToken").value.trim();
+  if(!S.ghToken){
+    if(oauthConfigured("github")){ startOAuth("github"); return; }
+    showFailedState("Demo mode: one-click GitHub sign-in isn't switched on for this copy of the page yet, so no connection exists. Use the code option under Details on the folder screen — it does exactly the same job.","github",
+      function(){ showScreen("step1"); $("ghDetails").open=true; $("ghAdvanced").open=true; $("ghToken").focus(); },"step1");
+    return;
+  }
+  wizBack="step1";
+  showWorking("Creating your folder…","Checking your sign-in…","step1");
+  startWorkPoll(["ghCheck"]);
+  await ghCreate();
+  stopWorkPoll();
+  if(S.repoDone){
+    showSuccessState("✓ Your folder is private","Checked on GitHub just now.","Continue",function(){ showScreen("step2"); });
+  }else{
+    showFailedState($("ghErr").textContent||"GitHub did not confirm the folder was created.","github",runGithubFlow,"step1");
+  }
+}
+async function runSupabaseFlow(){
+  if(!S.sbToken)S.sbToken=$("sbToken").value.trim();
+  if(!S.sbToken){
+    if(oauthConfigured("supabase")){ startOAuth("supabase"); return; }
+    showFailedState("Demo mode: one-click Supabase sign-in isn't switched on for this copy of the page yet, so no connection exists. Use the code option under Details on the memory screen — it does exactly the same job.","supabase",
+      function(){ showScreen("step2"); $("sbDetails").open=true; $("sbAdvanced").open=true; $("sbToken").focus(); },"step2");
+    return;
+  }
+  wizBack="step2";
+  showWorking("Creating your memory store…","Checking your sign-in…","step2");
+  startWorkPoll(["sbCheck"]);
+  await sbCreate();
+  stopWorkPoll();
+  if(S.dbDone){
+    showSuccessState("✓ Only you can open it","Checked in your database just now.","Continue",function(){ runWireFlow(); });
+  }else{
+    showFailedState($("sbErr").textContent||"Supabase did not confirm the memory store was created.","supabase",runSupabaseFlow,"step2");
+  }
+}
+async function runWireFlow(){
+  if(!S.repoDone){ fullSetReturn="step4"; showScreen("stepFullSet"); return; }
+  wizBack="step2";
+  showWorking("Joining everything together…","Joining the two together…","step2");
+  startWorkPoll(["wireCheck"]);
+  await wire();
+  stopWorkPoll();
+  if(S.wired){
+    /* wire() already called showDone(), which shows the done screen */
+  }else{
+    showFailedState($("wireErr").textContent||"The wiring could not be read back from GitHub.","wire",runWireFlow,"step2");
+  }
+}
+$("nameContinueBtn").addEventListener("click",function(){
+  readBasics();
+  if(!S.name){ $("nameErr").classList.add("show"); $("fName").focus(); return; }
+  $("nameErr").classList.remove("show");
+  showScreen("step1choice");
+});
+$("ghPrimaryBtn").addEventListener("click",function(){ runGithubFlow(); });
+$("sbPrimaryBtn").addEventListener("click",function(){ runSupabaseFlow(); });
+$("sbSkip").addEventListener("click",function(){ setTimeout(function(){ runWireFlow(); },50); });
+$("successContinueBtn").addEventListener("click",function(){ if(wizSuccessNext)wizSuccessNext(); });
+$("failedRetryBtn").addEventListener("click",function(){ if(wizRetry)wizRetry(); });
+$("failedBackBtn").addEventListener("click",function(){ showScreen(wizBack); });
+$("showPastesBtn").addEventListener("click",function(){
+  var w=$("pastesWrap"); var open=!w.open; w.open=open;
+  this.textContent=open?tt("Hide my copy-paste messages","붙여넣기 글 숨기기"):tt("Show my copy-paste messages","붙여넣기 글 보기");
+  if(open)w.scrollIntoView({behavior:"smooth",block:"start"});
+});
+var fullSetReturn="step4";
+function renderFullSet(){
+  var apps=[["claude","Claude"],["chatgpt","ChatGPT"],["grok","Grok"],["muse","Muse"]];
+  var c=$("fullSetRows"); if(!c)return; c.innerHTML="";
+  apps.forEach(function(a){
+    var row=document.createElement("div"); row.className="fs-row";
+    var n=document.createElement("span"); n.className="fs-name"; n.textContent=a[1];
+    var b=document.createElement("a"); b.className="btn small-btn secondary"; b.textContent=(typeof tt==="function")?tt("Get it free","무료로 받기","Gratis"):"Get it free";
+    b.href=SIGNUP_URLS[a[0]]||"#"; b.target="_blank"; b.rel="noopener";
+    row.appendChild(n); row.appendChild(b); c.appendChild(row);
+  });
+}
+async function loadProofBubble(){
+  var wrap=$("proofBubble"); if(!wrap)return;
+  wrap.classList.add("hidden");
+  if(!S.repoDone||!S.ghToken||!S.repoFull)return;
+  try{
+    var f=await ghFetch("/repos/"+S.repoFull+"/contents/MEMORY.md");
+    if(!f||!f.content)return;
+    var text=decodeURIComponent(escape(atob(f.content.replace(/\n/g,""))));
+    var fact="";
+    text.split(/\r?\n/).forEach(function(line){
+      if(!fact&&line.indexOf("Set up my agent home")!==-1)
+        fact=line.replace(/^[-*\s]+/,"").split(" (owner:")[0].trim();
+    });
+    if(!fact)return;
+    $("proofBubbleText").textContent="Hi "+(S.name||"there")+" — I remember: "+fact.charAt(0).toLowerCase()+fact.slice(1)+".";
+    wrap.classList.remove("hidden");
+  }catch(e){ /* the bubble only ever shows what was actually read back */ }
+}
+$("fullSetContinueBtn").addEventListener("click",function(){
+  if(fullSetReturn==="screen-extras"){ fullSetReturn="step4"; showScreen("screen-extras"); }
+  else showDone();
+});
+$("extrasFullSetBtn").addEventListener("click",function(){ fullSetReturn="screen-extras"; showScreen("stepFullSet"); });
+$("pastesFullSetBtn").addEventListener("click",function(){ fullSetReturn="step4"; showScreen("stepFullSet"); });
+renderFullSet();
+updateNotionMirror();
+$("doneExtrasBtn").addEventListener("click",function(){ showScreen("screen-extras"); });
+$("welcomeExtrasBtn").addEventListener("click",function(){ showScreen("screen-extras"); });
+$("backToDoneBtn").addEventListener("click",function(){ showScreen(S.repoDone||S.wired?"step4":"screen-welcome"); });
+/* Language toggle + never-lose-your-place restore */
+function setLang(l){ LANG=l; try{sessionStorage.setItem("ah_lang",l);}catch(e){} savePlace(); applyLang(); closeLangSheet(); }
+function openLangSheet(){ var s=$("langSheet"),b=$("langSheetBack"); if(s)s.classList.add("open"); if(b)b.classList.add("open"); }
+function closeLangSheet(){ var s=$("langSheet"),b=$("langSheetBack"); if(s)s.classList.remove("open"); if(b)b.classList.remove("open"); }
+[["langEnBtn","en"],["langKoBtn","ko"],["langEsBtn","es"],["langSheetEnBtn","en"],["langSheetKoBtn","ko"],["langSheetEsBtn","es"]].forEach(function(pair){var el=$(pair[0]); if(el)el.addEventListener("click",function(){setLang(pair[1]);});});
+if($("langFabBtn"))$("langFabBtn").addEventListener("click",openLangSheet);
+if($("langSheetClose"))$("langSheetClose").addEventListener("click",closeLangSheet);
+if($("langSheetBack"))$("langSheetBack").addEventListener("click",closeLangSheet);
+/* Vignette: pause when off-screen or the tab is hidden */
+(function(){
+  var v=$("vignette"); if(!v)return;
+  function sync(){ var hidden=document.hidden; v.classList.toggle("paused",hidden); if(!hidden&&v._ioPaused)v.classList.add("paused"); }
+  document.addEventListener("visibilitychange",sync);
+  if("IntersectionObserver" in window){ new IntersectionObserver(function(es){ es.forEach(function(e){ v._ioPaused=!e.isIntersecting; v.classList.toggle("paused",!e.isIntersecting||document.hidden); }); },{threshold:.15}).observe(v); }
+})();
+["fName","fEmail"].forEach(function(id){var el=$(id); if(el)el.addEventListener("input",function(){savePlace();});});
+document.addEventListener("click",function(e){var a=e.target&&e.target.closest?e.target.closest("a[target='_blank']"):null; if(a)savePlace();},true);
+applyLang();
+(function restorePlace(){
+  var isOAuth=!!(location.search||"").match(/[?&]code=/), isAdmin=!!(location.hash||"").match(/^#admin-/);
+  if(isOAuth||isAdmin) return; /* OAuth return / admin already route themselves */
+  var saved=null; try{saved=JSON.parse(sessionStorage.getItem("ah_state")||"null");}catch(e){}
+  if(saved){
+    if(saved.name&&$("fName")){$("fName").value=saved.name;}
+    if(saved.email&&$("fEmail")){$("fEmail").value=saved.email;}
+    if(saved.name||saved.email){try{readBasics();suggestRepo();readBasics();updateIdentitySummary();}catch(e){}}
+    if(saved.screen&&WIZ_SCREENS.indexOf(saved.screen)>-1&&saved.screen!=="screen-working"&&saved.screen!=="screen-success"&&saved.screen!=="screen-failed"){showScreen(saved.screen); return;}
+  }
+  showScreen("screen-welcome");
+})();
+
+</script>
+</body>
+</html>
