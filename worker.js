@@ -144,6 +144,20 @@ export default {
         db_created: body.db_created === true,
         ts: Date.now(),
       };
+      // Feedback payloads (kind: "feedback") may carry a longer note and
+      // ONE downscaled screenshot. The image is stored raw under a paired
+      // img:* key (same ts + suffix as the report key) so report listings
+      // stay small; the admin view fetches it via /admin/img. An image
+      // that fails validation is dropped silently — the text always lands.
+      if (clean(body.kind, 16) === "feedback") {
+        entry.kind = "feedback";
+        entry.note = clean(body.note, 2000);
+        const img = body.image;
+        if (typeof img === "string" && img.startsWith("data:image/") && img.length <= 750000) {
+          entry.has_image = true;
+          entry._img = img;
+        }
+      }
       // Abuse shaping (added after the operator flagged that anonymous
       // reports had neither a rate limit nor a retention limit): at most
       // 10 reports per IP per hour, and only the newest 100 reports are
@@ -155,12 +169,21 @@ export default {
       const rlCount = parseInt((await env.SETUPS.get(rlKey)) || "0", 10) || 0;
       if (rlCount >= 10) return json({ error: "rate_limited" }, 429);
       await env.SETUPS.put(rlKey, String(rlCount + 1), { expirationTtl: 3600 });
-      const key = "report:" + entry.ts + ":" + Math.random().toString(36).slice(2, 8);
+      const suffix = entry.ts + ":" + Math.random().toString(36).slice(2, 8);
+      const key = "report:" + suffix;
+      if (entry._img) {
+        entry.img_key = "img:" + suffix;
+        await env.SETUPS.put(entry.img_key, entry._img);
+        delete entry._img;
+      }
       await env.SETUPS.put(key, JSON.stringify(entry));
       const stored = await env.SETUPS.list({ prefix: "report:", limit: 1000 });
       if (stored.keys.length > 100) {
         const oldest = stored.keys.map((k) => k.name).sort().slice(0, stored.keys.length - 100);
-        for (const name of oldest) await env.SETUPS.delete(name);
+        for (const name of oldest) {
+          await env.SETUPS.delete(name);
+          await env.SETUPS.delete("img:" + name.slice("report:".length));
+        }
       }
       return json({ ok: true });
     }
@@ -253,6 +276,7 @@ export default {
       do {
         const page = await env.SETUPS.list(cursor ? { cursor } : {});
         for (const key of page.keys) {
+          if (key.name.startsWith("img:")) continue; // screenshots are fetched via /admin/img
           const raw = await env.SETUPS.get(key.name);
           if (!raw) continue;
           try {
@@ -273,6 +297,20 @@ export default {
       entries.sort((a, b) => tsValue(b) - tsValue(a));
       reports.sort((a, b) => tsValue(b) - tsValue(a));
       return json({ setups: entries, reports: reports.slice(0, 50) });
+    }
+
+    // Feedback screenshots, fetched one at a time by the admin view so the
+    // /admin list itself stays small. Same link-key auth as /admin option (b).
+    if (url.pathname === "/admin/img" && request.method === "GET") {
+      if (!env.SETUPS) return json({ error: "registry_not_configured" }, 501);
+      const keyParam = url.searchParams.get("key");
+      const keyOk = !!env.ADMIN_LINK_KEY && keyParam !== null && secretEquals(keyParam, env.ADMIN_LINK_KEY);
+      if (!keyOk) return json({ error: "unauthorized" }, 401);
+      const name = url.searchParams.get("name") || "";
+      if (!/^img:\d+:[a-z0-9]+$/.test(name)) return json({ error: "bad_name" }, 400);
+      const img = await env.SETUPS.get(name);
+      if (!img) return json({ error: "not_found" }, 404);
+      return json({ image: img });
     }
 
     return json({ error: "not_found" }, 404);
