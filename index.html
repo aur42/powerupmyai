@@ -31,7 +31,6 @@ a:hover{color:var(--accent-hover)}
 a:active{color:var(--accent-active)}
 .screen{display:none}
 .screen.active{display:block;animation:slideFade .28s ease}
-@keyframes fade{from{opacity:0}to{opacity:1}}
 @keyframes slideFade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes checkPop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
 @keyframes calmPulse{0%,100%{opacity:1}50%{opacity:.55}}
@@ -173,30 +172,30 @@ table{font-size:18px}
 .sheetclose{width:100%;min-height:56px;border:0;background:var(--surface2);border-radius:14px;font:inherit;font-size:20px;font-weight:700;cursor:pointer;transition:background-color 200ms ease,transform 200ms ease}
 .sheetclose:hover{background:var(--neutral-hover)}
 .sheetclose:active{background:var(--neutral-active);transform:scale(.98)}
-/* --- Brand tiles: one uniform mark system everywhere (inline only, zero requests) --- */
+/* Brand tiles */
 .btile{display:inline-flex;width:42px;height:42px;border-radius:12px;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:19px;line-height:1;flex:none;vertical-align:middle}
 .btile svg{width:25px;height:25px;fill:#fff;display:block}
 .btile.sm{width:34px;height:34px;border-radius:10px;font-size:15px}
 .btile.sm svg{width:20px;height:20px}
 .fs-name{display:flex;align-items:center;gap:12px}
 .block-head h3{display:flex;align-items:center;gap:10px}
-/* --- Textual design: bullets over prose inside folds, left-aligned, even rhythm --- */
+/* Folds: bullets */
 details{text-align:left}
 details p,details li{line-height:1.55}
 .blist{list-style:none;margin:10px 0;padding:0}
 .blist li{position:relative;padding:5px 0 5px 24px}
 .blist li::before{content:"•";position:absolute;left:4px;top:5px;color:var(--accent-text);font-weight:800}
-/* --- Welcome pain row: captioned mini-vignettes (the problem, in pictures) --- */
+/* Welcome pain row */
 .painrow{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:24px 0 0}
 .paincard{background:transparent;padding:8px 4px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
 .painicon{width:52px;height:52px;flex:none;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:26px;line-height:1}
 .paincap{font-size:18px;font-weight:600;line-height:1.35;margin:0;color:var(--muted)}
-/* --- Welcome language pill: one compact control, opens the language sheet --- */
+/* Welcome language pill */
 .langpill{align-self:flex-end;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;margin-bottom:24px;border-radius:999px;border:2px solid var(--line);background:#fff;font:inherit;font-size:17px;font-weight:700;color:var(--ink);cursor:pointer;transition:background-color 200ms ease,border-color 200ms ease,transform 200ms ease}
 .langpill:hover{border-color:var(--line-strong);background:var(--surface2)}
 .langpill:active{transform:scale(.98);background:var(--neutral-hover)}
 .langpill .chev{color:var(--muted);font-size:14px}
-/* --- Welcome at phone size (390x844 target): compressed stack, primary button fully above the fold --- */
+/* Welcome at phone size */
 @media (max-width:640px){
   #screen-welcome .langpill{margin-bottom:16px}
   #welcomeH1{font-size:32px;margin-bottom:8px}
@@ -215,7 +214,7 @@ details p,details li{line-height:1.55}
   #adminTableWrap{overflow-x:visible}
   #adminTableWrap td{word-break:break-word}
 }
-/* --- Animated welcome vignette: apart → the hub → together (pure CSS/SVG, 10.5s loop) --- */
+/* Welcome vignette (10.5s loop) */
 .vignette .tile-move,.vignette .hub{transform-box:fill-box;transform-origin:center}
 .vignette .tile-look{filter:drop-shadow(0 3px 5px rgba(17,17,17,.14))}
 .vignette .hub,.vignette .hub-glow,.vignette .lines,.vignette .ring{opacity:0}
@@ -251,8 +250,7 @@ details p,details li{line-height:1.55}
 .preview-bar button:hover{background:var(--surface2)}
 body.preview .dots span{cursor:pointer}
 body.preview .dots span:hover{outline:2px solid var(--accent);outline-offset:2px}
-.come-back-line{font-weight:600}
-/* --- GitHub step: a few px more air between the stacked blocks (+~4px per gap) --- */
+/* GitHub step spacing */
 #step1 .btn{margin-top:20px}
 #step1 .why{margin-top:16px}
 #step1 .demo-line{margin-top:20px}
@@ -263,13 +261,13 @@ body.preview .dots span:hover{outline:2px solid var(--accent);outline-offset:2px
 #ghHavePanel .blist{margin-top:18px !important}
 #ghCheck{margin-top:18px;margin-bottom:18px}
 #ghAdvanced{margin-top:30px;padding-top:22px}
-/* --- Fallback entry in attention colour: only the "Having trouble?" fold headers --- */
+/* Fallback entry colour */
 #ghAdvanced>summary,#sbAdvanced>summary{background:var(--warn-bg);color:var(--warn-ink);border:2px solid var(--warn-line);border-radius:14px;padding:12px 16px}
 #ghAdvanced>summary:hover,#sbAdvanced>summary:hover{color:var(--warn-ink)}
 #ghAdvanced>summary:active,#sbAdvanced>summary:active{color:var(--warn-ink)}
-/* --- Problem report (failed states only): quiet secondary copy button --- */
+/* Problem report button */
 .report-btn-inline{margin-top:10px}
-/* --- Status screen (returning user): health rows with a green bar + word --- */
+/* Status screen rows */
 .status-row{display:flex;gap:14px;align-items:flex-start;background:var(--surface2);border:2px solid var(--line);border-radius:16px;padding:16px 18px 16px 24px;margin-top:14px;position:relative;overflow:hidden}
 .status-row::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--line-strong)}
 .status-row.is-done::before{background:#1E9E57}
@@ -285,6 +283,15 @@ body.preview .dots span:hover{outline:2px solid var(--accent);outline-offset:2px
 .status-row .btn.small-btn{margin-top:10px}
 #statusHonest{margin-top:24px;font-size:20px}
 #statusStartAgainConfirm p{font-size:20px}
+/* First-week strip + What-you-get panels */
+.fw{margin:22px 0 6px}
+.fw h3{margin:0 0 6px}
+.fw-step{display:flex;gap:12px;align-items:center;padding:9px 0;font-size:20px;line-height:1.4}
+.fw-num{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;font-weight:800;font-size:19px;display:flex;align-items:center;justify-content:center}
+.get-panels{display:grid;gap:14px;margin:12px 0}
+.get-panel{background:var(--surface2);border:2px solid var(--line);border-radius:16px;padding:16px 18px}
+.get-label{font-size:20px;font-weight:700;margin:0 0 8px;display:flex;gap:10px;align-items:center}
+.get-row{display:flex;gap:10px;align-items:center;font-size:20px;padding:4px 0}
 </style>
 </head>
 <body>
@@ -605,13 +612,14 @@ No AI expertise needed.</p>
   <section class="screen" id="step4">
     <div aria-hidden="true" style="font-size:44px;line-height:1;margin-bottom:10px">✓</div>
     <h1 id="doneH1">You're done 🎉</h1>
-    <p id="wiringHonestLine" style="font-size:20px;font-weight:600;margin:0 0 14px">Your AIs can't see this by themselves. One paste per AI — this message does the rest.</p>
+    <p id="wiringHonestLine" style="font-size:20px;font-weight:600;margin:0 0 14px">Your AIs can't see this by themselves. <span class="acc">One paste per AI</span> — this message does the rest.</p>
     <p class="lede" id="doneLede">You never need to come back here. Everything lives in your own accounts now — want extras later, just ask your AI.</p>
     <p class="small" id="doneSub">Your AIs can now remember you properly — expert-level setup, done once.</p>
     <div id="proofBubble" class="hidden">
       <div class="bubble" id="proofBubbleText"></div>
       <p class="bubble-label">Read back from your home just now.</p>
     </div>
+    <div class="fw" id="firstWeek"></div>
     <div class="done-links" id="doneLinks"></div>
     <details id="howDetailsDone">
       <summary id="howSummaryDone">How this works — as deep as you want</summary>
@@ -854,33 +862,20 @@ No AI expertise needed.</p>
 
 <script>
 "use strict";
-/* ============ CONFIG — set googleClientId to switch on Continue with Google ============
-   Client-side only (Google Identity Services). The ID token is decoded in the browser
-   purely to prefill name + email; it is never sent to any server of ours (there is none).
-   When empty, the page falls back to name + email fields that do the same prefill. */
+/* CONFIG — set googleClientId for Continue with Google. Client-side only: the ID token is decoded in the browser just to prefill name + email, never sent anywhere. Empty = name + email fields instead. */
 var CONFIG = {
   googleClientId: "",
-  /* OAuth (one-click connect). The client secret for an OAuth app can never live in a
-     public page, so the code-for-token swap is done by a tiny exchange endpoint:
-     POST {provider:"github"|"supabase", code} -> {access_token}.
-     Reference behaviour is all this page expects; when these are empty the page runs
-     in demo mode and says so on the button — it never simulates a connection. */
+  /* OAuth (one-click connect). The secret can't live in a public page, so a tiny endpoint swaps code for token: POST {provider, code} -> {access_token}. Empty = demo mode, stated on the button; never simulated. */
   githubOAuthClientId: "",
   supabaseOAuthClientId: "",
   oauthExchangeUrl: "",
-  /* The public address of this page, used as the OAuth return address. Set it to the
-     address this page is actually shared at; left empty, the page uses its own path. */
+  /* This page's public address (OAuth return). Empty = the page uses its own path. */
   oauthRedirectUri: "",
-  /* Optional register: the same helper worker's /register address. When set, the done
-     screen's tick-box can tell the person who shared the page that a setup finished,
-     and the owner's secret admin link (#admin-<key>) can read the list back. */
+  /* Optional register: the helper worker's /register address. When set, the done screen's tick-box can report a finished setup, and the owner's #admin-<key> link reads the list back. */
   registryUrl: "",
   MUSE_REFERRAL_CODE: "18GRDY",
   GROK_REFERRAL_CODE: "8RR96PZ7KDNHUD",
-  /* "Get the full set" signup links. Defaults are the plain official signup pages;
-     the operator may replace any of them with a referral/invite link — signups then
-     carry the sharer's referral code automatically, because opening the link IS the
-     mechanism. Nothing about referrals is shown on screen beyond one Details line. */
+  /* "Get the full set" signup links. Defaults are the official signup pages; the operator may swap in referral links (opening the link carries the code). One Details line mentions referrals. */
   signupUrls: {
     claude: "https://claude.ai/",
     chatgpt: "https://chatgpt.com/",
@@ -914,9 +909,7 @@ function genPassword(){
   var out=""; for(var i=0;i<arr.length;i++){out+=chars[arr[i]%chars.length];}
   return out;
 }
-/* One random verification phrase per setup session (e.g. "harbor-lantern-42").
-   Generated once, cached in S, and written into MEMORY.md as a seed line; the
-   per-app sync checks ask the app to quote it back from MEMORY.md verbatim. */
+/* One random verification phrase per session (e.g. "harbor-lantern-42"). Generated once, cached in S, seeded into MEMORY.md; sync checks ask each app to quote it back verbatim. */
 function verificationPhrase(){
   if(S.verificationPhrase)return S.verificationPhrase;
   var words=["harbor","lantern","meadow","cedar","willow","copper","velvet","ember","orchard","marble","compass","saddle","timber","violet","juniper","maple","beacon","anchor","falcon","glacier","river","summit","tulip","walnut","pearl","onyx","dune","cinder","cobalt","zephyr"];
@@ -934,10 +927,7 @@ function setCheck(listId,key,state,note){
   var st=li.querySelector(".st");
   if(st)st.textContent=note||(state==="done"?"verified":state==="failed"?"failed":"");
 }
-/* ============ problem report (failed states only) ============
-   One quiet copy button on the full-screen failed state and beside every
-   inline error. It copies a short plain-text summary for the user to send
-   to whoever shared the page with them. No network call, no new screen. */
+/* Problem report (failed states only): a quiet copy button copying a short plain-text summary to send to whoever shared the page. No network call. */
 var lastFailure={step:"",error:""};
 function stepForErrId(id){
   if(id==="ghErr"||id==="ghTokenErr")return "Step 2 of 3 — GitHub: create private folder";
@@ -1675,9 +1665,7 @@ function templateFiles(v){
 function currentVars(){
   return {name:S.name,email:S.email,repoName:S.repoName,repoUrl:S.repoUrl,projectRef:S.projectRef,projectUrl:S.projectUrl,verificationPhrase:verificationPhrase()};
 }
-/* Brand marks: GitHub is a true inline SVG path (octocat). Every other service uses
-   the same uniform rounded tile in its brand colour with its glyph/initial, so the
-   set reads as one designed system. Inline only — zero external requests. */
+/* Brand marks: GitHub is a true inline SVG (octocat); every other service is the same rounded tile in its brand colour with its glyph/initial. Inline only. */
 function brandTileHTML(id,sm){
   var cls="btile"+(sm?" sm":"");
   if(id==="github")return '<span class="'+cls+'" style="background:#111111" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></span>';
@@ -1694,30 +1682,12 @@ function brandTileHTML(id,sm){
   var m=map[id]||map.other;
   return '<span class="'+cls+'" style="background:'+m.bg+';color:'+(m.fg||"#ffffff")+';font-size:'+m.fs+(m.ff?(";font-family:"+m.ff):"")+'" aria-hidden="true">'+m.g+'</span>';
 }
-/* ============ Done-screen verification ticks (localStorage, this device only) ============
-   One tappable circle per named AI app (the first five TOOLS — the same apps the
-   confirm blocks cover). Tapping marks that the app answered with the verification
-   phrase. Ticks never gate anything. In preview they start unticked, live only in
-   memory for the preview session, and are never read from or written to storage. */
+/* Done-screen verification ticks (localStorage, this device only). One tappable circle per AI app; a tick marks that the app answered with the verification phrase. Ticks never gate anything. Preview: memory-only, never stored. */
 var WIRED_TICK_KEY="ah_wired_ticks_v1";
 var wiredTicks=null;
 var wiredTickTimes={};
 var statusDoneShown=false;
-/* agentHomeStatus — the durable setup record (localStorage key "agentHomeStatus",
-   same device-only storage area as the ticks). Data plumbing only: no UI reads it
-   yet; a later pass renders a returning-user status view from it. Shape:
-   {
-     version: 1,
-     repoUrl: string|null,          // S.repoUrl once the repo exists
-     databaseUrl: string|null,      // S.projectUrl once the database exists
-     steps: { repoCreated:boolean, databaseCreated:boolean,
-              databaseSkipped:boolean, wired:boolean, doneShown:boolean },
-     ticks: { muse:{ticked:boolean, tickedAt:string|null}, claude:{...},
-              chatgpt:{...}, grok:{...}, instinct:{...} },  // tickedAt = ISO time of the tick
-     updatedAt: string              // ISO time this record was last written
-   }
-   Written by saveAgentHomeStatus() whenever setup state changes (a step
-   completing, showDone, a tick toggle). Never written in preview mode. */
+/* agentHomeStatus — durable setup record (localStorage key "agentHomeStatus"). Shape: {version:1, repoUrl, databaseUrl, steps:{repoCreated, databaseCreated, databaseSkipped, wired, doneShown}, ticks:{app:{ticked, tickedAt ISO}}, updatedAt ISO}. Written by saveAgentHomeStatus() on setup changes; never in preview. */
 function loadAgentHomeStatus(){
   try{
     var raw=localStorage.getItem("agentHomeStatus");
@@ -1842,13 +1812,7 @@ document.querySelectorAll("[data-copy]").forEach(function(b){
   b.addEventListener("click",function(){ copyText($(b.getAttribute("data-copy")).textContent,b); });
 });
 
-/* ============ Status screen (returning user) ============
-   Rendered entirely from this device's agentHomeStatus record. Shown on a
-   normal load (never #preview, never #admin) when the record says the repo
-   was created. Per-app rows reuse the done screen's own pieces — the same
-   makeWiredTick() circle (so ticks stay in sync both ways) and the same
-   connectBlock() generator for the copy button (the paste text lives in
-   exactly one place). */
+/* Status screen (returning user): rendered from this device's agentHomeStatus record, on a normal load when the repo exists. Per-app rows reuse makeWiredTick() and connectBlock() so ticks and paste text stay in sync with the done screen. */
 var statusResumeScreen=null;
 function fmtWhen(iso){
   if(!iso)return "";
@@ -2039,8 +2003,7 @@ if($("statusStartAgainCancel"))$("statusStartAgainCancel").addEventListener("cli
   var sab=$("statusStartAgainBtn"); if(sab)sab.classList.remove("hidden");
 });
 if($("statusStartAgainYes"))$("statusStartAgainYes").addEventListener("click",function(){
-  /* Local only: clears this device's record + session state. Nothing on
-     GitHub or Supabase is touched — the folder and database stay as they are. */
+  /* Local only: clears this device's record + session. GitHub/Supabase untouched. */
   try{localStorage.removeItem("agentHomeStatus");}catch(e){}
   try{localStorage.removeItem(WIRED_TICK_KEY);}catch(e){}
   try{sessionStorage.removeItem("ah_state");}catch(e){}
@@ -2095,9 +2058,7 @@ async function ghCreate(){
         description:"My agent home — private memory and instructions for my AI tools."
       })});
     }catch(eCreate){
-      /* Retry-safe: a repo with this name that is already yours and private
-         (e.g. from an earlier attempt that failed halfway) is reused, so
-         "Try again" can finish the job instead of failing on the name. */
+      /* Retry-safe: a repo with this name that is already yours and private is reused, so "Try again" can finish instead of failing on the name. */
       if(!/422|already exists/i.test(eCreate.message))throw eCreate;
       repo=await ghFetch("/repos/"+S.ghUser+"/"+S.repoName);
       if(!repo||repo.private!==true)throw eCreate;
@@ -2238,9 +2199,7 @@ async function sbCreate(){
       var keys=await sbFetch("/projects/"+S.projectRef+"/api-keys");
       (keys||[]).forEach(function(k){
         if(k.name==="anon")S.anonKey=k.api_key;
-        /* The service_role key is never read into this page: it bypasses all
-           row-level security, so it stays in the owner's Supabase dashboard
-           until they paste it into their LOCAL .env.service-role file. */
+        /* The service_role key is never read into this page (it bypasses row-level security); it stays in the owner's dashboard until pasted into their LOCAL .env.service-role. */
       });
     }catch(e){ /* keys can also be copied from the dashboard; not fatal */ }
 
@@ -2308,7 +2267,7 @@ async function wire(){
     await putFile("agent.config.json",tplConfig(v),"Wire agent home config (ref + URL only, no keys)");
     setCheck("wireCheck","wire-config","done","committed");
     setCheck("wireCheck","wire-connect","doing","committing…");
-    /* Only these three non-secret files are committed here. Keys are never committed: .env and .env.service-role are local-only files the owner saves from the done screen. */
+    /* Only these three non-secret files are committed. Keys never are: .env / .env.service-role are local-only, saved from the done screen. */
     await putFile("CONNECT.md",tplConnect(v),"Personalise CONNECT.md for "+(S.name||"owner"));
     await putFile(".env.example",tplEnvExample(v),".env.example with project URL");
     setCheck("wireCheck","wire-connect","done","committed");
@@ -2857,14 +2816,11 @@ handleOAuthReturn();
 checkAdminHash();
 refreshManual();
 
-/* ============ language (EN / KO / ES) + session restore ============
-   Priority: ?lang= in the link wins over everything (the sharer pre-localises
-   for the recipient), then the saved toggle, then the browser language. */
+/* Language (EN / KO / ES) + session restore. Priority: ?lang= in the link, then the saved toggle, then the browser language. */
 var LANG="en";
 var ES_DICT={
 "I have GitHub — connect it":"Ya tengo GitHub — conéctalo",
 "You'll come back to this tab — your place is saved.":"Volverás a esta pestaña — tu lugar está guardado.",
-"Your AIs can't see this by themselves. One paste per AI — this message does the rest.":"Tus IA no pueden ver esto por sí mismas. Un pegado por IA — este mensaje hace el resto.",
 "Preview — nothing is created":"Vista previa — no se crea nada",
 "Exit preview":"Salir de la vista previa",
 "Skills are included — little instruction cards your AIs learn from. New ones get written automatically when a task repeats.":"También hay skills — pequeñas tarjetas de instrucciones de las que aprenden tus IA. Las nuevas se escriben automáticamente cuando una tarea se repite.",
@@ -3007,7 +2963,7 @@ function applyLang(){
   setTextId("choiceH1",tt("Do you have GitHub?","GitHub가 있어요?"));
   setTextId("choiceLede",tt("If not, we'll show you how.","없으면 알려드릴게요."));
   setTextId("ghHaveBtn",tt("I have GitHub — connect it","GitHub가 있어요 — 연결하기","Ya tengo GitHub — conéctalo"));
-  setTextId("wiringHonestLine",tt("Your AIs can't see this by themselves. One paste per AI — this message does the rest.","AI들은 혼자서는 이걸 못 봐요. AI마다 한 번만 붙여넣으면, 이 글이 나머지를 해요.","Tus IA no pueden ver esto por sí mismas. Un pegado por IA — este mensaje hace el resto."));
+  var whEl=$("wiringHonestLine"); if(whEl)whEl.innerHTML=esc(tt("Your AIs can't see this by themselves. ","AI들은 혼자서는 이걸 못 봐요. ","Tus IA no pueden ver esto por sí mismas. "))+'<span class="acc">'+esc(tt("One paste per AI","AI마다 한 번만 붙여넣으면","Un pegado por IA"))+'</span>'+esc(tt(" — this message does the rest.",", 이 글이 나머지를 해요."," — este mensaje hace el resto."));
   setTextId("signupFreeLine",tt("Free — straight from GitHub.","무료예요 — GitHub에서 바로 받아요.","Gratis — directo de GitHub."));
   (function(){var demoNote=tt("One-click sign-in is coming soon. For now, the code option below does exactly the same job.","원터치 로그인은 곧 와요. 지금은 아래 코드 방법이 똑같이 해줘요.","El inicio con un clic llega pronto. Por ahora, la opción con código de abajo hace exactamente lo mismo.");var gn2=$("ghConnectNote");if(gn2&&!(typeof oauthConfigured==="function"&&oauthConfigured("github")))gn2.textContent=demoNote;var sn2=$("sbConnectNote");if(sn2&&!(typeof oauthConfigured==="function"&&oauthConfigured("supabase")))sn2.textContent=demoNote;})();
   document.querySelectorAll(".report-btn,.report-btn-inline").forEach(function(b){b.textContent=reportLabel();});
@@ -3109,27 +3065,36 @@ function applyLang(){
   setTextId("howSummaryDone",tt("How this works — as deep as you want","어떻게 돌아가는지 — 원하는 만큼 깊이","Cómo funciona — tan profundo como quieras"));
   setTextId("howSummaryExtras",tt("How this works — as deep as you want","어떻게 돌아가는지 — 원하는 만큼 깊이","Cómo funciona — tan profundo como quieras"));
   renderHow();
+  renderFirstWeek();
   renderFullSet();
   renderFullSetLangOnly();
   try{updateAllWiredLine();}catch(e){}
   try{renderStatusFromRecord();}catch(e){}
 }
 function renderFullSetLangOnly(){ /* fs buttons already re-texted above; full re-render keeps URLs */ }
-/* ============ layered details: "How this works — as deep as you want" (done + extras mirror) ============ */
+/* Layered details: "How this works" (done + extras mirror) */
+function renderFirstWeek(){
+  var el=$("firstWeek"); if(!el)return;
+  function step(n,g,html){return '<div class="fw-step"><span class="fw-num" aria-hidden="true">'+n+'</span><span class="btile sm" style="background:var(--accent-soft);font-size:20px" aria-hidden="true">'+g+'</span><span>'+html+'</span></div>';}
+  function acc(en,ko,es){return '<span class="acc">'+esc(tt(en,ko,es))+'</span>';}
+  el.innerHTML='<h3>'+esc(tt("Your first week","첫 주","Tu primera semana"))+'</h3>'
+  +step(1,"📋",acc("One paste per AI","AI마다 한 번 붙여넣기","Un pegado por IA")+esc(tt(" — that's the whole setup."," — 설정은 그게 다예요."," — eso es toda la instalación.")))
+  +step(2,"🔑",esc(tt("It answers with your secret phrase — proof it read your home.","비밀 문구로 답해요 — 내 공간을 읽었다는 증거예요.","Responde con tu frase secreta — prueba de que leyó tu espacio.")))
+  +step(3,"📱",acc("Use your apps as always","쓰던 앱 그대로 쓰기","Usa tus apps como siempre")+esc(tt(" — nothing new to learn."," — 새로 배울 게 없어요."," — nada nuevo que aprender.")))
+  +step(4,"🌱",esc(tt("It improves quietly — one question at a time; repeated tasks become skills on their own.","조용히 나아져요 — 한 번에 질문 하나; 반복되는 일은 저절로 스킬이 돼요.","Mejora en silencio — una pregunta por vez; las tareas repetidas se vuelven skills solas.")));
+}
 function renderHow(){
-  var regTile='<span class="btile sm" style="background:#2970FF" aria-hidden="true">✓</span>';
   function li(tile,text){return '<li>'+(tile?tile+' ':'')+esc(text)+'</li>';}
   function liB(tile,lead,rest){return '<li>'+(tile?tile+' ':'')+'<strong>'+esc(lead)+'</strong>'+esc(rest)+'</li>';}
+  function panel(tile,label,rows){var r="";rows.forEach(function(x){r+='<div class="get-row"><span aria-hidden="true">'+x[0]+'</span>'+esc(x[1])+'</div>';});return '<div class="get-panel"><p class="get-label">'+tile+' '+esc(label)+'</p>'+r+'</div>';}
   var h=''
   +'<h3>'+esc(tt("What you get","받는 것","Lo que recibes"))+'</h3>'
-  +'<ul class="blist">'
-  +li(brandTileHTML("github",true),tt("Your private folder (GitHub) — your files, only you can see them.","나만의 비밀 폴더 (GitHub) — 내 파일, 나만 볼 수 있어요.","Tu carpeta privada (GitHub) — tus archivos, solo tú puedes verlos."))
-  +li(brandTileHTML("supabase",true),tt("Your private memory store (Supabase) — what your AIs learn about you, locked to you.","나만의 비밀 기억 저장소 (Supabase) — AI가 배운 내 정보, 나에게만 잠겨 있어요.","Tu memoria privada (Supabase) — lo que tus IA aprenden de ti, bloqueado para ti."))
-  +li(brandTileHTML("claude",true),tt("Your AIs wired to both — every app reads and writes the same home.","AI들이 둘 다에 연결돼요 — 모든 앱이 같은 공간을 읽고 써요.","Tus IA conectadas a ambos — cada app lee y escribe en el mismo espacio."))
-  +li(regTile,tt("The best-practices register — the shared list of what works, kept in your home.","베스트 프랙티스 목록 — 검증된 방법들의 공유 목록, 내 공간에 있어요.","El registro de buenas prácticas — la lista compartida de lo que funciona, en tu espacio."))
-  +li("",tt("Skills are included — little instruction cards your AIs learn from. New ones get written automatically when a task repeats.","스킬도 포함돼요 — AI가 배우는 작은 안내 카드예요. 같은 일이 반복되면 새 카드가 자동으로 생겨요.","También hay skills — pequeñas tarjetas de instrucciones de las que aprenden tus IA. Las nuevas se escriben automáticamente cuando una tarea se repite."))
-  +liB("",tt("What do you have to do after this? ","이후에 할 일은? ","¿Qué tienes que hacer después? "),tt("Nothing. Your AIs keep it in sync. Occasionally one will ask you a single question.","없어요. AI들이 알아서 맞추고, 가끔 질문 하나만 물어봐요.","Nada. Tus IA lo mantienen en sync. A veces una te hará una sola pregunta."))
-  +'</ul>'
+  +'<div class="get-panels">'
+  +panel(brandTileHTML("github",true),tt("Your private folder — your files, readable by you","나만의 비밀 폴더 — 내 파일, 내가 읽을 수 있어요","Tu carpeta privada — tus archivos, legibles por ti"),[["👤",tt("Who you are","내가 누구인지","Quién eres")],["🧠",tt("Your memory","내 기억","Tu memoria")],["🔌",tt("Wiring for each AI","AI마다 연결 방법","La conexión de cada IA")],["🌱",tt("Skills that grow themselves","저절로 자라는 스킬","Skills que crecen solas")]])
+  +panel(brandTileHTML("supabase",true),tt("Your private database — the memory your AIs share","나만의 비밀 데이터베이스 — AI들이 함께 쓰는 기억","Tu base de datos privada — la memoria que comparten tus IA"),[["💡",tt("Facts & preferences","사실과 취향","Datos y preferencias")],["👥",tt("People","사람들","Personas")],["🎯",tt("Goals","목표","Metas")],["💬",tt("Conversations","대화","Conversaciones")]])
+  +'</div>'
+  +'<p>'+esc(tt("Your AIs wired to both — every app reads and writes the same home.","AI들이 둘 다에 연결돼요 — 모든 앱이 같은 공간을 읽고 써요.","Tus IA conectadas a ambos — cada app lee y escribe en el mismo espacio."))+'</p>'
+  +'<p><strong>'+esc(tt("What do you have to do after this? ","이후에 할 일은? ","¿Qué tienes que hacer después? "))+'</strong>'+esc(tt("Nothing. Your AIs keep it in sync. Occasionally one will ask you a single question.","없어요. AI들이 알아서 맞추고, 가끔 질문 하나만 물어봐요.","Nada. Tus IA lo mantienen en sync. A veces una te hará una sola pregunta."))+'</p>'
   +'<h3>'+esc(tt("The files","파일들","Los archivos"))+'</h3>'
   +'<ul class="blist">'
   +li("",tt("SOUL.md — how your AI behaves.","SOUL.md — AI가 어떻게 행동하는지.","SOUL.md — cómo se comporta tu IA."))
@@ -3139,6 +3104,7 @@ function renderHow(){
   +li("",tt("AGENTS.md — how it works in your home.","AGENTS.md — 내 공간에서 어떻게 일하는지.","AGENTS.md — cómo trabaja en tu espacio."))
   +li("",tt("DECISIONS.md — choices made for you, changeable anytime.","DECISIONS.md — 대신 정해 둔 선택, 언제든 바꿀 수 있어요.","DECISIONS.md — decisiones tomadas por ti, cambiables cuando quieras."))
   +li("",tt("CONNECT.md — how each app plugs in.","CONNECT.md — 앱마다 어떻게 연결되는지.","CONNECT.md — cómo se conecta cada app."))
+  +liB("",tt("The 6 tables: ","테이블 6개: ","Las 6 tablas: "),"owners · memories · people · goals · conversations · sources")
   +'</ul>'
   +'<h3>'+esc(tt("The design","설계","El diseño"))+'</h3>'
   +'<ul class="blist">'
