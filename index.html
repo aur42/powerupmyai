@@ -8,25 +8,25 @@
 <title>PowerUpMyAI — Power up your AIs. One time.</title>
 <style>
 :root{
-  --bg:#ffffff; --surface:#ffffff; --surface2:#f4f4f1; --ink:#111111; --muted:#3f3f3f;
-  --line:#cfcfc8; --line-strong:#a9a99f; --accent:#0a6640; --accent-hover:#084f31; --accent-active:#063d26; --accent-ink:#ffffff; --accent-soft:#e6f2ec;
-  --neutral-hover:#e9e9e3; --neutral-active:#deded6;
+  --bg:#FFFFFF; --surface:#FFFFFF; --surface2:#F9FAFB; --ink:#1F2937; --muted:#676D77;
+  --line:#D1D5DB; --line-strong:#98A2B3; --accent:#2970FF; --accent-hover:#2057C7; --accent-active:#194399; --accent-ink:#FFFFFF; --accent-soft:#E8EFFE; --accent-text:#2568E6; --powder:#83ADFB;
+  --neutral-hover:#F2F2F3; --neutral-active:#E9EAEC;
   --warn-bg:#fff6dd; --warn-line:#d9b84a; --warn-ink:#5c4300;
   --err-bg:#fdecec; --err-line:#d98c8c; --err-ink:#8c1d1d;
-  --ok:#0a6640; --code-bg:#111111; --code-ink:#f2f2f2;
+  --ok:#2970FF; --code-bg:#1F2937; --code-ink:#F9FAFB;
   --gap-lg:24px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-family:Inter,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   font-size:20px;line-height:1.5;-webkit-font-smoothing:antialiased}
 .wrap{max-width:640px;margin:0 auto;padding:36px 22px 48px;min-height:100dvh;display:flex;flex-direction:column}
 h1{font-size:42px;line-height:1.12;margin:0 0 16px;font-weight:800;letter-spacing:-.02em}
 h2{font-size:32px;line-height:1.2;margin:0 0 10px;font-weight:800}
 h3{font-size:22px;margin:22px 0 8px;font-weight:700}
 p{margin:0 0 14px}
-a{color:var(--accent);text-underline-offset:3px;font-weight:600;transition:color 200ms ease}
+a{color:var(--accent-text);text-underline-offset:3px;font-weight:600;transition:color 200ms ease}
 a:hover{color:var(--accent-hover)}
 a:active{color:var(--accent-active)}
 .screen{display:none}
@@ -49,7 +49,7 @@ img,svg,pre,table{max-width:100%}
 .progress{margin-bottom:28px}
 .progress-label{font-size:20px;color:var(--muted);font-weight:600;margin-bottom:8px}
 .dots{display:flex;gap:10px}
-.dots span{width:14px;height:14px;border-radius:50%;background:#d9d9d2;border:2px solid #bdbdb2}
+.dots span{width:14px;height:14px;border-radius:50%;background:var(--line);border:2px solid var(--line-strong)}
 .dots span.on{background:var(--accent);border-color:var(--accent)}
 .dots span.done{background:var(--accent);border-color:var(--accent);opacity:.45}
 .btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:72px;
@@ -83,9 +83,9 @@ img,svg,pre,table{max-width:100%}
 label{display:block;font-weight:700;font-size:20px;margin:22px 0 8px}
 input[type=text],input[type=password],select,textarea{width:100%;min-height:64px;padding:14px 16px;
   border:2px solid var(--ink);border-radius:14px;background:#fff;color:var(--ink);font:inherit;font-size:20px;transition:border-color 200ms ease,background-color 200ms ease}
-input[type=text]:hover,input[type=password]:hover,select:hover,textarea:hover{border-color:#000000}
+input[type=text]:hover,input[type=password]:hover,select:hover,textarea:hover{border-color:var(--ink)}
 input[type=file]{font:inherit;font-size:18px;width:100%;padding:14px 0}
-textarea{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:16px}
+textarea{font-family:"Roboto Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:16px}
 a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:2px}
 details{margin-top:26px;border-top:2px solid var(--line);padding-top:18px}
@@ -96,7 +96,7 @@ details p,details li{font-size:18px}
 .small{font-size:18px;color:var(--muted)}
 .honest{background:var(--warn-bg);border:2px solid var(--warn-line);border-radius:14px;padding:18px;margin:18px 0;color:var(--ink);font-size:18px}
 .safe{background:var(--accent-soft);border:2px solid var(--line);border-radius:14px;padding:18px;margin:18px 0;font-size:18px}
-.tag{display:inline-block;font-size:17px;font-weight:700;padding:6px 14px;border-radius:999px;background:var(--accent-soft);color:var(--accent);border:2px solid var(--line)}
+.tag{display:inline-block;font-size:17px;font-weight:700;padding:6px 14px;border-radius:999px;background:var(--accent-soft);color:var(--accent-text);border:2px solid var(--line)}
 .tag.paste{background:var(--warn-bg);color:var(--warn-ink);border-color:var(--warn-line)}
 ul.check{list-style:none;margin:14px 0;padding:0}
 ul.check li{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:2px dashed var(--line);font-size:18px}
@@ -115,8 +115,8 @@ pre{background:var(--code-bg);color:var(--code-ink);border-radius:14px;padding:1
 .block-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:var(--gap-lg)}
 .block-head h3{margin:0}
 .hidden{display:none !important}
-.filelist{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:16px;color:var(--muted);line-height:1.9}
-.pw-once{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:19px;background:var(--code-bg);color:var(--code-ink);padding:16px;border-radius:14px;word-break:break-all;margin:10px 0}
+.filelist{font-family:"Roboto Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:16px;color:var(--muted);line-height:1.9}
+.pw-once{font-family:"Roboto Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:19px;background:var(--code-bg);color:var(--code-ink);padding:16px;border-radius:14px;word-break:break-all;margin:10px 0}
 .spinner{width:76px;height:76px;border-radius:50%;border:9px solid var(--accent-soft);border-top-color:var(--accent);animation:spin .8s linear infinite;margin:12px 0 28px}
 .big-icon{width:118px;height:118px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:62px;font-weight:800;margin:8px 0 26px;color:#fff}
 .big-icon.ok{background:var(--ok)}
@@ -137,7 +137,7 @@ table{font-size:18px}
 .flagopt:hover .flagcircle{border-color:var(--line-strong)}
 .flagopt:active{transform:scale(.98)}
 .flagopt .flagword{font-size:20px;font-weight:700;line-height:1.2}
-.flagopt.on .flagcircle{border-color:var(--accent);transform:scale(1.08);box-shadow:0 6px 20px rgba(10,102,64,.22)}
+.flagopt.on .flagcircle{border-color:var(--accent);transform:scale(1.08);box-shadow:0 6px 20px rgba(41,112,255,.22)}
 .flagopt.on .flagword{color:var(--accent)}
 #screen-welcome .flagopt .flagcircle{width:56px;height:56px;font-size:32px}
 .hline{display:block}
@@ -147,16 +147,16 @@ table{font-size:18px}
 #welcomeLede{margin-bottom:16px}
 .why-line{font-size:20px;line-height:1.45;color:var(--muted);margin:0 0 24px}
 #vignette{width:min(94vw,600px);margin-left:auto;margin-right:auto;overflow:hidden}
-.acc{color:var(--accent)}
+.acc{color:var(--accent-text)}
 #screen-welcome summary{color:var(--ink)}
-#screen-welcome summary:hover{color:#000000}
-#screen-welcome summary:active{color:#000000}
+#screen-welcome summary:hover{color:var(--ink)}
+#screen-welcome summary:active{color:var(--ink)}
 #screen-welcome .blist li::before{color:var(--muted)}
 .langfab{position:fixed;top:max(12px,env(safe-area-inset-top));right:14px;z-index:40;width:48px;height:48px;border-radius:50%;border:2px solid var(--line);background:#fff;font-size:26px;line-height:1;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.14);padding:0;transition:background-color 200ms ease,border-color 200ms ease,transform 200ms ease}
 .langfab:hover{border-color:var(--line-strong);background:var(--surface2)}
 .langfab:active{transform:scale(.98);background:var(--neutral-hover)}
 .langfab.show{display:flex}
-.langsheet-back{position:fixed;inset:0;background:rgba(17,17,17,.44);z-index:50;display:none}
+.langsheet-back{position:fixed;inset:0;background:rgba(31,41,55,.44);z-index:50;display:none}
 .langsheet-back.open{display:block}
 .langsheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:#fff;border-radius:26px 26px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom));display:none;box-shadow:0 -8px 30px rgba(0,0,0,.2);max-width:640px;margin:0 auto}
 .langsheet.open{display:block;animation:sheetUp .22s ease}
@@ -178,7 +178,7 @@ details{text-align:left}
 details p,details li{line-height:1.55}
 .blist{list-style:none;margin:10px 0;padding:0}
 .blist li{position:relative;padding:5px 0 5px 24px}
-.blist li::before{content:"•";position:absolute;left:4px;top:5px;color:var(--accent);font-weight:800}
+.blist li::before{content:"•";position:absolute;left:4px;top:5px;color:var(--accent-text);font-weight:800}
 /* --- Welcome pain row: captioned mini-vignettes (the problem, in pictures) --- */
 .painrow{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:24px 0 0}
 .paincard{background:transparent;padding:8px 4px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
@@ -220,8 +220,8 @@ details p,details li{line-height:1.55}
 .vignette.playing .hub-glow{animation:vGlow 10.5s ease-in-out infinite}
 .vignette.playing .lines{animation:vLines 10.5s ease-in-out infinite}
 .vignette.playing .ring{animation:vRing 10.5s ease-in-out infinite}
-@keyframes vLook{0%,27%{opacity:.58;filter:drop-shadow(0 3px 5px rgba(17,17,17,.12)) saturate(.12)}47%,60%{opacity:.92;filter:drop-shadow(0 3px 5px rgba(17,17,17,.14)) saturate(.6)}78%,93%{opacity:1;filter:drop-shadow(0 4px 9px rgba(10,102,64,.22)) saturate(1.1)}100%{opacity:.58;filter:drop-shadow(0 3px 5px rgba(17,17,17,.12)) saturate(.12)}}
-@keyframes vPill{0%,27%{fill:#e9e9e2;stroke-opacity:0}47%,60%{fill:#f2f5ef;stroke-opacity:.3}78%,93%{fill:#e9f7ee;stroke-opacity:.6}100%{fill:#e9e9e2;stroke-opacity:0}}
+@keyframes vLook{0%,27%{opacity:.58;filter:drop-shadow(0 3px 5px rgba(17,17,17,.12)) saturate(.12)}47%,60%{opacity:.92;filter:drop-shadow(0 3px 5px rgba(17,17,17,.14)) saturate(.6)}78%,93%{opacity:1;filter:drop-shadow(0 4px 9px rgba(41,112,255,.22)) saturate(1.1)}100%{opacity:.58;filter:drop-shadow(0 3px 5px rgba(17,17,17,.12)) saturate(.12)}}
+@keyframes vPill{0%,27%{fill:#ECEEF1;stroke-opacity:0}47%,60%{fill:#EDF2FE;stroke-opacity:.3}78%,93%{fill:#E3EDFF;stroke-opacity:.6}100%{fill:#ECEEF1;stroke-opacity:0}}
 @keyframes vM1{0%,27%{transform:translate(0,0)}47%,60%{transform:translate(65px,37px)}78%,100%{transform:translate(0,0)}}
 @keyframes vM2{0%,27%{transform:translate(0,0)}47%,60%{transform:translate(0,46px)}78%,100%{transform:translate(0,0)}}
 @keyframes vM3{0%,27%{transform:translate(0,0)}47%,60%{transform:translate(-65px,37px)}78%,100%{transform:translate(0,0)}}
@@ -234,7 +234,7 @@ details p,details li{line-height:1.55}
 @keyframes vLines{0%,40%{opacity:0}56%,66%{opacity:.8}78%,100%{opacity:0}}
 @keyframes vRing{0%,64%{opacity:0}80%,93%{opacity:.55}100%{opacity:0}}
 .vignette.paused .tile-move,.vignette.paused .tile-look,.vignette.paused .pillbg,.vignette.paused .hub,.vignette.paused .hub-glow,.vignette.paused .lines,.vignette.paused .ring{animation-play-state:paused !important}
-@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.spinner,li.doing .dot,.big-icon.ok,#screen-working .spinner,.vignette *{animation:none !important}.screen.active{animation:none}.vignette .tile-look{opacity:1}.vignette .pillbg{fill:#e9f7ee;stroke-opacity:.6}.vignette .hub{opacity:1}.vignette .hub-glow{opacity:.45}.vignette .lines{opacity:.6}.vignette .ring{opacity:.5}.langsheet.open{animation:none}}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.spinner,li.doing .dot,.big-icon.ok,#screen-working .spinner,.vignette *{animation:none !important}.screen.active{animation:none}.vignette .tile-look{opacity:1}.vignette .pillbg{fill:#E3EDFF;stroke-opacity:.6}.vignette .hub{opacity:1}.vignette .hub-glow{opacity:.45}.vignette .lines{opacity:.6}.vignette .ring{opacity:.5}.langsheet.open{animation:none}}
 
 </style>
 </head>
@@ -257,36 +257,36 @@ details p,details li{line-height:1.55}
     <div class="visual vignette playing" id="vignette" aria-hidden="true">
       <svg viewBox="0 0 560 292" role="img" aria-label="AI apps apart, then drawn to one private hub — a folder and a database together — then back out bright and in sync">
         <defs>
-          <radialGradient id="hubGlowGrad" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#0a6640" stop-opacity=".38"/><stop offset="1" stop-color="#0a6640" stop-opacity="0"/></radialGradient>
+          <linearGradient id="hubGlowGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2970FF" stop-opacity=".38"/><stop offset="1" stop-color="#1DCBFA" stop-opacity="0"/></linearGradient>
         </defs>
         <ellipse class="hub-glow" cx="280" cy="146" rx="112" ry="80" fill="url(#hubGlowGrad)"/>
-        <g class="lines" stroke="#9db8a8" stroke-width="2">
+        <g class="lines" stroke="#83ADFB" stroke-width="2">
           <line x1="280" y1="146" x2="155" y2="84"/><line x1="280" y1="146" x2="280" y2="81"/><line x1="280" y1="146" x2="405" y2="84"/><line x1="280" y1="146" x2="152" y2="146"/><line x1="280" y1="146" x2="408" y2="146"/><line x1="280" y1="146" x2="180" y2="203"/><line x1="280" y1="146" x2="380" y2="203"/>
         </g>
         <g class="hub">
-          <rect x="214" y="96" width="132" height="100" rx="18" fill="#f3f8f4" stroke="#0a6640" stroke-width="2"/>
-          <path d="M232,124 h13 l5,6 h20 a5,5 0 0 1 5,5 v15 a5,5 0 0 1 -5,5 h-38 a5,5 0 0 1 -5,-5 v-21 a5,5 0 0 1 5,-5 z" fill="#e6f2ec" stroke="#0a6640" stroke-width="2"/>
-          <path d="M244,133 l-6,6 6,6" fill="none" stroke="#0a6640" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M258,133 l6,6 -6,6" fill="none" stroke="#0a6640" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <g fill="#e6f2ec" stroke="#0a6640" stroke-width="2">
+          <rect x="214" y="96" width="132" height="100" rx="18" fill="#EEF3FE" stroke="#2970FF" stroke-width="2"/>
+          <path d="M232,124 h13 l5,6 h20 a5,5 0 0 1 5,5 v15 a5,5 0 0 1 -5,5 h-38 a5,5 0 0 1 -5,-5 v-21 a5,5 0 0 1 5,-5 z" fill="#E8EFFE" stroke="#2970FF" stroke-width="2"/>
+          <path d="M244,133 l-6,6 6,6" fill="none" stroke="#2970FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M258,133 l6,6 -6,6" fill="none" stroke="#2970FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <g fill="#E8EFFE" stroke="#2970FF" stroke-width="2">
             <path d="M290,126 v24 a15,5.5 0 0 0 30,0 v-24"/>
-            <ellipse cx="305" cy="126" rx="15" ry="5.5" fill="#d9ecdf"/>
+            <ellipse cx="305" cy="126" rx="15" ry="5.5" fill="#C9DBFE"/>
             <path d="M290,138 a15,5.5 0 0 0 30,0" fill="none"/>
           </g>
-          <line x1="248" y1="178" x2="312" y2="178" stroke="#bcd2c4" stroke-width="4" stroke-linecap="round"/>
-          <circle cx="292" cy="178" r="6.5" fill="#0a6640" stroke="#ffffff" stroke-width="2"/>
-          <circle cx="340" cy="100" r="12" fill="#0a6640" stroke="#ffffff" stroke-width="3"/>
+          <line x1="248" y1="178" x2="312" y2="178" stroke="#A8C4FB" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="292" cy="178" r="6.5" fill="#2970FF" stroke="#ffffff" stroke-width="2"/>
+          <circle cx="340" cy="100" r="12" fill="#2970FF" stroke="#ffffff" stroke-width="3"/>
           <rect x="335.5" y="98.5" width="9" height="7.5" rx="1.6" fill="#ffffff"/>
           <path d="M337.2,98.5 v-2.2 a2.8,2.8 0 0 1 5.6,0 v2.2" fill="none" stroke="#ffffff" stroke-width="1.8"/>
         </g>
-        <g font-family="inherit" font-size="15" font-weight="700" fill="#2f2f2a">
-          <g class="tile-move tm1"><g class="tile-look"><rect class="ring" x="23" y="21" width="134" height="52" rx="26" fill="none" stroke="#0a6640" stroke-width="2"/><rect class="pillbg" x="28" y="26" width="124" height="42" rx="21" fill="#e9e9e2" stroke="#0a6640" stroke-width="1.6" stroke-opacity="0"/><circle cx="52" cy="47" r="13" fill="#D97757"/><text x="52" y="52" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">✦</text><text x="72" y="53">Claude</text></g></g>
-          <g class="tile-move tm2"><g class="tile-look"><rect class="ring" x="213" y="9" width="134" height="52" rx="26" fill="none" stroke="#0a6640" stroke-width="2"/><rect class="pillbg" x="218" y="14" width="124" height="42" rx="21" fill="#e9e9e2" stroke="#0a6640" stroke-width="1.6" stroke-opacity="0"/><circle cx="242" cy="35" r="13" fill="#10A37F"/><text x="242" y="40" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">G</text><text x="262" y="41">ChatGPT</text></g></g>
-          <g class="tile-move tm3"><g class="tile-look"><rect class="ring" x="403" y="21" width="134" height="52" rx="26" fill="none" stroke="#0a6640" stroke-width="2"/><rect class="pillbg" x="408" y="26" width="124" height="42" rx="21" fill="#e9e9e2" stroke="#0a6640" stroke-width="1.6" stroke-opacity="0"/><circle cx="432" cy="47" r="13" fill="#111111"/><text x="432" y="52" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">X</text><text x="452" y="53">Grok</text></g></g>
-          <g class="tile-move tm4"><g class="tile-look"><rect class="ring" x="3" y="120" width="134" height="52" rx="26" fill="none" stroke="#0a6640" stroke-width="2"/><rect class="pillbg" x="8" y="125" width="124" height="42" rx="21" fill="#e9e9e2" stroke="#0a6640" stroke-width="1.6" stroke-opacity="0"/><circle cx="32" cy="146" r="13" fill="#0B0D12"/><text x="32" y="151" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">M</text><text x="52" y="152">Muse</text></g></g>
-          <g class="tile-move tm5"><g class="tile-look"><rect class="ring" x="423" y="120" width="134" height="52" rx="26" fill="none" stroke="#0a6640" stroke-width="2"/><rect class="pillbg" x="428" y="125" width="124" height="42" rx="21" fill="#e9e9e2" stroke="#0a6640" stroke-width="1.6" stroke-opacity="0"/><circle cx="452" cy="146" r="13" fill="#55534E"/><text x="452" y="151" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">I</text><text x="472" y="152">Instinct</text></g></g>
-          <g class="tile-move tm6"><g class="tile-look"><rect class="ring" x="51" y="219" width="134" height="52" rx="26" fill="none" stroke="#0a6640" stroke-width="2"/><rect class="pillbg" x="56" y="224" width="124" height="42" rx="21" fill="#e9e9e2" stroke="#0a6640" stroke-width="1.6" stroke-opacity="0"/><circle cx="80" cy="245" r="13" fill="#4664D9"/><text x="80" y="250" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">K</text><text x="100" y="251">Kimi</text></g></g>
-          <g class="tile-move tm7"><g class="tile-look"><rect class="ring" x="375" y="219" width="134" height="52" rx="26" fill="none" stroke="#0a6640" stroke-width="2"/><rect class="pillbg" x="380" y="224" width="124" height="42" rx="21" fill="#e9e9e2" stroke="#0a6640" stroke-width="1.6" stroke-opacity="0"/><circle cx="404" cy="245" r="13" fill="#111111"/><text x="404" y="250" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff" font-family="Georgia,serif">N</text><text x="424" y="251">Notion</text></g></g>
+        <g font-family="inherit" font-size="15" font-weight="700" fill="#1F2937">
+          <g class="tile-move tm1"><g class="tile-look"><rect class="ring" x="23" y="21" width="134" height="52" rx="26" fill="none" stroke="#2970FF" stroke-width="2"/><rect class="pillbg" x="28" y="26" width="124" height="42" rx="21" fill="#ECEEF1" stroke="#2970FF" stroke-width="1.6" stroke-opacity="0"/><circle cx="52" cy="47" r="13" fill="#D97757"/><text x="52" y="52" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff">✦</text><text x="72" y="53">Claude</text></g></g>
+          <g class="tile-move tm2"><g class="tile-look"><rect class="ring" x="213" y="9" width="134" height="52" rx="26" fill="none" stroke="#2970FF" stroke-width="2"/><rect class="pillbg" x="218" y="14" width="124" height="42" rx="21" fill="#ECEEF1" stroke="#2970FF" stroke-width="1.6" stroke-opacity="0"/><circle cx="242" cy="35" r="13" fill="#10A37F"/><text x="242" y="40" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">G</text><text x="262" y="41">ChatGPT</text></g></g>
+          <g class="tile-move tm3"><g class="tile-look"><rect class="ring" x="403" y="21" width="134" height="52" rx="26" fill="none" stroke="#2970FF" stroke-width="2"/><rect class="pillbg" x="408" y="26" width="124" height="42" rx="21" fill="#ECEEF1" stroke="#2970FF" stroke-width="1.6" stroke-opacity="0"/><circle cx="432" cy="47" r="13" fill="#111111"/><text x="432" y="52" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">X</text><text x="452" y="53">Grok</text></g></g>
+          <g class="tile-move tm4"><g class="tile-look"><rect class="ring" x="3" y="120" width="134" height="52" rx="26" fill="none" stroke="#2970FF" stroke-width="2"/><rect class="pillbg" x="8" y="125" width="124" height="42" rx="21" fill="#ECEEF1" stroke="#2970FF" stroke-width="1.6" stroke-opacity="0"/><circle cx="32" cy="146" r="13" fill="#0B0D12"/><text x="32" y="151" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">M</text><text x="52" y="152">Muse</text></g></g>
+          <g class="tile-move tm5"><g class="tile-look"><rect class="ring" x="423" y="120" width="134" height="52" rx="26" fill="none" stroke="#2970FF" stroke-width="2"/><rect class="pillbg" x="428" y="125" width="124" height="42" rx="21" fill="#ECEEF1" stroke="#2970FF" stroke-width="1.6" stroke-opacity="0"/><circle cx="452" cy="146" r="13" fill="#4B5563"/><text x="452" y="151" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">I</text><text x="472" y="152">Instinct</text></g></g>
+          <g class="tile-move tm6"><g class="tile-look"><rect class="ring" x="51" y="219" width="134" height="52" rx="26" fill="none" stroke="#2970FF" stroke-width="2"/><rect class="pillbg" x="56" y="224" width="124" height="42" rx="21" fill="#ECEEF1" stroke="#2970FF" stroke-width="1.6" stroke-opacity="0"/><circle cx="80" cy="245" r="13" fill="#4664D9"/><text x="80" y="250" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">K</text><text x="100" y="251">Kimi</text></g></g>
+          <g class="tile-move tm7"><g class="tile-look"><rect class="ring" x="375" y="219" width="134" height="52" rx="26" fill="none" stroke="#2970FF" stroke-width="2"/><rect class="pillbg" x="380" y="224" width="124" height="42" rx="21" fill="#ECEEF1" stroke="#2970FF" stroke-width="1.6" stroke-opacity="0"/><circle cx="404" cy="245" r="13" fill="#111111"/><text x="404" y="250" text-anchor="middle" font-size="13" font-weight="800" fill="#ffffff" font-family="Georgia,serif">N</text><text x="424" y="251">Notion</text></g></g>
         </g>
       </svg>
     </div>
@@ -1342,8 +1342,8 @@ function brandTileHTML(id,sm){
     muse:{bg:"#0B0D12",g:"M",fs:"19px"},
     supabase:{bg:"#3ECF8E",g:"S",fs:"19px",fg:"#04331F"},
     notion:{bg:"#111111",g:"N",fs:"20px",ff:"Georgia,serif"},
-    instinct:{bg:"#55534E",g:"I",fs:"19px"},
-    other:{bg:"#8A8A80",g:"AI",fs:"13px"}
+    instinct:{bg:"#4B5563",g:"I",fs:"19px"},
+    other:{bg:"#6B7280",g:"AI",fs:"13px"}
   };
   var m=map[id]||map.other;
   return '<span class="'+cls+'" style="background:'+m.bg+';color:'+(m.fg||"#ffffff")+';font-size:'+m.fs+(m.ff?(";font-family:"+m.ff):"")+'" aria-hidden="true">'+m.g+'</span>';
@@ -2408,7 +2408,7 @@ function applyLang(){
 function renderFullSetLangOnly(){ /* fs buttons already re-texted above; full re-render keeps URLs */ }
 /* ============ layered details: "How this works — as deep as you want" (done + extras mirror) ============ */
 function renderHow(){
-  var regTile='<span class="btile sm" style="background:#0A6640" aria-hidden="true">✓</span>';
+  var regTile='<span class="btile sm" style="background:#2970FF" aria-hidden="true">✓</span>';
   function li(tile,text){return '<li>'+(tile?tile+' ':'')+esc(text)+'</li>';}
   function liB(tile,lead,rest){return '<li>'+(tile?tile+' ':'')+'<strong>'+esc(lead)+'</strong>'+esc(rest)+'</li>';}
   var h=''
