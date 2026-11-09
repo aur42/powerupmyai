@@ -33,6 +33,7 @@
 //   SUPABASE_CLIENT_ID, SUPABASE_CLIENT_SECRET   (optional until Supabase OAuth is registered)
 //   ALLOWED_ORIGIN   e.g. https://your-setup-page.example  (the page's origin; CORS lock)
 //   ADMIN_GITHUB_LOGIN   GitHub username allowed to read GET /admin (plain var)
+//   ADMIN_GITHUB_LOGINS   optional comma-separated allowlist; overrides ADMIN_GITHUB_LOGIN when set (the operator login aur42 is always included)
 //   ADMIN_LINK_KEY   long random secret; GET /admin?key=<this> is the owner's
 //                    custom admin link — the link itself IS the credential
 //   INVITES_REQUIRED   "true" turns the invite gate on at /exchange (default off)
@@ -94,6 +95,21 @@ function inviteNextTierAt(points) {
 function invitesConfig(env) {
   const b = parseInt(env.INVITES_BALANCE, 10);
   return { required: env.INVITES_REQUIRED === "true", balance: Number.isFinite(b) && b > 0 ? b : 5 };
+}
+// Admin allowlist: ADMIN_GITHUB_LOGINS (comma-separated) when set,
+// otherwise the single ADMIN_GITHUB_LOGIN exactly as before. The
+// operator login is always an admin whenever any admin config exists,
+// so an allowlist can never lock the operator out. An unset new var
+// changes nothing.
+const OPERATOR_LOGIN = "aur42";
+function adminLogins(env) {
+  const raw = env.ADMIN_GITHUB_LOGINS || env.ADMIN_GITHUB_LOGIN || "";
+  const list = raw.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
+  if (list.length && !list.includes(OPERATOR_LOGIN)) list.push(OPERATOR_LOGIN);
+  return list;
+}
+function isAdminLogin(env, login) {
+  return !!login && adminLogins(env).includes(String(login).toLowerCase());
 }
 function normInviteCode(v) {
   return typeof v === "string" ? v.trim().toUpperCase() : "";
@@ -244,8 +260,7 @@ async function inviteMinePayload(kv, ledger) {
 // binding or a ledger, and anyone with a finished-setup registry entry
 // (pre-gate users are grandfathered by their entry — never re-gated).
 async function inviteKnownLogin(env, login) {
-  const adminLogin = (env.ADMIN_GITHUB_LOGIN || "").trim().toLowerCase();
-  if (adminLogin && login === adminLogin) return true;
+  if (isAdminLogin(env, login)) return true;
   const kv = env.SETUPS;
   if (await kv.get("invbind:" + login)) return true;
   if (await kv.get("invledger:" + login)) return true;
@@ -379,7 +394,8 @@ export default {
     const url = new URL(request.url);
     const json = (obj, status = 200) =>
       new Response(JSON.stringify(obj), { status, headers: { ...cors, "Content-Type": "application/json" } });
-    const adminLogin = (env.ADMIN_GITHUB_LOGIN || "").trim().toLowerCase();
+    const adminList = adminLogins(env);
+    const adminLogin = adminList[0] || "";
 
     // Public config: client IDs are not secrets — the page fetches them from here
     // so the operator configures everything in exactly one place. The invites
@@ -656,15 +672,17 @@ export default {
       if (!env.SETUPS) return json({ error: "registry_not_configured" }, 501);
       const keyParam = url.searchParams.get("key");
       const keyOk = !!env.ADMIN_LINK_KEY && keyParam !== null && secretEquals(keyParam, env.ADMIN_LINK_KEY);
+      let callerLogin = "";
       if (!keyOk) {
         const auth = request.headers.get("Authorization") || "";
         const token = auth.startsWith("Bearer ") ? auth.slice(7).trim() : "";
         if (!token) return json({ error: "missing_token" }, 401);
         const login = await verifyGitHubToken(token);
         if (!login) return json({ error: "invalid_token" }, 401);
-        if (!adminLogin || login !== adminLogin) {
+        if (!isAdminLogin(env, login)) {
           return json({ error: "not_admin", detail: "This GitHub account is not the registered admin for this setup service." }, 403);
         }
+        callerLogin = login;
       }
       let body;
       try { body = await request.json(); } catch { return json({ error: "invalid_json" }, 400); }
@@ -672,7 +690,7 @@ export default {
       if (count < 1 || count > 50) return json({ error: "bad_count", detail: "count must be between 1 and 50." }, 400);
       const issuerLogin = (typeof body.forLogin === "string" && body.forLogin.trim())
         ? body.forLogin.trim().toLowerCase()
-        : adminLogin;
+        : (callerLogin || adminLogin);
       if (!issuerLogin) return json({ error: "no_issuer", detail: "ADMIN_GITHUB_LOGIN is not configured and no forLogin was given." }, 400);
       let ledger = await getInviteLedger(env.SETUPS, issuerLogin);
       if (!ledger) {
@@ -723,8 +741,7 @@ export default {
         });
         if (!meResp.ok) return json({ error: "invalid_token" }, 401);
         const me = await meResp.json().catch(() => ({}));
-        const adminLogin = (env.ADMIN_GITHUB_LOGIN || "").trim().toLowerCase();
-        if (!adminLogin || !me.login || String(me.login).toLowerCase() !== adminLogin) {
+        if (!isAdminLogin(env, me.login)) {
           return json({ error: "not_admin", detail: "This GitHub account is not the registered admin for this setup service." }, 403);
         }
       }
@@ -806,8 +823,7 @@ export default {
         });
         if (!meResp.ok) return json({ error: "invalid_token" }, 401);
         const me = await meResp.json().catch(() => ({}));
-        const adminLogin = (env.ADMIN_GITHUB_LOGIN || "").trim().toLowerCase();
-        if (!adminLogin || !me.login || String(me.login).toLowerCase() !== adminLogin) {
+        if (!isAdminLogin(env, me.login)) {
           return json({ error: "not_admin" }, 403);
         }
       }
@@ -821,4 +837,3 @@ export default {
     return json({ error: "not_found" }, 404);
   },
 };
-// Deploy verification 2026-11-09: comment-only change to trigger Workers Builds auto-deploy. No functional change.
