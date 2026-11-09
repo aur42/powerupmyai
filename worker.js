@@ -821,3 +821,4 @@ export default {
     return json({ error: "not_found" }, 404);
   },
 };
+// Deploy verification 2026-11-09: comment-only change to trigger Workers Builds auto-deploy. No functional change.
