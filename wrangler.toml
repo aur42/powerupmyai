@@ -1,3 +1,20 @@
+# PowerUpMyAI OAuth worker — deploy configuration.
+# RECONCILED 2026-11-09 against the live worker. Full drift table and
+# evidence: ~/workspace/agent-home-product/operator-founding-fix/WRANGLER-RECONCILE.md
+# Before this reconciliation the committed copy still pointed at the
+# retired aur42.github.io origin and had the SETUPS KV binding commented
+# out — deploying from it would have broken the live worker.
+#
+# ⚠ ONE VALUE IS STILL A PLACEHOLDER: the SETUPS KV namespace id below.
+# It is recorded nowhere outside Cloudflare. Read it from the live worker
+# (Cloudflare dashboard → Workers & Pages → powerupmyai-oauth → Settings
+# → Bindings) and replace 99a2a81e22f24825a07a5147b2d3f326 before ANY deploy
+# from this file — including the first Workers Builds deploy.
+#
+# Secrets (GITHUB_CLIENT_SECRET, SUPABASE_CLIENT_SECRET, ADMIN_LINK_KEY)
+# are Worker secrets held in Cloudflare. They are never in this file, and
+# code deploys do not change them.
+
 name = "powerupmyai-oauth"
 main = "worker.js"
 compatibility_date = "2024-11-01"
@@ -6,13 +23,17 @@ compatibility_date = "2024-11-01"
 # Public client IDs (not secrets — the page itself fetches these from /config).
 GITHUB_CLIENT_ID = "Ov23liWNLiv4Ntxi7RKE"
 SUPABASE_CLIENT_ID = "0d0f4731-8033-4620-9415-7f0826ac933d"
-ALLOWED_ORIGIN = "https://aur42.github.io"
+ALLOWED_ORIGIN = "https://powerupmyai.com"
 # The one exact OAuth callback for both providers; the worker rejects any
 # exchange whose redirect_uri does not match this byte-for-byte.
-EXPECTED_REDIRECT_URI = "https://aur42.github.io/powerupmyai/"
+EXPECTED_REDIRECT_URI = "https://powerupmyai.com/"
 ADMIN_GITHUB_LOGIN = "aur42"
+# Invite gate (worker.js invitesConfig): only the exact string "true"
+# turns the gate on. The invite worker's first deploy ships "false";
+# flip only per INVITE-DEPLOY.md's order (codes issued and confirmed first).
+INVITES_REQUIRED = "false"
+INVITES_BALANCE = "5"
 
-# After `wrangler kv namespace create SETUPS`, uncomment and fill:
-# [[kv_namespaces]]
-# binding = "SETUPS"
-# id = "FILL_FROM_KV_CREATE"
+[[kv_namespaces]]
+binding = "SETUPS"
+id = "99a2a81e22f24825a07a5147b2d3f326"
