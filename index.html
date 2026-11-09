@@ -14907,6 +14907,35 @@ function k(e) {
         Wm("preflight"), e =
             "screen-working"
     }
+    if (window.__mcLeave) window.__mcLeave();
+    if (!window.matchMedia || !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        var mcPrev = null;
+        Ze.forEach(function(s) {
+            var c = i(s);
+            if (c && s !== e && c.classList.contains("active")) mcPrev = c
+        });
+        if (mcPrev) {
+            var mcR = mcPrev.getBoundingClientRect(),
+                mcS = mcPrev.style,
+                mcOld = mcS.cssText;
+            mcS.position = "fixed";
+            mcS.left = mcR.left + "px";
+            mcS.top = mcR.top + "px";
+            mcS.width = mcR.width + "px";
+            mcS.height = mcR.height + "px";
+            mcS.margin = "0";
+            mcS.zIndex = "35";
+            mcS.pointerEvents = "none";
+            mcPrev.classList.add("mc-leaving");
+            var mcDone = function() {
+                mcPrev.classList.remove("mc-leaving");
+                mcS.cssText = mcOld;
+                if (window.__mcLeave === mcDone) window.__mcLeave = null
+            };
+            window.__mcLeave = mcDone;
+            setTimeout(mcDone, 340)
+        }
+    }
     Ze.forEach(function(s) {
         var c = i(s);
         if (c) c.classList
@@ -15686,7 +15715,16 @@ if (i("langSheetBack")) i(
 (function() {
     var e = i("sbStage");
     if (!e) return;
-    e.classList.add("playing");
+    var mcImgs = e.querySelectorAll(".sb-art img");
+    if (mcImgs.length && "decode" in HTMLImageElement.prototype) {
+        var mcPend = mcImgs.length;
+        var mcStart = function() {
+            if (--mcPend <= 0) e.classList.add("playing")
+        };
+        mcImgs.forEach(function(im) {
+            im.decode().then(mcStart, mcStart)
+        })
+    } else e.classList.add("playing");
     function t() {
         var n = document.hidden;
         e.classList.toggle("paused", n || !!e._ioPaused)
@@ -17086,6 +17124,87 @@ pre{padding:14px 16px}
    ping-height probe: 44px -> 48px via font 16px -> 21px). This rule
    sits after the media queries so it wins at every width. */
 .bc-ping{font-size:16px}
+</style>
+<style>
+/* ═══ Motion craft pass (2026-11-09) ═══ Continuous ambient
+   atmosphere; screens crossfade (exit ≈63% of entrance); capped
+   card stagger; segment/fold settles; one press language; the
+   cottage light breathes (hero + Your home); one Done bloom.
+   Transform/opacity only — layout never moves. All of it rests
+   under prefers-reduced-motion. */
+:root{--mc-ease:cubic-bezier(.22,1,.36,1)}
+/* — 1 · Ambient background: one atmosphere, carried across screens — */
+body::before{content:"";position:fixed;inset:-6%;z-index:-1;pointer-events:none;background:radial-gradient(90% 55% at 50% -8%,rgba(131,173,251,.12),rgba(131,173,251,0) 60%),radial-gradient(120% 65% at 50% 112%,rgba(250,242,227,.75),rgba(250,242,227,0) 62%),linear-gradient(180deg,#FFFFFF 0%,#FDFCFA 100%);animation:mcDrift 28s ease-in-out infinite alternate}
+@keyframes mcDrift{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(0,-1.4%,0) scale(1.025)}}
+/* — 2 · Screen crossfade: exit 300ms ≈ 63% of the 480ms entrance — */
+.screen.mc-leaving{display:block;animation:mcOut .3s cubic-bezier(.5,0,.8,.4) both}
+#screen-welcome.mc-leaving{display:flex;flex-direction:column}
+#screen-working.mc-leaving{display:flex;flex-direction:column}
+@keyframes mcOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-6px) scale(.996)}}
+.screen.active{animation:mcScreenIn .48s var(--mc-ease) both}
+@keyframes mcScreenIn{from{opacity:0;transform:translateY(12px) scale(.998)}to{opacity:1;transform:none}}
+/* scenes arrive with a whisper of depth */
+.stagevis .sm-scene{animation:mcSceneIn .44s var(--mc-ease) both}
+@keyframes mcSceneIn{from{opacity:0;transform:translateY(5px) scale(1.012)}to{opacity:1;transform:none}}
+/* — 3 · Staggered card entrances: 30ms steps, capped, never bouncy — */
+.screen.active .ai-row,.screen.active .status-row,.screen.active .get-panel,.screen.active .pw-row,.screen.active .board-card,.screen.active .panel-row,.screen.active .welcome-panel,.screen.active .fold-panel,.screen.active .fb-panel,.screen.active .invreq,.screen.active .sum-card,.screen.active .done-links,.screen.active .welcome-below>details{animation:mcRise .4s var(--mc-ease) both}
+.screen.active :is(.ai-row,.status-row,.pw-row,.board-card):nth-child(2){animation-delay:.03s}
+.screen.active :is(.ai-row,.status-row,.pw-row,.board-card):nth-child(3){animation-delay:.06s}
+.screen.active :is(.ai-row,.status-row,.pw-row,.board-card):nth-child(4){animation-delay:.09s}
+.screen.active :is(.ai-row,.status-row,.pw-row,.board-card):nth-child(5){animation-delay:.12s}
+@keyframes mcRise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* — 4 · Segments and folds settle instead of snapping — */
+.seg-panel.on{animation:mcRise .3s var(--mc-ease) both}
+details[open]>:not(summary){animation:mcFade .26s var(--mc-ease) both}
+@keyframes mcFade{from{opacity:0}to{opacity:1}}
+/* — 5 · Press and micro feedback: one language — */
+.btn{transition:transform .11s var(--mc-ease),background-color var(--dur-med) var(--mc-ease),border-color var(--dur-med) var(--mc-ease),box-shadow var(--dur-med) var(--mc-ease),opacity var(--dur-med) var(--mc-ease)}
+.btn:not(:disabled):active{transform:scale(.972);box-shadow:0 2px 8px rgba(41,112,255,.22)}
+.btn.secondary:not(:disabled):active,.btn.quiet:not(:disabled):active{box-shadow:0 2px 6px rgba(31,41,55,.14)}
+.text-btn{transition:color var(--dur-med) var(--mc-ease),transform .11s var(--mc-ease)}
+.text-btn:active{transform:scale(.98)}
+.segbtn{transition:background-color var(--dur-med) var(--mc-ease),color var(--dur-med) var(--mc-ease),box-shadow var(--dur-med) var(--mc-ease),transform .11s var(--mc-ease)}
+.segbtn:active{transform:scale(.97)}
+.langpill{transition:background-color var(--dur-med) var(--mc-ease),box-shadow var(--dur-med) var(--mc-ease),transform .11s var(--mc-ease)}
+.langpill:active{transform:scale(.96)}
+.sum-card{transition:box-shadow var(--dur-med) var(--mc-ease),transform .11s var(--mc-ease)}
+.sum-card:active{transform:scale(.99)}
+@media (hover:hover){.sum-card:hover{box-shadow:var(--shadow-lift)}}
+/* — 6 · The cottage light breathes: hero + Your home — */
+#sbStage .sb-art::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(60% 45% at 50% 58%,rgba(255,176,84,.16),rgba(255,176,84,0) 70%);animation:mcGlow 8.5s ease-in-out infinite}
+#screen-home .stagevis .sm-scene::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(60% 45% at 50% 58%,rgba(255,176,84,.14),rgba(255,176,84,0) 70%);animation:mcGlow 8.5s ease-in-out infinite}
+@keyframes mcGlow{0%,100%{opacity:.45}50%{opacity:.9}}
+/* — 7 · The Done moment: one bloom, the dots settle in — */
+#screen-working[data-state="done"] .stagevis .sm-scene{animation:mcDoneIn .9s var(--mc-ease) both}
+@keyframes mcDoneIn{0%{opacity:0;transform:scale(.965) translateY(8px)}55%{opacity:1;transform:scale(1.008) translateY(0)}100%{opacity:1;transform:scale(1) translateY(0)}}
+#screen-working[data-state="done"] .stagevis .sm-scene::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(65% 55% at 50% 55%,rgba(255,183,77,.28),rgba(255,183,77,0) 72%);animation:mcDoneGlow 2.2s ease-out both}
+@keyframes mcDoneGlow{0%{opacity:0}25%{opacity:1}100%{opacity:.35}}
+#screen-working[data-state="done"] #workCheck li.done .dot{animation:mcPop .45s cubic-bezier(.34,1.56,.64,1) both}
+#screen-working[data-state="done"] #workCheck li:nth-child(2) .dot{animation-delay:.06s}
+#screen-working[data-state="done"] #workCheck li:nth-child(3) .dot{animation-delay:.12s}
+#screen-working[data-state="done"] #workCheck li:nth-child(4) .dot{animation-delay:.18s}
+#screen-working[data-state="done"] #workCheck li:nth-child(5) .dot{animation-delay:.24s}
+#screen-working[data-state="done"] #workCheck li:nth-child(6) .dot{animation-delay:.3s}
+@keyframes mcPop{0%{transform:scale(.4)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+#screen-working[data-state="done"] #successLine{animation:mcRise .5s var(--mc-ease) .12s both}
+/* — 8 · Language sheet: a real exit, ~67% of its entrance — */
+.langsheet{display:block;visibility:hidden;opacity:0;transform:translateY(14px);pointer-events:none;transition:transform .32s var(--mc-ease),opacity .22s var(--mc-ease),visibility 0s linear .32s}
+.langsheet.open{visibility:visible;opacity:1;transform:none;pointer-events:auto;transition:transform .48s var(--mc-ease),opacity .3s var(--mc-ease),visibility 0s}
+.langsheet-back{display:block;visibility:hidden;opacity:0;pointer-events:none;transition:opacity .22s var(--mc-ease),visibility 0s linear .22s}
+.langsheet-back.open{visibility:visible;opacity:1;pointer-events:auto;transition:opacity .3s var(--mc-ease),visibility 0s}
+/* — Reduced motion: this whole layer rests — */
+@media (prefers-reduced-motion:reduce){
+body::before{animation:none !important}
+.screen.active{animation:none !important}
+.screen.mc-leaving{display:none !important;animation:none !important}
+.stagevis .sm-scene{animation:none !important}
+.screen.active :is(.ai-row,.status-row,.get-panel,.pw-row,.board-card,.panel-row,.welcome-panel,.fold-panel,.fb-panel,.invreq,.sum-card,.done-links),.screen.active .welcome-below>details,.seg-panel.on,details[open]>:not(summary){animation:none !important}
+#sbStage .sb-art::after,#screen-home .stagevis .sm-scene::after{animation:none !important;opacity:.55}
+#screen-working[data-state="done"] .stagevis .sm-scene,#screen-working[data-state="done"] #workCheck li.done .dot,#screen-working[data-state="done"] #successLine{animation:none !important}
+#screen-working[data-state="done"] .stagevis .sm-scene::after{animation:none !important;opacity:0}
+.langsheet,.langsheet-back{transition:none !important}
+.sum-card{transition:none !important}
+}
 </style>
 </body>
 </html>
