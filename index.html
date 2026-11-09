@@ -2386,7 +2386,7 @@ If you cannot open web pages, say so.
 Then explain from this description only.
 Description: the page creates one shared memory for every AI I use.
 It sets up a private codebase and a private database under my own accounts.
-Every AI reads and writes the same memory, so I do not repeat myself.</pre></div><button class="btn quiet" id=welcomeExtrasBtn>Just want the template files?</button><div id=manualW><details class=fold-quiet data-k=template><summary><span class=fold-t></span><span class=fold-val></span></summary><template id=manualWTpl><p class=deepx>Download every template file and set things up by hand. Fill in what you already have (or plan to have) and the paste blocks below update to match.</p><label for=mRepoW>Your repo URL (optional)</label><input id=mRepoW placeholder=https://github.com/you/agent-home autocomplete=off spellcheck=false /><label for=mDbW>Your database URL (optional)</label><input id=mDbW placeholder=https://xxxx.supabase.co autocomplete=off spellcheck=false /><button class="btn secondary" id=dlBtnW></button><p class="small mt8 deepx">Your browser will save each file one by one. Allow multiple downloads if it asks. Files:</p><p class=filelist>00-MUSE-MANIFEST.md · README.md · SOUL.md · IDENTITY.md · USER.md · AGENTS.md · MEMORY.md · DECISIONS.md · CONNECT.md · ORCHESTRATION.md · CAPABILITIES.md · BEST-PRACTICES.md · UPGRADES.md · skills/README.md · skills/memory-hygiene.md · skills/verify-before-claiming.md · skills/import-and-reconcile.md · agent.config.example.json · .env.example · .env.service-role.example · .gitignore · db/001_starter_schema.sql · tools/import_md.py · tools/export_home.py · skills/building-things-simply.md · skills/building-things-simply-field-notes.md · skills/software-craft.md · skills/front-end-craft.md · skills/orchestrating-your-agents.md</p><div id=manualBlocksW></div></template></details></div></div><div id=welcomePartway class=hidden><div class=stagevis id=partwayVis data-scene=back></div><h1 id=partwayH1></h1><div id=resyncSummary></div><button class="btn hidden" id=resyncKeepBtn></button></div></section><section class=screen id=step0><div class=stagevis id=nameVis data-scene=name></div><h1 id=step0H1></h1><p class=lede id=step0Lede></p><p class="lede hidden" id=forGreet style=font-size:26px;font-weight:700></p><button class="text-btn hidden" id=notMyNameBtn></button><div id=nameFieldWrap><label for=fName>Your name</label><input id=fName placeholder="e.g. Alex Rivera" autocomplete=name /></div><button class=btn id=nameContinueBtn></button><button class=text-btn id=nameSkipBtn></button><p class=why id=nameWhy>So they know who you are.</p><details><summary>Details</summary><ul class=blist><li>One identity runs through everything.</li><li>It prefills your USER.md and suggests your repo name.</li><li>Use the same name for GitHub and Supabase. The accounts line up as yours.</li></ul><div class=okbox id=identitySummary></div><label for=fRepo>Codebase name</label><input id=fRepo value=agent-home autocomplete=off spellcheck=false /><p class=small>Suggested from your name; change it freely. Lowercase letters, numbers and hyphens. It will be created <strong>private</strong>. Nothing public, ever.</p></details></section><section class=screen id=step1><div class=stagevis id=ghVis data-scene=link></div><h1 id=step1H1></h1><p class=lede id=step1Lede></p><button class=btn id=ghSignupBtn aria-expanded=false aria-controls=ghSignupPanel></button><div id=ghSignupPanel class=hidden><p class="small mt8" id=ghSignupText></p><a class=btn href=https://github.com/signup target=_blank rel=noopener id=ghSignupLink></a><p class=why id=ghSignupFree></p></div><button class="btn secondary small-btn btn-fw" id=ghPrimaryBtn></button><p class=why id=step1Why></p><p class="demo-line hidden" id=ghDemoLine></p><details id=ghDetails><summary>Details</summary><p><span class="btile sm" style=background:#111111 aria-hidden=true><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.5 2.87 8.31 6.84 9.66.5.09.68-.22.68-.49v-1.7c-2.78.61-3.37-1.21-3.37-1.21-.45-1.16-1.11-1.47-1.11-1.47-.91-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.55 2.34 1.1 2.91.84.09-.65.35-1.1.63-1.35-2.22-.26-4.56-1.13-4.56-5.02 0-1.11.39-2.02 1.03-2.73-.1-.26-.45-1.29.1-2.68 0 0 .84-.27 2.75 1.04a9.4 9.4 0 0 1 5 0c1.91-1.31 2.75-1.04 2.75-1.04.55 1.39.2 2.42.1 2.68.64.71 1.03 1.62 1.03 2.73 0 3.9-2.34 4.75-4.57 1 0 .29.41.56.75 1.1.29 1.06 0 1.91-.01 2.17-.01 1.08.01 1.95.01 2.17 0 1.14.75 2.46 2.79 1.65 3.97 1.35 1.03 4.66 9.64 4.66A10.25 10.25 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"/></svg></span> A “codebase” is a private folder online.<br/>It keeps every version of your files. Only you can see it. <span class=tag id=ghPill>Checking…</span></p><div id=ghHavePanel><button class=btn id=ghConnectBtn></button><p class="small mt8" id=ghConnectNote></p><div class=okbox id=ghConnected></div></ul><button class=btn id=ghBtn></button><ul class=check id=ghCheck><li data-k=gh-verify><span class=dot>✓</span><span>Token verified against GitHub (reads back your username) · ~10 seconds</span><span class=st></span></li><li data-k=gh-create><span class=dot>✓</span><span>Private folder created · ~10 seconds</span><span class=st></span></li><li data-k=gh-upload><span class=dot>✓</span><span>Template files uploaded · ~10–30 seconds</span><span class=st></span></li><li data-k=gh-readback><span class=dot>✓</span><span>Folder read back. Confirmed private, files present · ~10 seconds</span><span class=st></span></li></ul><div class=err id=ghErr></div><div class="safe hidden" id=ghCollision></div><div class=okbox id=ghOk></div><details id=ghAdvanced><summary>Having trouble? Connect with a code instead</summary><p class="small mt8">Only if the button above fails. Make a one-time code on GitHub, paste it here:</p><ol class="small olist"><li><a href="https://github.com/settings/tokens/new?scopes=repo&amp;description=agent-home%20setup" target=_blank rel=noopener>Tap here</a> — GitHub opens, right screen, boxes ticked.</li><li>Name box: “agent-home setup”. Empty? Type it in.</li><li>Scroll down. Tap the green <strong>Generate token</strong>.</li><li>Copy the long code starting <code>ghp_</code> (copy icon).</li><li>Back here, paste it below. It's checked instantly.</li></ol><label for=ghToken>Your code from GitHub</label><input type=password id=ghToken placeholder="Paste the long code here…" autocomplete=off spellcheck=false /><div class=okbox id=ghTokenStatus></div><div class=err id=ghTokenErr></div><p class=small>Sent only to GitHub, from your browser. Never saved. Delete it on GitHub once setup finishes.</p></details></div></details></section><section class=screen id=stepInvite><h1 id=invGateH1></h1><p class=lede id=invGateLede></p><label for=invCodeInput id=invCodeLabel></label><input id=invCodeInput autocomplete=off spellcheck=false autocapitalize=characters placeholder="PUMA-XXXXXX" /><button class=btn id=invGateContinueBtn></button><p class=why id=invGateWhy></p><button class=text-btn id=invGateBackBtn></button></section><section class=screen id=screen-invite-stop><h1 id=invStopH1></h1><p class=lede id=invStopLede></p><button class=btn id=invStopBackBtn></button></section><section class=screen id=screen-working data-state=running aria-live=polite><div class=stagevis id=workVis data-scene=working></div><h1 id=workingTitle></h1><p class=state-msg id=workingMsg></p><ul class=check id=workCheck></ul><p class=small id=workSlow></p><div id=sbPreflight class=hidden><div class=stagevis id=sbVis data-scene=memory></div><h1 id=step2H1></h1><p class=lede id=step2Lede></p><button class=btn id=sbPrimaryBtn></button><p class=why id=step2Why></p><p class="demo-line hidden" id=sbDemoLine></p><details id=sbDetails><summary>Details</summary><p><span class="btile sm" style=background:#3ECF8E;color:#04331F aria-hidden=true><svg viewBox="0 0 24 24"><path d="M13.4 2.2 5 13.8h5.4L9.3 21.8 18.6 10.2h-5.6Z"/></svg></span> A “database” is where your memory is stored safely.<br/>Organised, searchable, locked so only you can open it. <span class=tag id=sbPill>Checking…</span></p><button class=btn id=sbConnectBtn></button><p class="small mt8" id=sbConnectNote></p><div class=okbox id=sbConnected></div></ul><p class=small>No Supabase account yet? <a href=https://supabase.com/dashboard/sign-up target=_blank rel=noopener>Create one free</a> (it offers GitHub sign-in — use the same account as step 1 so everything lines up).</p><label for=sbOrg>Your Supabase group (“organisation”)</label><select id=sbOrg><option value="">Connect above, then load your groups →</option></select><label for=sbRegion>Region (closest to you is best)</label><select id=sbRegion><option value=ap-southeast-1 selected>Singapore (Southeast Asia)</option><option value=ap-northeast-1>Tokyo (Northeast Asia)</option><option value=ap-northeast-2>Seoul (Northeast Asia)</option><option value=ap-south-1>Mumbai (South Asia)</option><option value=ap-southeast-2>Sydney (Oceania)</option><option value=eu-west-1>Ireland (Europe)</option><option value=eu-west-2>London (Europe)</option><option value=eu-central-1>Frankfurt (Europe)</option><option value=us-east-1>N. Virginia (US East)</option><option value=us-west-1>N. California (US West)</option><option value=ca-central-1>Canada (Central)</option><option value=sa-east-1>São Paulo (South America)</option></select><button class="btn quiet" id=sbOrgBtn></button><button class=btn id=sbBtn></button><ul class=check id=sbCheck><li data-k=sb-verify><span class=dot>✓</span><span>Token verified (organisations listed) · ~10 seconds</span><span class=st></span></li><li data-k=sb-create><span class=dot>✓</span><span>Free project created · ~10 seconds</span><span class=st></span></li><li data-k=sb-active><span class=dot>✓</span><span>Project is live · can take a few minutes</span><span class=st></span></li><li data-k=sb-schema><span class=dot>✓</span><span>Starter schema applied · ~10 seconds</span><span class=st></span></li><li data-k=sb-readback><span class=dot>✓</span><span>Tables verified by querying the database · ~10 seconds</span><span class=st></span></li></ul><div class=err id=sbErr></div><div class=okbox id=sbOk></div><details id=sbAdvanced><summary>Having trouble? Connect with a code instead</summary><p class="small mt8">Only if the button above fails. Make a one-time code on Supabase, paste it here:</p><ol class="small olist"><li><a href=https://supabase.com/dashboard/account/tokens target=_blank rel=noopener>Tap here</a> — Supabase opens on the token page.</li><li>Tap <strong>Generate new token</strong>. Name it “agent-home setup”.</li><li>Copy the long code starting <code>sbp_</code>.</li><li>Back here, paste it below. It's checked instantly. Then “Create my memory store” above works.</li></ol><label for=sbToken>Your code from Supabase</label><input type=password id=sbToken placeholder="Paste the long code here…" autocomplete=off spellcheck=false /><div class=okbox id=sbTokenStatus></div><div class=err id=sbTokenErr></div><p class=small>Sent only to Supabase, from your browser. Never saved. Delete it once setup finishes.</p></details></details></div><div id=workDone class=hidden><div class=stagevis id=sucVis data-scene=success></div><h1 id=successTitle></h1><p class=state-msg id=successLine></p><p class="small hidden" id=workDbSleepLine>Your memory is on Supabase's free plan. If it sits unused for about a week, Supabase puts it to sleep — it emails you a warning first, waking it is one tap, and your AIs using it counts as use.</p><div id=successMemoryAsk class=hidden><button class=btn id=successMemCreateBtn></button><button class="btn secondary" id=successMemSkipBtn></button></div><button class=btn id=successContinueBtn></button></div><div id=workFailed class=hidden><div class=stagevis id=failedVis data-scene=failed></div><h1 id=failedH1></h1><p class=state-msg id=failedLine></p><p class=small id=failedKeptLine>Completed steps stay done. You lose nothing you finished.</p><button class=btn id=failedRetryBtn></button><button class=text-btn id=failedBackBtn></button><button class="btn quiet report-btn" id=failedReportBtn>Copy a problem report</button><details id=failedDetails><summary>Details</summary><pre id=failedTech></pre></details></div></section><section class=screen id=screen-home data-entry=checkin><div class=home-head data-head=created><div class=stagevis id=doneVis data-scene=done></div><h1 id=doneH1></h1><p id=wiringHonestLine style="font-size:20px;font-weight:600;margin:0 0 14px">Your AIs can't see this by themselves. <span class=acc>One paste per AI</span> — this message does the rest.</p><p class=lede id=doneLede></p><p class="state-msg hidden" id=doneProofLine></p><p class="small hidden" id=doneProofWhy style="margin:6px 0 0"></p><p class=small id=doneSub></p></div><div class=home-head data-head=checkin><div class=stagevis id=statusVis data-scene=health></div><h1 id=statusH1></h1><p class="lede status-line" id=statusUpdated></p><p class="small hidden" id=statusPartial></p><p class=small id=statusHonest></p></div><div class=home-head data-head=locked><h1 id=resyncH1></h1><p class=lede id=resyncLede></p><button class=btn id=resyncBtn></button><div class=err id=resyncErr></div><details id=resyncCodeFold><summary id=resyncCodeSummary></summary><p class="small mt8" id=resyncCodeText></p><button class=text-btn id=resyncCodeBtn></button></details></div><span id=homeSegTop hidden></span><div id=fullSetPitch><h1 id=fullSetH1></h1><p class=lede id=fullSetLede></p><div id=fullSetRows></div><p class=why id=fullSetWhy></p><details><summary>Details</summary><p>Links may include the sharer's referral code.</p></details></div><h3 id=doneAiH></h3><p class="small wired-count" id=doneWiredCount></p><p class=all-wired id=statusAllWiredLine role=status></p><p class="small hidden" id=statusAllWiredDetail style="text-align:center;margin:0 0 var(--sp-2)"></p><div id=doneAiRows></div><button class=btn id=showPastesBtn></button><p class=why id=pastesWhy>Paste once into each app.</p><details id=pastesWrap><summary>Copy-paste messages</summary><div class="safe deepx"><p style=margin:0><strong>The one safety rule:</strong></p><ul class=blist style="margin:4px 0 0"><li>Everything created is private and yours: repo under your GitHub, database under your Supabase.</li><li>This page keeps no copy of your tokens or keys.</li><li>To cut access: revoke the token in the provider's settings, delete keys from your local <code>.env</code>.</li><li><strong>Now revoke the two setup tokens you pasted</strong>. Setup is done, and they've served their purpose.</li></ul></div><div class=safe><label style=display:flex;gap:12px;align-items:flex-start;font-weight:400;margin:0;cursor:pointer><input type=checkbox id=regTick checked style=width:28px;height:28px;margin-top:4px;flex:none /><span><strong>Tell the person who shared this with me that I'm set up</strong>. This sends only my name and my codebase link, nothing else.</span></label><p class=small id=regNote style="margin:8px 0 0"></p></div><h3>Confirm each app is wired: paste it this message</h3><p class=deepx><strong>How to read the reply:</strong></p><ul class="blist deepx"><li>Correct verification phrase + correct facts = strong evidence it's wired. Not proof.</li><li>Wrong or missing phrase = <strong>not wired</strong>. Even if the rest sounds plausible.</li><li>It names a blank field = wired, just not filled in yet. Not a failure.</li><li>It says “I can't read your agent home yet” = not wired. Paste the full setup block from <code>CONNECT.md</code> first.</li></ul><p class="small deepx">Send the matching message to each AI app you use. It asks the app to reply with: the verification phrase from MEMORY.md (verbatim), your name from USER.md, one fact from MEMORY.md (word for word), and the canonical-store line.</p><p class=all-wired id=allWiredLine role=status></p><p class="small hidden" id=allWiredDetail style="text-align:center"></p><button class=text-btn id=pastesFullSetBtn></button><h3>Full setup blocks</h3><p class=small>The longer first-time blocks (also saved as <code>CONNECT.md</code> in your repo). There is no shared one-click sign-in across these tools. A generated paste block is the honest version.</p><div id=doneBlocks></div><div id=envBox class=hidden><div class=block-head><h3>Your local <code>.env</code>. Save this, never commit it</h3><button class="btn small-btn secondary" data-copy=envPre>Copy</button></div><pre id=envPre></pre><p class="small deepx">This is the only key file an AI app may ever draw from, and the only key in it is <code>SUPABASE_ANON_KEY</code>.</p></div><div id=envServiceBox class=hidden><div class=block-head><h3><code>.env.service-role</code> (importer only — never give this to any AI app)</h3><button class="btn small-btn secondary" data-copy=envServicePre>Copy</button></div><pre id=envServicePre></pre><p class="small deepx">Save this as a separate local file next to your <code>.env</code>. Only the importer (<code>tools/import_md.py</code>) on your own machine uses it. It has full access to your database.</p></div></details><div id=proofBubble class=hidden><div class=bubble id=proofBubbleText></div><p class=bubble-label>Read back from your home just now.</p></div><div id=houseKeyBox class=hidden style="margin-top:var(--sp-4)"><p style="margin:0 0 6px"><span id=houseKeyLabel style="font-weight:700"></span> <code id=houseKeyText class=pw-once style="display:inline-block;padding:6px 12px;margin:0"></code></p><p class=small id=houseKeyLine style="margin:0 0 8px"></p><button class="btn small-btn secondary" id=houseKeyCopy type=button></button></div><div id=proveItBox class=hidden style="margin-top:var(--sp-4)"><p style="margin:0 0 6px"><span id=proveItLabel style="font-weight:700"></span></p><p class=small id=proveItLine style="margin:0 0 8px"></p><button class="btn small-btn secondary" id=proveItCopy type=button></button></div><p style="margin-top:var(--sp-4)" id=doneChipP><span class=tag id=doneCheckedChip></span></p><div class=done-links id=doneLinks></div><div class=safe id=saveBackBlock><p id=saveBackLine style=margin:0></p><p class=small id=saveBackHow style="margin:6px 0 0"></p><p class="small hidden" id=saveBackNote style="margin:6px 0 0"></p></div><details id=sbPwBox class=hidden><summary>Save this database password now</summary><p class=pw-save id=sbPwSaveLine>Save it now.</p><p id=sbPwResetLine style="margin:0 0 8px">If you ever lose it, you can reset it in Supabase.<br/>Nothing breaks.</p><div style=display:flex;gap:10px;align-items:stretch;flex-wrap:wrap><div class=pw-once id=sbPw style=flex:1;min-width:180px;margin:0></div><button class="btn small-btn secondary" id=sbPwCopy style=margin-top:0></button></div><p class=small id=sbPwNote style=margin-top:16px>Made in your browser for the new project.<br/>Supabase shows it once. It is never saved in your codebase.<br/>You need it only for direct database connections.<br/>Most tools use the API keys in your <code>.env</code> instead.</p></details><div id=statusRows></div><button class="btn hidden" id=statusContinueBtn>Continue setup</button><button class="btn secondary" id=statusCheckBtn></button><div id=statusProblems></div><div id=boardWrap></div><div id=repairWrap></div><div class=fw id=firstWeek></div><details id=howDetailsExtras class=fold-panel data-k=how><summary><span aria-hidden=true>🧩</span> <span class=fold-t></span><span class=fold-val></span></summary><div id=howExtras></div><button class=btn id=wireBtn disabled></button><ul class=check id=wireCheck><li data-k=wire-config><span class=dot>✓</span><span><code>agent.config.json</code> committed (ref + URL only)</span><span class=st></span></li><li data-k=wire-connect><span class=dot>✓</span><span><code>CONNECT.md</code> committed</span><span class=st></span></li><li data-k=wire-readback><span class=dot>✓</span><span>Wiring read back from the codebase and verified</span><span class=st></span></li></ul><div class=err id=wireErr></div><div class=okbox id=wireOk></div><details><summary>Optional: GitHub Secrets (manual — this page does not do this for you)</summary><ul class="blist small mt8"><li>Only needed if you later run GitHub Actions against your database. Most people never need it.</li><li>This page doesn't do it for you. Adding secrets needs GitHub's encryption flow.</li><li>Manual path: your repo → <strong>Settings → Secrets and variables → Actions → New repository secret</strong>.</li><li>Add <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> from your local <code>.env</code>, one at a time.</li><li>Add <code>SUPABASE_SERVICE_ROLE_KEY</code> only if an Action truly needs it. It has full access.</li></ul></details></details><details id=decisionsDetails class=fold-panel data-k=choices><summary><span aria-hidden=true>✅</span> <span class=fold-t></span><span class=fold-val></span></summary><p id=decisionsSentence></p><div class=block-head><h3 id=decisionsBlockH></h3><button class="btn small-btn secondary" id=decisionsCopyBtn></button></div><pre id=decisionsPre></pre></details><details id=scoreboardDetails class=fold-panel data-k=score><summary><span aria-hidden=true>🏆</span> <span class=fold-t></span><span class=fold-val></span></summary><p class=small>From <code>BEST-PRACTICES.md</code>, the shared register of what we've learned building agent setups like this. Only checks this page actually verified during your setup are listed. Anything not verified is not claimed.</p><div id=scoreboard></div></details><div id=stepImport><details class=fold-panel data-k=bring><summary><span aria-hidden=true>📥</span> <span class=fold-t></span><span class=fold-val></span></summary><p class=deepx>Already have memory files? An export, notes, plain local files — add them here.</p><ul class="blist deepx"><li>Read <em>in your browser only</em>.</li><li>Exact duplicates dropped.</li><li>Every conflict shown to you — you pick.</li><li><strong>Nothing is silently overwritten. Ever.</strong></li></ul><h3 id=notionImportH></h3><p class=small id=notionImportNote>Honest label: this is a <strong>file import</strong>, not a live connection. You export once, and the files join the same reconcile below.</p><ol class="small olist" id=notionImportSteps><li>Open the Notion app → Settings → Export all workspace content.</li><li>If it arrives as a zip, unzip it.</li><li>Come back here and add the Markdown (.md) files with the picker below. They reconcile exactly like an AI app's export.</li></ol><label for=importFiles>Memory files (.md, .txt, .json — pick as many as you have)</label><input type=file id=importFiles accept=.md,.txt,.json,text/markdown,text/plain,application/json multiple /><div class=okbox id=importSummary></div><div id=conflictList></div><div class=err id=importErr></div><div id=importActions class=hidden><button class=btn id=importRepoBtn>Write the reconciled import to my repo</button><ul class="blist small mt8 deepx"><li>Appends reconciled memories to <code>MEMORY.md</code>.</li><li>Writes an <code>IMPORT-REPORT.md</code>: sources, dropped duplicates, conflict resolutions.</li><li>Needs the repo from setup — import earlier and it rides along when the repo is created.</li></ul><button class="btn secondary" id=importRowsBtn>Show the database rows this prepares</button><div id=importRowsBox class=hidden><div class=block-head><h3>Rows prepared for the <code>memories</code> table</h3><button class="btn small-btn secondary" id=importRowsCopy></button></div><pre id=importRowsPre></pre><p class="small deepx">Load them with <code>tools/import_md.py</code> from your repo, or paste into your own import. <code>owner_id</code> is left as <code>YOUR-AUTH-USER-ID</code> on purpose: it must be your Supabase auth user id, and this page will not invent one.</p></div></div><h3 id=notionMirrorPathH></h3><p><span class=tag id=notionMirrorTag></span></p><p class=small id=notionMirrorP></p><div class=block-head><h3 id=notionMirrorH></h3><button class="btn small-btn secondary" id=notionMirrorCopyBtn></button></div><pre id=notionMirrorPre></pre></details></div><div id=manual><details class=fold-quiet data-k=template><summary><span class=fold-t></span><span class=fold-val></span></summary><p class=deepx>Download every template file and set things up by hand. Fill in what you already have (or plan to have) and the paste blocks below update to match.</p><label for=mRepo>Your repo URL (optional)</label><input id=mRepo placeholder=https://github.com/you/agent-home autocomplete=off spellcheck=false /><label for=mDb>Your database URL (optional)</label><input id=mDb placeholder=https://xxxx.supabase.co autocomplete=off spellcheck=false /><button class="btn secondary" id=dlBtn></button><p class="small mt8 deepx">Your browser will save each file one by one. Allow multiple downloads if it asks. Files:</p><p class=filelist>00-MUSE-MANIFEST.md · README.md · SOUL.md · IDENTITY.md · USER.md · AGENTS.md · MEMORY.md · DECISIONS.md · CONNECT.md · ORCHESTRATION.md · CAPABILITIES.md · BEST-PRACTICES.md · UPGRADES.md · skills/README.md · skills/memory-hygiene.md · skills/verify-before-claiming.md · skills/import-and-reconcile.md · agent.config.example.json · .env.example · .env.service-role.example · .gitignore · db/001_starter_schema.sql · tools/import_md.py · tools/export_home.py · skills/building-things-simply.md · skills/building-things-simply-field-notes.md · skills/software-craft.md · skills/front-end-craft.md · skills/orchestrating-your-agents.md</p><div id=manualBlocks></div></details></div><div id=invitesBlock></div><div class=fb-mount></div><button class="btn quiet hidden" id=fbTellBtn type=button>Tell us what's broken or missing</button><details class=fold-panel data-k=del id=deleteHomeFold><summary><span aria-hidden=true>🗑️</span> <span class=fold-t></span><span class=fold-val></span></summary><div id=deleteHomeBody></div></details><button class=text-btn id=statusStartAgainBtn></button><div class="safe hidden" id=statusStartAgainConfirm><p id=statusStartAgainMsg style="margin:0 0 6px"></p><button class=btn id=statusStartAgainYes></button><button class=text-btn id=statusStartAgainCancel></button></div><details class=closing-det><summary>Details</summary><p>Your agent home lives in your GitHub and your Supabase now, not here.</p><p>You don't need this page again. But it stays here as your check-up if you ever want one. Your repo and database links are above; everything else lives inside the repo itself.</p></details></section><section class=screen id=adminView><h1>Who's set up</h1><p class=lede>Names and repo links only.</p><p class=small>This link is your key. Anyone who has it can see this list (names and repo links only), so keep it private, the way you'd keep a password.</p><p id=adminStatus></p><p class=small id=adminNote></p><div id=adminTableWrap style=overflow-x:auto></div><div id=adminInvites></div><div id=inviteMaker><h3>Make a personal share link</h3><p class=small>A personal link for someone you know — it greets them by name and notes that you shared it. It isn't a beta code; the invite codes above are the gate.</p><label for=invName>Name</label><input id=invName autocomplete=off /><label for=invLang>Language</label><select id=invLang><option value=en>English</option><option value=ko>한국어</option><option value=es>Español</option><option value=zh>中文</option><option value=hi>हिन्दी</option><option value=fr>Français</option><option value=ar>العربية</option><option value=pt>Português</option><option value=ja>日本語</option></select><label for=invRef>Ref code (optional)</label><input id=invRef autocomplete=off /><button class="btn small-btn secondary" id=invMakeBtn>Make link</button><pre id=invOut></pre><button class="btn small-btn secondary hidden" id=invCopyBtn>Copy invite link</button></div></section><button class=langfab id=langFabBtn aria-label="Language / 언어 / Idioma / 语言 / भाषा / Langue / العربية / Português / 日本語">🇺🇸</button><div class=langsheet-back id=langSheetBack></div><div class=langsheet id=langSheet role=dialog aria-modal=true aria-label="Language / 언어 / Idioma / 语言 / भाषा / Langue / العربية / Português / 日本語"><h2>Language · 언어 · Idioma · 语言 · भाषा · Langue · العربية · Português · 日本語</h2><div class=flagdial role=group aria-label="Language / 언어 / Idioma / 语言 / भाषा / Langue / العربية / Português / 日本語"><button id=langSheetEnBtn class=flagopt aria-label=English><span class=flagcircle aria-hidden=true>🇺🇸</span><span class=flagword>English</span></button><button id=langSheetKoBtn class=flagopt aria-label=한국어><span class=flagcircle aria-hidden=true>🇰🇷</span><span class=flagword>한국어</span></button><button id=langSheetEsBtn class=flagopt aria-label=Español><span class=flagcircle aria-hidden=true>🇪🇸</span><span class=flagword>Español</span></button><button id=langSheetZhBtn class=flagopt aria-label=中文><span class=flagcircle aria-hidden=true>🇨🇳</span><span class=flagword>中文</span></button><button id=langSheetHiBtn class=flagopt aria-label=हिन्दी><span class=flagcircle aria-hidden=true>🇮🇳</span><span class=flagword>हिन्दी</span></button><button id=langSheetFrBtn class=flagopt aria-label=Français><span class=flagcircle aria-hidden=true>🇫🇷</span><span class=flagword>Français</span></button><button id=langSheetArBtn class=flagopt aria-label=العربية><span class=flagcircle aria-hidden=true>🇪🇬</span><span class=flagword>العربية</span></button><button id=langSheetPtBtn class=flagopt aria-label=Português><span class=flagcircle aria-hidden=true>🇵🇹</span><span class=flagword>Português</span></button><button id=langSheetJaBtn class=flagopt aria-label=日本語><span class=flagcircle aria-hidden=true>🇯🇵</span><span class=flagword>日本語</span></button></div><button class=sheetclose id=langSheetClose>Close</button></div><p class=footer-line id=footerLine><span class=footer-l1><span class=footer-name>PowerUpMyAI</span> · powerupmyai.com</span><span class=footer-l2 id=footerYours></span></p></div>
+Every AI reads and writes the same memory, so I do not repeat myself.</pre></div><button class="btn quiet" id=welcomeExtrasBtn>Just want the template files?</button><div id=manualW><details class=fold-quiet data-k=template><summary><span class=fold-t></span><span class=fold-val></span></summary><template id=manualWTpl><p class=deepx>Download every template file and set things up by hand. Fill in what you already have (or plan to have) and the paste blocks below update to match.</p><label for=mRepoW>Your repo URL (optional)</label><input id=mRepoW placeholder=https://github.com/you/agent-home autocomplete=off spellcheck=false /><label for=mDbW>Your database URL (optional)</label><input id=mDbW placeholder=https://xxxx.supabase.co autocomplete=off spellcheck=false /><button class="btn secondary" id=dlBtnW></button><p class="small mt8 deepx">Your browser will save each file one by one. Allow multiple downloads if it asks. Files:</p><p class=filelist>00-MUSE-MANIFEST.md · README.md · SOUL.md · IDENTITY.md · USER.md · AGENTS.md · MEMORY.md · DECISIONS.md · CONNECT.md · ORCHESTRATION.md · CAPABILITIES.md · BEST-PRACTICES.md · UPGRADES.md · skills/README.md · skills/memory-hygiene.md · skills/verify-before-claiming.md · skills/import-and-reconcile.md · agent.config.example.json · .env.example · .env.service-role.example · .gitignore · db/001_starter_schema.sql · tools/import_md.py · tools/export_home.py · skills/building-things-simply.md · skills/building-things-simply-field-notes.md · skills/software-craft.md · skills/front-end-craft.md · skills/orchestrating-your-agents.md</p><div id=manualBlocksW></div></template></details></div></div><div id=welcomePartway class=hidden><div class=stagevis id=partwayVis data-scene=back></div><h1 id=partwayH1></h1><div id=resyncSummary></div><button class="btn hidden" id=resyncKeepBtn></button></div></section><section class=screen id=screen-gift><div class=stagevis id=giftVis data-scene=done></div><h1 id=giftH1></h1><p class=lede id=giftSub></p><button class=btn id=giftOpenBtn type=button></button></section><section class=screen id=step0><div class=stagevis id=nameVis data-scene=name></div><h1 id=step0H1></h1><p class=lede id=step0Lede></p><p class="lede hidden" id=forGreet style=font-size:26px;font-weight:700></p><button class="text-btn hidden" id=notMyNameBtn></button><div id=nameFieldWrap><label for=fName>Your name</label><input id=fName placeholder="e.g. Alex Rivera" autocomplete=name /></div><button class=btn id=nameContinueBtn></button><button class=text-btn id=nameSkipBtn></button><p class=why id=nameWhy>So they know who you are.</p><details><summary>Details</summary><ul class=blist><li>One identity runs through everything.</li><li>It prefills your USER.md and suggests your repo name.</li><li>Use the same name for GitHub and Supabase. The accounts line up as yours.</li></ul><div class=okbox id=identitySummary></div><label for=fRepo>Codebase name</label><input id=fRepo value=agent-home autocomplete=off spellcheck=false /><p class=small>Suggested from your name; change it freely. Lowercase letters, numbers and hyphens. It will be created <strong>private</strong>. Nothing public, ever.</p></details></section><section class=screen id=step1><div class=stagevis id=ghVis data-scene=link></div><h1 id=step1H1></h1><p class=lede id=step1Lede></p><button class=btn id=ghSignupBtn aria-expanded=false aria-controls=ghSignupPanel></button><div id=ghSignupPanel class=hidden><p class="small mt8" id=ghSignupText></p><a class=btn href=https://github.com/signup target=_blank rel=noopener id=ghSignupLink></a><p class=why id=ghSignupFree></p></div><button class="btn secondary small-btn btn-fw" id=ghPrimaryBtn></button><p class=why id=step1Why></p><p class="demo-line hidden" id=ghDemoLine></p><details id=ghDetails><summary>Details</summary><p><span class="btile sm" style=background:#111111 aria-hidden=true><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.5 2.87 8.31 6.84 9.66.5.09.68-.22.68-.49v-1.7c-2.78.61-3.37-1.21-3.37-1.21-.45-1.16-1.11-1.47-1.11-1.47-.91-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.55 2.34 1.1 2.91.84.09-.65.35-1.1.63-1.35-2.22-.26-4.56-1.13-4.56-5.02 0-1.11.39-2.02 1.03-2.73-.1-.26-.45-1.29.1-2.68 0 0 .84-.27 2.75 1.04a9.4 9.4 0 0 1 5 0c1.91-1.31 2.75-1.04 2.75-1.04.55 1.39.2 2.42.1 2.68.64.71 1.03 1.62 1.03 2.73 0 3.9-2.34 4.75-4.57 1 0 .29.41.56.75 1.1.29 1.06 0 1.91-.01 2.17-.01 1.08.01 1.95.01 2.17 0 1.14.75 2.46 2.79 1.65 3.97 1.35 1.03 4.66 9.64 4.66A10.25 10.25 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"/></svg></span> A “codebase” is a private folder online.<br/>It keeps every version of your files. Only you can see it. <span class=tag id=ghPill>Checking…</span></p><div id=ghHavePanel><button class=btn id=ghConnectBtn></button><p class="small mt8" id=ghConnectNote></p><div class=okbox id=ghConnected></div></ul><button class=btn id=ghBtn></button><ul class=check id=ghCheck><li data-k=gh-verify><span class=dot>✓</span><span>Token verified against GitHub (reads back your username) · ~10 seconds</span><span class=st></span></li><li data-k=gh-create><span class=dot>✓</span><span>Private folder created · ~10 seconds</span><span class=st></span></li><li data-k=gh-upload><span class=dot>✓</span><span>Template files uploaded · ~10–30 seconds</span><span class=st></span></li><li data-k=gh-readback><span class=dot>✓</span><span>Folder read back. Confirmed private, files present · ~10 seconds</span><span class=st></span></li></ul><div class=err id=ghErr></div><div class="safe hidden" id=ghCollision></div><div class=okbox id=ghOk></div><details id=ghAdvanced><summary>Having trouble? Connect with a code instead</summary><p class="small mt8">Only if the button above fails. Make a one-time code on GitHub, paste it here:</p><ol class="small olist"><li><a href="https://github.com/settings/tokens/new?scopes=repo&amp;description=agent-home%20setup" target=_blank rel=noopener>Tap here</a> — GitHub opens, right screen, boxes ticked.</li><li>Name box: “agent-home setup”. Empty? Type it in.</li><li>Scroll down. Tap the green <strong>Generate token</strong>.</li><li>Copy the long code starting <code>ghp_</code> (copy icon).</li><li>Back here, paste it below. It's checked instantly.</li></ol><label for=ghToken>Your code from GitHub</label><input type=password id=ghToken placeholder="Paste the long code here…" autocomplete=off spellcheck=false /><div class=okbox id=ghTokenStatus></div><div class=err id=ghTokenErr></div><p class=small>Sent only to GitHub, from your browser. Never saved. Delete it on GitHub once setup finishes.</p></details></div></details></section><section class=screen id=stepInvite><h1 id=invGateH1></h1><p class=lede id=invGateLede></p><label for=invCodeInput id=invCodeLabel></label><input id=invCodeInput autocomplete=off spellcheck=false autocapitalize=characters placeholder="PUMA-XXXXXX" /><button class=btn id=invGateContinueBtn></button><p class=why id=invGateWhy></p><button class=text-btn id=invGateBackBtn></button></section><section class=screen id=screen-invite-stop><h1 id=invStopH1></h1><p class=lede id=invStopLede></p><button class=btn id=invStopBackBtn></button><div id=invReqStop></div></section><section class=screen id=screen-working data-state=running aria-live=polite><div class=stagevis id=workVis data-scene=working></div><h1 id=workingTitle></h1><p class=state-msg id=workingMsg></p><ul class=check id=workCheck></ul><p class=small id=workSlow></p><div id=sbPreflight class=hidden><div class=stagevis id=sbVis data-scene=memory></div><h1 id=step2H1></h1><p class=lede id=step2Lede></p><button class=btn id=sbPrimaryBtn></button><p class=why id=step2Why></p><p class="demo-line hidden" id=sbDemoLine></p><details id=sbDetails><summary>Details</summary><p><span class="btile sm" style=background:#3ECF8E;color:#04331F aria-hidden=true><svg viewBox="0 0 24 24"><path d="M13.4 2.2 5 13.8h5.4L9.3 21.8 18.6 10.2h-5.6Z"/></svg></span> A “database” is where your memory is stored safely.<br/>Organised, searchable, locked so only you can open it. <span class=tag id=sbPill>Checking…</span></p><button class=btn id=sbConnectBtn></button><p class="small mt8" id=sbConnectNote></p><div class=okbox id=sbConnected></div></ul><p class=small>No Supabase account yet? <a href=https://supabase.com/dashboard/sign-up target=_blank rel=noopener>Create one free</a> (it offers GitHub sign-in — use the same account as step 1 so everything lines up).</p><label for=sbOrg>Your Supabase group (“organisation”)</label><select id=sbOrg><option value="">Connect above, then load your groups →</option></select><label for=sbRegion>Region (closest to you is best)</label><select id=sbRegion><option value=ap-southeast-1 selected>Singapore (Southeast Asia)</option><option value=ap-northeast-1>Tokyo (Northeast Asia)</option><option value=ap-northeast-2>Seoul (Northeast Asia)</option><option value=ap-south-1>Mumbai (South Asia)</option><option value=ap-southeast-2>Sydney (Oceania)</option><option value=eu-west-1>Ireland (Europe)</option><option value=eu-west-2>London (Europe)</option><option value=eu-central-1>Frankfurt (Europe)</option><option value=us-east-1>N. Virginia (US East)</option><option value=us-west-1>N. California (US West)</option><option value=ca-central-1>Canada (Central)</option><option value=sa-east-1>São Paulo (South America)</option></select><button class="btn quiet" id=sbOrgBtn></button><button class=btn id=sbBtn></button><ul class=check id=sbCheck><li data-k=sb-verify><span class=dot>✓</span><span>Token verified (organisations listed) · ~10 seconds</span><span class=st></span></li><li data-k=sb-create><span class=dot>✓</span><span>Free project created · ~10 seconds</span><span class=st></span></li><li data-k=sb-active><span class=dot>✓</span><span>Project is live · can take a few minutes</span><span class=st></span></li><li data-k=sb-schema><span class=dot>✓</span><span>Starter schema applied · ~10 seconds</span><span class=st></span></li><li data-k=sb-readback><span class=dot>✓</span><span>Tables verified by querying the database · ~10 seconds</span><span class=st></span></li></ul><div class=err id=sbErr></div><div class=okbox id=sbOk></div><details id=sbAdvanced><summary>Having trouble? Connect with a code instead</summary><p class="small mt8">Only if the button above fails. Make a one-time code on Supabase, paste it here:</p><ol class="small olist"><li><a href=https://supabase.com/dashboard/account/tokens target=_blank rel=noopener>Tap here</a> — Supabase opens on the token page.</li><li>Tap <strong>Generate new token</strong>. Name it “agent-home setup”.</li><li>Copy the long code starting <code>sbp_</code>.</li><li>Back here, paste it below. It's checked instantly. Then “Create my memory store” above works.</li></ol><label for=sbToken>Your code from Supabase</label><input type=password id=sbToken placeholder="Paste the long code here…" autocomplete=off spellcheck=false /><div class=okbox id=sbTokenStatus></div><div class=err id=sbTokenErr></div><p class=small>Sent only to Supabase, from your browser. Never saved. Delete it once setup finishes.</p></details></details></div><div id=workDone class=hidden><div class=stagevis id=sucVis data-scene=success></div><h1 id=successTitle></h1><p class=state-msg id=successLine></p><p class="small hidden" id=workDbSleepLine>Your memory is on Supabase's free plan. If it sits unused for about a week, Supabase puts it to sleep — it emails you a warning first, waking it is one tap, and your AIs using it counts as use.</p><div id=successMemoryAsk class=hidden><button class=btn id=successMemCreateBtn></button><button class="btn secondary" id=successMemSkipBtn></button></div><button class=btn id=successContinueBtn></button></div><div id=workFailed class=hidden><div class=stagevis id=failedVis data-scene=failed></div><h1 id=failedH1></h1><p class=state-msg id=failedLine></p><p class=small id=failedKeptLine>Completed steps stay done. You lose nothing you finished.</p><button class=btn id=failedRetryBtn></button><button class=text-btn id=failedBackBtn></button><button class="btn quiet report-btn" id=failedReportBtn>Copy a problem report</button><details id=failedDetails><summary>Details</summary><pre id=failedTech></pre></details></div></section><section class=screen id=screen-home data-entry=checkin><div class=home-head data-head=created><div class=stagevis id=doneVis data-scene=done></div><h1 id=doneH1></h1><p id=wiringHonestLine style="font-size:20px;font-weight:600;margin:0 0 14px">Your AIs can't see this by themselves. <span class=acc>One paste per AI</span> — this message does the rest.</p><p class=lede id=doneLede></p><p class="state-msg hidden" id=doneProofLine></p><p class="small hidden" id=doneProofWhy style="margin:6px 0 0"></p><p class=small id=doneSub></p><button class="btn secondary" id=saveHomePicBtn type=button></button></div><div class=home-head data-head=checkin><div class=stagevis id=statusVis data-scene=health></div><h1 id=statusH1></h1><div class="lede status-line" id=statusUpdated></div><div class="hidden sum-card" id=statusPartial></div><p class=small id=statusHonest></p></div><div class=home-head data-head=locked><h1 id=resyncH1></h1><p class=lede id=resyncLede></p><button class=btn id=resyncBtn></button><div class=err id=resyncErr></div><details id=resyncCodeFold><summary id=resyncCodeSummary></summary><p class="small mt8" id=resyncCodeText></p><button class=text-btn id=resyncCodeBtn></button></details></div><span id=homeSegTop hidden></span><div id=fullSetPitch><h1 id=fullSetH1></h1><p class=lede id=fullSetLede></p><div id=fullSetRows></div><p class=why id=fullSetWhy></p><details><summary>Details</summary><p>Links may include the sharer's referral code.</p></details></div><h3 id=doneAiH></h3><p class="small wired-count" id=doneWiredCount></p><p class=all-wired id=statusAllWiredLine role=status></p><p class="small hidden" id=statusAllWiredDetail style="text-align:center;margin:0 0 var(--sp-2)"></p><div id=doneAiRows></div><button class=btn id=showPastesBtn></button><p class=why id=pastesWhy>Paste once into each app.</p><details id=pastesWrap><summary>Copy-paste messages</summary><div class="safe deepx"><p style=margin:0><strong>The one safety rule:</strong></p><ul class=blist style="margin:4px 0 0"><li>Everything created is private and yours: repo under your GitHub, database under your Supabase.</li><li>This page keeps no copy of your tokens or keys.</li><li>To cut access: revoke the token in the provider's settings, delete keys from your local <code>.env</code>.</li><li><strong>Now revoke the two setup tokens you pasted</strong>. Setup is done, and they've served their purpose.</li></ul></div><div class=safe><label style=display:flex;gap:12px;align-items:flex-start;font-weight:400;margin:0;cursor:pointer><input type=checkbox id=regTick checked style=width:28px;height:28px;margin-top:4px;flex:none /><span><strong>Tell the person who shared this with me that I'm set up</strong>. This sends only my name and my codebase link, nothing else.</span></label><p class=small id=regNote style="margin:8px 0 0"></p></div><h3>Confirm each app is wired: paste it this message</h3><p class=deepx><strong>How to read the reply:</strong></p><ul class="blist deepx"><li>Correct verification phrase + correct facts = strong evidence it's wired. Not proof.</li><li>Wrong or missing phrase = <strong>not wired</strong>. Even if the rest sounds plausible.</li><li>It names a blank field = wired, just not filled in yet. Not a failure.</li><li>It says “I can't read your agent home yet” = not wired. Paste the full setup block from <code>CONNECT.md</code> first.</li></ul><p class="small deepx">Send the matching message to each AI app you use. It asks the app to reply with: the verification phrase from MEMORY.md (verbatim), your name from USER.md, one fact from MEMORY.md (word for word), and the canonical-store line.</p><p class=all-wired id=allWiredLine role=status></p><p class="small hidden" id=allWiredDetail style="text-align:center"></p><button class=text-btn id=pastesFullSetBtn></button><h3>Full setup blocks</h3><p class=small>The longer first-time blocks (also saved as <code>CONNECT.md</code> in your repo). There is no shared one-click sign-in across these tools. A generated paste block is the honest version.</p><div id=doneBlocks></div><div id=envBox class=hidden><div class=block-head><h3>Your local <code>.env</code>. Save this, never commit it</h3><button class="btn small-btn secondary" data-copy=envPre>Copy</button></div><pre id=envPre></pre><p class="small deepx">This is the only key file an AI app may ever draw from, and the only key in it is <code>SUPABASE_ANON_KEY</code>.</p></div><div id=envServiceBox class=hidden><div class=block-head><h3><code>.env.service-role</code> (importer only — never give this to any AI app)</h3><button class="btn small-btn secondary" data-copy=envServicePre>Copy</button></div><pre id=envServicePre></pre><p class="small deepx">Save this as a separate local file next to your <code>.env</code>. Only the importer (<code>tools/import_md.py</code>) on your own machine uses it. It has full access to your database.</p></div></details><div id=proofBubble class=hidden><div class=bubble id=proofBubbleText></div><p class=bubble-label>Read back from your home just now.</p></div><div id=houseKeyBox class=hidden style="margin-top:var(--sp-4)"><p style="margin:0 0 6px"><span id=houseKeyLabel style="font-weight:700"></span> <code id=houseKeyText class=pw-once style="display:inline-block;padding:6px 12px;margin:0"></code></p><p class=small id=houseKeyLine style="margin:0 0 8px"></p><button class="btn small-btn secondary" id=houseKeyCopy type=button></button></div><div id=proveItBox class=hidden style="margin-top:var(--sp-4)"><p style="margin:0 0 6px"><span id=proveItLabel style="font-weight:700"></span></p><p class=small id=proveItLine style="margin:0 0 8px"></p><button class="btn small-btn secondary" id=proveItCopy type=button></button></div><p style="margin-top:var(--sp-4)" id=doneChipP><span class=tag id=doneCheckedChip></span></p><div class=done-links id=doneLinks></div><div class=safe id=saveBackBlock><p id=saveBackLine style=margin:0></p><p class=small id=saveBackHow style="margin:6px 0 0"></p><p class="small hidden" id=saveBackNote style="margin:6px 0 0"></p></div><details id=sbPwBox class=hidden><summary>Save this database password now</summary><p class=pw-save id=sbPwSaveLine>Save it now.</p><p id=sbPwResetLine style="margin:0 0 8px">If you ever lose it, you can reset it in Supabase.<br/>Nothing breaks.</p><div style=display:flex;gap:10px;align-items:stretch;flex-wrap:wrap><div class=pw-once id=sbPw style=flex:1;min-width:180px;margin:0></div><button class="btn small-btn secondary" id=sbPwCopy style=margin-top:0></button></div><p class=small id=sbPwNote style=margin-top:16px>Made in your browser for the new project.<br/>Supabase shows it once. It is never saved in your codebase.<br/>You need it only for direct database connections.<br/>Most tools use the API keys in your <code>.env</code> instead.</p></details><div id=statusRows></div><button class="btn hidden" id=statusContinueBtn>Continue setup</button><button class="btn secondary" id=statusCheckBtn></button><div id=statusProblems></div><div id=boardWrap></div><div id=repairWrap></div><div class=fw id=firstWeek></div><details id=howDetailsExtras class=fold-panel data-k=how><summary><span aria-hidden=true>🧩</span> <span class=fold-t></span><span class=fold-val></span></summary><div id=howExtras></div><button class=btn id=wireBtn disabled></button><ul class=check id=wireCheck><li data-k=wire-config><span class=dot>✓</span><span><code>agent.config.json</code> committed (ref + URL only)</span><span class=st></span></li><li data-k=wire-connect><span class=dot>✓</span><span><code>CONNECT.md</code> committed</span><span class=st></span></li><li data-k=wire-readback><span class=dot>✓</span><span>Wiring read back from the codebase and verified</span><span class=st></span></li></ul><div class=err id=wireErr></div><div class=okbox id=wireOk></div><details><summary>Optional: GitHub Secrets (manual — this page does not do this for you)</summary><ul class="blist small mt8"><li>Only needed if you later run GitHub Actions against your database. Most people never need it.</li><li>This page doesn't do it for you. Adding secrets needs GitHub's encryption flow.</li><li>Manual path: your repo → <strong>Settings → Secrets and variables → Actions → New repository secret</strong>.</li><li>Add <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> from your local <code>.env</code>, one at a time.</li><li>Add <code>SUPABASE_SERVICE_ROLE_KEY</code> only if an Action truly needs it. It has full access.</li></ul></details></details><details id=decisionsDetails class=fold-panel data-k=choices><summary><span aria-hidden=true>✅</span> <span class=fold-t></span><span class=fold-val></span></summary><p id=decisionsSentence></p><div class=block-head><h3 id=decisionsBlockH></h3><button class="btn small-btn secondary" id=decisionsCopyBtn></button></div><pre id=decisionsPre></pre></details><details id=scoreboardDetails class=fold-panel data-k=score><summary><span aria-hidden=true>🏆</span> <span class=fold-t></span><span class=fold-val></span></summary><p class=small>From <code>BEST-PRACTICES.md</code>, the shared register of what we've learned building agent setups like this. Only checks this page actually verified during your setup are listed. Anything not verified is not claimed.</p><div id=scoreboard></div></details><div id=stepImport><details class=fold-panel data-k=bring><summary><span aria-hidden=true>📥</span> <span class=fold-t></span><span class=fold-val></span></summary><p class=deepx>Already have memory files? An export, notes, plain local files — add them here.</p><ul class="blist deepx"><li>Read <em>in your browser only</em>.</li><li>Exact duplicates dropped.</li><li>Every conflict shown to you — you pick.</li><li><strong>Nothing is silently overwritten. Ever.</strong></li></ul><h3 id=notionImportH></h3><p class=small id=notionImportNote>Honest label: this is a <strong>file import</strong>, not a live connection. You export once, and the files join the same reconcile below.</p><ol class="small olist" id=notionImportSteps><li>Open the Notion app → Settings → Export all workspace content.</li><li>If it arrives as a zip, unzip it.</li><li>Come back here and add the Markdown (.md) files with the picker below. They reconcile exactly like an AI app's export.</li></ol><label for=importFiles>Memory files (.md, .txt, .json — pick as many as you have)</label><input type=file id=importFiles accept=.md,.txt,.json,text/markdown,text/plain,application/json multiple /><div class=okbox id=importSummary></div><div id=conflictList></div><div class=err id=importErr></div><div id=importActions class=hidden><button class=btn id=importRepoBtn>Write the reconciled import to my repo</button><ul class="blist small mt8 deepx"><li>Appends reconciled memories to <code>MEMORY.md</code>.</li><li>Writes an <code>IMPORT-REPORT.md</code>: sources, dropped duplicates, conflict resolutions.</li><li>Needs the repo from setup — import earlier and it rides along when the repo is created.</li></ul><button class="btn secondary" id=importRowsBtn>Show the database rows this prepares</button><div id=importRowsBox class=hidden><div class=block-head><h3>Rows prepared for the <code>memories</code> table</h3><button class="btn small-btn secondary" id=importRowsCopy></button></div><pre id=importRowsPre></pre><p class="small deepx">Load them with <code>tools/import_md.py</code> from your repo, or paste into your own import. <code>owner_id</code> is left as <code>YOUR-AUTH-USER-ID</code> on purpose: it must be your Supabase auth user id, and this page will not invent one.</p></div></div><h3 id=notionMirrorPathH></h3><p><span class=tag id=notionMirrorTag></span></p><p class=small id=notionMirrorP></p><div class=block-head><h3 id=notionMirrorH></h3><button class="btn small-btn secondary" id=notionMirrorCopyBtn></button></div><pre id=notionMirrorPre></pre></details></div><div id=manual><details class=fold-quiet data-k=template><summary><span class=fold-t></span><span class=fold-val></span></summary><p class=deepx>Download every template file and set things up by hand. Fill in what you already have (or plan to have) and the paste blocks below update to match.</p><label for=mRepo>Your repo URL (optional)</label><input id=mRepo placeholder=https://github.com/you/agent-home autocomplete=off spellcheck=false /><label for=mDb>Your database URL (optional)</label><input id=mDb placeholder=https://xxxx.supabase.co autocomplete=off spellcheck=false /><button class="btn secondary" id=dlBtn></button><p class="small mt8 deepx">Your browser will save each file one by one. Allow multiple downloads if it asks. Files:</p><p class=filelist>00-MUSE-MANIFEST.md · README.md · SOUL.md · IDENTITY.md · USER.md · AGENTS.md · MEMORY.md · DECISIONS.md · CONNECT.md · ORCHESTRATION.md · CAPABILITIES.md · BEST-PRACTICES.md · UPGRADES.md · skills/README.md · skills/memory-hygiene.md · skills/verify-before-claiming.md · skills/import-and-reconcile.md · agent.config.example.json · .env.example · .env.service-role.example · .gitignore · db/001_starter_schema.sql · tools/import_md.py · tools/export_home.py · skills/building-things-simply.md · skills/building-things-simply-field-notes.md · skills/software-craft.md · skills/front-end-craft.md · skills/orchestrating-your-agents.md</p><div id=manualBlocks></div></details></div><div id=invitesBlock></div><div id=exportHomeWrap></div><div id=invReqMore></div><div class=fb-mount></div><button class="btn quiet hidden" id=fbTellBtn type=button>Tell us what's broken or missing</button><details class=fold-panel data-k=del id=deleteHomeFold><summary><span aria-hidden=true>🗑️</span> <span class=fold-t></span><span class=fold-val></span></summary><div id=deleteHomeBody></div></details><button class=text-btn id=statusStartAgainBtn></button><div class="safe hidden" id=statusStartAgainConfirm><p id=statusStartAgainMsg style="margin:0 0 6px"></p><button class=btn id=statusStartAgainYes></button><button class=text-btn id=statusStartAgainCancel></button></div><details class=closing-det><summary>Details</summary><p>Your agent home lives in your GitHub and your Supabase now, not here.</p><p>You don't need this page again. But it stays here as your check-up if you ever want one. Your repo and database links are above; everything else lives inside the repo itself.</p></details></section><section class=screen id=adminView><h1>Who's set up</h1><p class=lede>Names and repo links only.</p><p class=small>This link is your key. Anyone who has it can see this list (names and repo links only), so keep it private, the way you'd keep a password.</p><p id=adminStatus></p><p class=small id=adminNote></p><div id=adminTableWrap style=overflow-x:auto></div><div id=adminInvites></div><div id=inviteMaker><h3>Make a personal share link</h3><p class=small>A personal link for someone you know — it greets them by name and notes that you shared it. It isn't a beta code; the invite codes above are the gate.</p><label for=invName>Name</label><input id=invName autocomplete=off /><label for=invLang>Language</label><select id=invLang><option value=en>English</option><option value=ko>한국어</option><option value=es>Español</option><option value=zh>中文</option><option value=hi>हिन्दी</option><option value=fr>Français</option><option value=ar>العربية</option><option value=pt>Português</option><option value=ja>日本語</option></select><label for=invRef>Ref code (optional)</label><input id=invRef autocomplete=off /><button class="btn small-btn secondary" id=invMakeBtn>Make link</button><pre id=invOut></pre><button class="btn small-btn secondary hidden" id=invCopyBtn>Copy invite link</button></div></section><button class=langfab id=langFabBtn aria-label="Language / 언어 / Idioma / 语言 / भाषा / Langue / العربية / Português / 日本語">🇺🇸</button><div class=langsheet-back id=langSheetBack></div><div class=langsheet id=langSheet role=dialog aria-modal=true aria-label="Language / 언어 / Idioma / 语言 / भाषा / Langue / العربية / Português / 日本語"><h2>Language · 언어 · Idioma · 语言 · भाषा · Langue · العربية · Português · 日本語</h2><div class=flagdial role=group aria-label="Language / 언어 / Idioma / 语言 / भाषा / Langue / العربية / Português / 日本語"><button id=langSheetEnBtn class=flagopt aria-label=English><span class=flagcircle aria-hidden=true>🇺🇸</span><span class=flagword>English</span></button><button id=langSheetKoBtn class=flagopt aria-label=한국어><span class=flagcircle aria-hidden=true>🇰🇷</span><span class=flagword>한국어</span></button><button id=langSheetEsBtn class=flagopt aria-label=Español><span class=flagcircle aria-hidden=true>🇪🇸</span><span class=flagword>Español</span></button><button id=langSheetZhBtn class=flagopt aria-label=中文><span class=flagcircle aria-hidden=true>🇨🇳</span><span class=flagword>中文</span></button><button id=langSheetHiBtn class=flagopt aria-label=हिन्दी><span class=flagcircle aria-hidden=true>🇮🇳</span><span class=flagword>हिन्दी</span></button><button id=langSheetFrBtn class=flagopt aria-label=Français><span class=flagcircle aria-hidden=true>🇫🇷</span><span class=flagword>Français</span></button><button id=langSheetArBtn class=flagopt aria-label=العربية><span class=flagcircle aria-hidden=true>🇪🇬</span><span class=flagword>العربية</span></button><button id=langSheetPtBtn class=flagopt aria-label=Português><span class=flagcircle aria-hidden=true>🇵🇹</span><span class=flagword>Português</span></button><button id=langSheetJaBtn class=flagopt aria-label=日本語><span class=flagcircle aria-hidden=true>🇯🇵</span><span class=flagword>日本語</span></button></div><button class=sheetclose id=langSheetClose>Close</button></div><p class=footer-line id=footerLine><span class=footer-l1><span class=footer-name>PowerUpMyAI</span> · powerupmyai.com</span><span class=footer-l2 id=footerYours></span></p></div>
 
 <script>
 /* Style-motion pass (2026-11-09): Soft 3D scene art + stagevis scene swap. */
@@ -5128,14 +5128,20 @@ function paintBoard(rec) {
             "아직 게시판이 없어요 — 기록할 일이 생기면 AI들이 만들어요.",
             "Aún no hay tablero — tus IA crean uno cuando haya algo que seguir."
             , "还没有看板——有事情要跟踪时，你的 AI 会建一个。", "अभी कोई बोर्ड नहीं है — जब कुछ ट्रैक करने को होगा, आपके AI एक बोर्ड शुरू कर देंगे.", "Pas encore de tableau — vos IA en créent un quand il y aura quelque chose à suivre.", "لا لوحة بعد — تبدأ أدوات ذكائك واحدة حين يوجد ما يُتابَع.", "Ainda não há quadro — as suas IAs criam um quando houver alguma coisa para acompanhar.", "ボードはまだありません — 追跡するものができたら、AIが作り始めます。"));
+        BoardGhostRow(wrap, row);
         return
     }
     if (data.state === "empty") {
-        row(r(
-            "The board is empty right now.",
-            "지금은 게시판이 비어 있어요.",
-            "El tablero está vacío ahora."
-            , "看板现在是空的。", "बोर्ड अभी खाली है.", "Le tableau est vide pour le moment.", "اللوحة فارغة الآن.", "O quadro está vazio neste momento.", "ボードは今は空です。"));
+        var bp = document.createElement(
+            "p");
+        bp.className = "small board-purpose", bp
+            .textContent = r(
+            "This is where you see what your AIs are working on.",
+            "여기서 AI들이 무엇을 하고 있는지 볼 수 있어요.",
+            "Aquí ves en qué están trabajando tus IA."
+            , "在这里，你能看到你的 AI 们正在做什么。", "यहाँ आप देखते हैं कि आपकी AI किस पर काम कर रही हैं.", "C'est ici que vous voyez ce sur quoi vos IA travaillent.", "هنا ترى ما تعمل عليه مساعدات الذكاء الاصطناعي لديك.", "É aqui que você vê no que suas IAs estão trabalhando.", "ここで、AIたちが何に取り組んでいるかが見られます。");
+        wrap.appendChild(bp);
+        BoardGhostRow(wrap, row);
         return
     }
     (data.items || []).forEach(
@@ -6215,12 +6221,12 @@ function Fe(e) {
     if (t) {
         var n = e.lastCheckedAt || e
             .updatedAt;
-        var ln3 = SL(n, e.steps || {},
+        var parts3 = SLparts(n, e.steps || {},
             e.ticks || {}, M(), e);
-        if (ln3) t.textContent =
-            ln3, t.classList.remove(
+        if (parts3.length) t.innerHTML =
+            HealthHTML(parts3), t.classList.remove(
                 "hidden");
-        else t.textContent = "", t
+        else t.innerHTML = "", t
             .classList.add(
             "hidden")
     }
@@ -6392,13 +6398,13 @@ function Fe(e) {
             al = !(!a
                 .databaseCreated ||
                 wc < de().length);
-        pp.textContent = al ? "" :
-            wc + " / " + de()
+        pp.innerHTML = al ? "" :
+            SumCardHTML(e, wc, wc + " / " + de()
             .length + r(
                 " AIs wired. Folder and memory done — the rest is optional.",
                 "개의 AI 연결됨. 나머지는 선택이에요.",
                 " IA conectadas. El resto es opcional."
-                , "个 AI 已连接。文件夹和记忆都完成了——剩下的都是可选的。", " AI जुड़ गए हैं. फ़ोल्डर और मेमोरी पूरे हो गए — बाकी सब वैकल्पिक है.", " IA connectées. Dossier et mémoire terminés — le reste est facultatif.", " أداة ذكاء اصطناعي متصلة. المجلد والذاكرة منجزان — الباقي اختياري.", " IAs ligadas. Pasta e memória prontas — o resto é opcional.", " つのAIが接続済みです。フォルダとメモリは完了 — 残りは任意です。");
+                , "个 AI 已连接。文件夹和记忆都完成了——剩下的都是可选的。", " AI जुड़ गए हैं. फ़ोल्डर और मेमोरी पूरे हो गए — बाकी सब वैकल्पिक है.", " IA connectées. Dossier et mémoire terminés — le reste est facultatif.", " أداة ذكاء اصطناعي متصلة. المجلد والذاكرة منجزان — الباقي اختياري.", " IAs ligadas. Pasta e memória prontas — o resto é opcional.", " つのAIが接続済みです。フォルダとメモリは完了 — 残りは任意です。"));
         pp.classList.toggle(
             "hidden", al)
     }
@@ -10912,6 +10918,7 @@ Segs("screen-home", "homeSegTop", {
         "repairWrap"
     ],
     more: ["invitesBlock",
+        "exportHomeWrap", "invReqMore",
         "firstWeek",
         "howDetailsExtras",
         "decisionsDetails",
@@ -13689,6 +13696,7 @@ function paintInvStop() {
         "Back to the start",
         "처음으로 돌아가기",
         "Volver al inicio", "回到开始", "शुरुआत पर वापस", "Retour au début", "العودة إلى البداية", "Voltar ao início", "最初に戻る")
+    try { PaintInvReq(i("invReqStop")) } catch (_) {}
 }
 
 function InvSnap() {
@@ -13754,6 +13762,7 @@ function InvShareLink(rec, snap) {
 function paintInvites() {
     var box = i("invitesBlock");
     if (!box) return;
+    try { PaintMoreExtras() } catch (_) {}
     var snap = InvSnap();
     box.innerHTML = "";
     var h = document.createElement(
@@ -14452,6 +14461,7 @@ var Ze = ["screen-welcome", "step0",
         "screen-invite-stop",
         "screen-working",
         "screen-home",
+        "screen-gift",
         "adminView"
     ],
     z = "screen-welcome",
@@ -15740,7 +15750,7 @@ var he = ["welcome", "partway",
     "step0", "step1", "memory",
     "working", "stepdone",
     "stopped", "ais", "home",
-    "more", "locked"
+    "more", "locked", "gift"
 ];
 var PVi = 0;
 
@@ -15876,7 +15886,7 @@ var PVN = ["Welcome",
     "Working", "Step done",
     "Stopped", "Your AIs",
     "Your home", "More",
-    "Locked"
+    "Locked", "Gift"
 ];
 
 async function $t(e) {
@@ -15888,7 +15898,7 @@ async function $t(e) {
     FRz(document.body);
     var pv = i("pvName");
     if (pv) pv.textContent =
-        r("Preview", "미리보기", "Vista previa", "预览", "झलक", "Aperçu", "معاينة", "Pré-visualização", "プレビュー") + " · " + ([r("Welcome", "환영", "Bienvenida", "欢迎", "स्वागत", "Accueil", "مرحبًا", "Boas-vindas", "ようこそ"), r("Welcome back", "다시 오셨네요", "Hola de nuevo", "欢迎回来", "फिर से स्वागत है", "Bon retour", "مرحبًا بعودتك", "Bem-vindo de volta", "おかえりなさい"), r("Name", "이름", "Nombre", "名字", "नाम", "Nom", "الاسم", "Nome", "名前"), r("Folder", "폴더", "Carpeta", "文件夹", "फ़ोल्डर", "Dossier", "المجلد", "Pasta", "フォルダ"), r("Memory", "메모리", "Memoria", "记忆", "मेमोरी", "Mémoire", "الذاكرة", "Memória", "メモリ"), r("Working", "작업 중", "Trabajando", "处理中", "काम चल रहा है", "En cours", "جارٍ العمل", "A trabalhar", "処理中"), r("Step done", "단계 완료", "Paso listo", "这一步完成", "चरण पूरा", "Étape terminée", "اكتملت الخطوة", "Passo concluído", "ステップ完了"), r("Stopped", "멈춤", "Detenido", "已停止", "रुका हुआ", "Arrêté", "متوقف", "Parado", "停止中"), r("Your AIs", "내 AI들", "Tus IA", "你的 AI", "आपके AI", "Vos IA", "أدوات ذكائك الاصطناعي", "As suas IAs", "あなたのAI"), r("Your home", "내 공간", "Tu espacio", "你的空间", "आपका घर", "Votre espace", "مساحتك", "A sua casa", "あなたのホーム"), r("More", "더 보기", "Más", "更多", "और", "Plus", "المزيد", "Mais", "もっと見る"), r("Locked", "잠김", "Bloqueado", "已锁定", "बंद है", "Verrouillé", "مقفل", "Bloqueado", "ロック中")][PVi] || "");
+        r("Preview", "미리보기", "Vista previa", "预览", "झलक", "Aperçu", "معاينة", "Pré-visualização", "プレビュー") + " · " + ([r("Welcome", "환영", "Bienvenida", "欢迎", "स्वागत", "Accueil", "مرحبًا", "Boas-vindas", "ようこそ"), r("Welcome back", "다시 오셨네요", "Hola de nuevo", "欢迎回来", "फिर से स्वागत है", "Bon retour", "مرحبًا بعودتك", "Bem-vindo de volta", "おかえりなさい"), r("Name", "이름", "Nombre", "名字", "नाम", "Nom", "الاسم", "Nome", "名前"), r("Folder", "폴더", "Carpeta", "文件夹", "फ़ोल्डर", "Dossier", "المجلد", "Pasta", "フォルダ"), r("Memory", "메모리", "Memoria", "记忆", "मेमोरी", "Mémoire", "الذاكرة", "Memória", "メモリ"), r("Working", "작업 중", "Trabajando", "处理中", "काम चल रहा है", "En cours", "جارٍ العمل", "A trabalhar", "処理中"), r("Step done", "단계 완료", "Paso listo", "这一步完成", "चरण पूरा", "Étape terminée", "اكتملت الخطوة", "Passo concluído", "ステップ完了"), r("Stopped", "멈춤", "Detenido", "已停止", "रुका हुआ", "Arrêté", "متوقف", "Parado", "停止中"), r("Your AIs", "내 AI들", "Tus IA", "你的 AI", "आपके AI", "Vos IA", "أدوات ذكائك الاصطناعي", "As suas IAs", "あなたのAI"), r("Your home", "내 공간", "Tu espacio", "你的空间", "आपका घर", "Votre espace", "مساحتك", "A sua casa", "あなたのホーム"), r("More", "더 보기", "Más", "更多", "और", "Plus", "المزيد", "Mais", "もっと見る"), r("Locked", "잠김", "Bloqueado", "已锁定", "बंद है", "Verrouillé", "مقفل", "Bloqueado", "ロック中"), r("Gift", "선물", "Regalo", "礼物", "उपहार", "Cadeau", "هدية", "Presente", "ギフト")][PVi] || "");
     var sampleRec = {
         repoUrl: o.repoUrl,
         databaseUrl: o.projectUrl,
@@ -15917,6 +15927,11 @@ async function $t(e) {
         updatedAt: new Date()
             .toISOString()
     };
+    if (s === "gift") {
+        GiftPaint("Theo");
+        k("screen-gift");
+        return
+    }
     if (s === "welcome") {
         var w0 = i(
             "screen-welcome");
@@ -16336,7 +16351,8 @@ window.addEventListener(
                 return
             }
         }
-        k("screen-welcome")
+        if (!GiftBoot()) k(
+                "screen-welcome")
     } catch (d) {
         try {
             Wm("stopped"), k(
@@ -16362,7 +16378,291 @@ window.addEventListener(
     if (b && !b.textContent) b
         .textContent =
         "Set up my agent home"
-})();</script>
+})();/* ═══ Launch-polish pass (2026-11-09): Your-home status cards (wired
+   summary + Last checked health card), invite-request door, gift
+   arrival, home export, board empty state, done picture.
+   Element 1 strings are EXISTING dictionary strings only (SL / Nt
+   literal sets, copied verbatim). Elements 2/3/4/6/7 strings are new,
+   each a full 9-language positional r() set. ═══ */
+function SLparts(e, t, n, a, rec) {
+    var s = [];
+    if (e) s.push({ k: "when", text: Lt(e), cls: "" });
+    if (t && t.repoCreated) s.push({ k: "folder", cls: "ok", text: r("Folder ready",
+            "폴더 준비 완료",
+            "Carpeta lista", "文件夹已就绪", "फ़ोल्डर तैयार", "Dossier prêt", "المجلد جاهز", "Pasta pronta", "フォルダの準備ができました") });
+    if (t && t.databaseCreated) s.push({ k: "memory", cls: rec && rec.dbState === "paused" ? "warn" : "ok", text: rec && rec
+            .dbState === "paused" ?
+            r("Memory: asleep",
+                "기억: 잠들어 있어요",
+                "Memoria: dormida", "记忆：休眠中", "मेमोरी: सोई हुई", "Mémoire : endormie", "الذاكرة: نائمة", "Memória: a dormir", "メモリ： お休み中") :
+            r("Memory ready",
+                "기억 준비 완료",
+                "Memoria lista", "记忆已就绪", "मेमोरी तैयार", "Mémoire prête", "الذاكرة جاهزة", "Memória pronta", "メモリの準備ができました") });
+    else if (t && t.databaseSkipped) s.push({ k: "memory", cls: "idle", text: r(
+            "Memory: not yet — your AIs will offer to finish it later",
+            "기억: 아직이에요 — 나중에 AI들이 마저 하자고 제안할 거예요",
+            "Memoria: todavía no — tus IA te ofrecerán terminarla más adelante", "记忆：还没好——你的 AI 以后会主动帮你完成它", "मेमोरी: अभी नहीं — आपके AI बाद में इसे पूरा करने की पेशकश करेंगे", "Mémoire : pas encore — vos IA vous proposeront de la terminer plus tard", "الذاكرة: لم تُنشأ بعد — ستعرض أدوات ذكائك إنهاءها لاحقًا", "Memória: ainda não — as suas IAs vão propor terminar isto mais tarde", "メモリ： まだです — 後でAIが仕上げを提案します") });
+    var c = 0;
+    de().forEach(function(x) {
+        var tk = n && n[x.id];
+        if (tk && tk.ticked || a && a[x.id]) c++
+    });
+    s.push({ k: "ais", cls: c >= de().length ? "ok" : c > 0 ? "mid" : "idle", text: r(c + " of " + de()
+        .length + " AIs wired",
+        "AI " + c + "/" + de()
+        .length + "개 연결됨",
+        c + " de " + de().length +
+        " IA conectadas", c + " 个 AI 已连接，共 " + de().length + " 个", c + " AI जुड़े हुए, कुल " + de().length, c + " sur " + de()
+        .length + " IA connectées", c + " من " + de()
+        .length + " أدوات ذكاء اصطناعي متصلة", c + " de " + de()
+        .length + " IAs ligadas", c + " / " + de().length + " のAIが接続済み") });
+    return s
+}
+function HealthHTML(parts) {
+    var h = "";
+    parts.forEach(function(p) {
+        if (p.k === "when") h += '<div class="hc-head">' + w(p.text) + "</div>";
+        else h += '<div class="hc-row"><span class="hc-dot ' + p.cls + '" aria-hidden="true"></span><span>' + w(p.text) + "</span></div>"
+    });
+    return h
+}
+function SumWord(kind) {
+    if (kind === "wired") return r("Wired ✓", "연결됨 ✓",
+            "Conectado ✓", "已连接 ✓", "जुड़ गया ✓", "Connectée ✓", "متصل ✓", "Ligado ✓", "接続済み ✓");
+    if (kind === "copied") return r("Paste copied",
+            "붙여넣기 복사됨",
+            "Pegado copiado", "粘贴文本已复制", "पेस्ट कॉपी हो गया", "Texte copié", "نُسخ اللصق", "Texto copiado", "貼り付け文をコピーしました");
+    return r("Paste not sent",
+            "붙여넣기 아직 안 보냄",
+            "Pegado no enviado", "粘贴文本还没发", "पेस्ट नहीं भेजा गया", "Texte non envoyé", "لم يُرسل اللصق", "Texto não enviado", "貼り付け文は送られていません")
+}
+function SumCardHTML(e, wc, headline) {
+    var tk = e.ticks || {}, mir = M(), segs = "", rows = "";
+    de().forEach(function(h) {
+        var t2 = tk[h.id] || {}, wired = !!t2.ticked || !!mir[h.id], copied = !!t2.copiedAt;
+        segs += '<span class="seg2' + (wired ? " on" : "") + '"></span>';
+        rows += '<div class="sum-ai">' + q(h.id, !0) + '<span class="ai-name">' + w(h.label) + '</span><span class="ai-status"><span class="sdot' + (wired ? " on" : "") + '" aria-hidden="true"></span><span>' + w(SumWord(wired ? "wired" : copied ? "copied" : "none")) + "</span></span></div>"
+    });
+    return '<div class="sum-head">' + w(headline) + '</div><div class="segbar2" aria-hidden="true">' + segs + '</div><div class="sum-ais">' + rows + "</div>"
+}
+/* ── Invite-request door (element 2). Rides the worker /report contract
+   as kind:"feedback" with step "Invite request" and a note whose first
+   line is INVITE REQUEST — no worker change; requests surface in the
+   admin reports list like every other /report submission. ── */
+function InvReqNote(nm, rc) {
+    var ng = r("(not given)", "(적지 않음)", "(sin indicar)", "（未填写）", "(नहीं दिया)", "(non précisé)", "(غير مذكور)", "(não informado)", "（未記入）");
+    return r("Hi! I'd like an invite to PowerUpMyAI, please.",
+            "안녕하세요! PowerUpMyAI 초대받고 싶어요.",
+            "¡Hola! Me gustaría una invitación a PowerUpMyAI, por favor.",
+            "你好！我想申请 PowerUpMyAI 的邀请。",
+            "नमस्ते! मुझे PowerUpMyAI का आमंत्रण चाहिए, कृपया.",
+            "Bonjour ! J'aimerais une invitation à PowerUpMyAI, s'il vous plaît.",
+            "مرحبًا! أود الحصول على دعوة إلى PowerUpMyAI، من فضلك.",
+            "Olá! Eu gostaria de um convite para o PowerUpMyAI, por favor.",
+            "こんにちは！PowerUpMyAIの招待をいただけますか。") + "\n" +
+        r("Name: ", "이름: ", "Nombre: ", "名字：", "नाम: ", "Nom : ", "الاسم: ", "Nome: ", "お名前：") + (nm || ng) + "\n" +
+        r("Reach me at: ", "연락처: ", "Contáctame en: ", "联系方式：", "संपर्क: ", "Contact : ", "للتواصل: ", "Contato: ", "連絡先：") + (rc || ng)
+}
+function PaintInvReq(box) {
+    if (!box) return;
+    var oldN = box.querySelector(".irq-name"), oldR = box.querySelector(".irq-reach");
+    var vN = oldN ? oldN.value : "", vR = oldR ? oldR.value : "";
+    var h = '<div class="invreq"><h3>' + w(r("Request an invite", "초대 요청하기", "Pedir una invitación", "申请邀请", "आमंत्रण के लिए अनुरोध करें", "Demander une invitation", "طلب دعوة", "Pedir um convite", "招待をリクエスト")) + "</h3>";
+    h += '<p class="small">' + w(box.id === "invReqStop" ?
+        r("No code? You can ask for one here. We read every request.",
+            "코드가 없나요? 여기서 요청할 수 있어요. 모든 요청을 읽어요.",
+            "¿No tienes código? Puedes pedir uno aquí. Leemos todas las solicitudes.",
+            "没有邀请码？可以在这里申请。我们会看每一个申请。",
+            "कोड नहीं है? आप यहाँ अनुरोध कर सकते हैं। हम हर अनुरोध पढ़ते हैं।",
+            "Pas de code ? Vous pouvez en demander un ici. Nous lisons chaque demande.",
+            "ليس لديك رمز؟ يمكنك طلب واحد من هنا. نقرأ كل طلب.",
+            "Sem código? Você pode pedir um aqui. Lemos todos os pedidos.",
+            "コードをお持ちでないですか？ここからリクエストできます。すべてのリクエストに目を通しています。") :
+        r("Still need a code? Ask for one here — we read every request.",
+            "아직 코드가 필요한가요? 여기서 요청하세요 — 모든 요청을 읽어요.",
+            "¿Aún necesitas un código? Pídelo aquí — leemos todas las solicitudes.",
+            "还需要邀请码？在这里申请——我们会看每一个申请。",
+            "अभी भी कोड चाहिए? यहाँ अनुरोध करें — हम हर अनुरोध पढ़ते हैं।",
+            "Il vous faut encore un code ? Demandez-en un ici — nous lisons chaque demande.",
+            "ما زلت بحاجة إلى رمز؟ اطلب واحدًا من هنا — نقرأ كل طلب.",
+            "Ainda precisa de um código? Peça um aqui — lemos todos os pedidos.",
+            "まだコードが必要ですか？ここからリクエストを — すべて目を通しています。")) + "</p>";
+    if (box.dataset.sent === "1") {
+        h += '<p class="irq-sent">' + w(r("Request sent. If we can reach you, we'll be in touch.",
+            "요청을 보냈어요. 연락할 수 있으면 연락드릴게요.",
+            "Solicitud enviada. Si podemos contactarte, te escribiremos.",
+            "申请已发送。如果能联系到你，我们会联系你。",
+            "अनुरोध भेज दिया गया है. अगर हम संपर्क कर सके, तो हम संपर्क करेंगे.",
+            "Demande envoyée. Si nous pouvons vous joindre, nous vous contacterons.",
+            "تم إرسال الطلب. إذا تمكنا من الوصول إليك، سنتواصل معك.",
+            "Pedido enviado. Se conseguirmos falar com você, entraremos em contato.",
+            "リクエストを送信しました。連絡できる場合は、こちらからご連絡します。")) + "</p></div>";
+        box.innerHTML = h;
+        return
+    }
+    h += '<label class="irq-lab">' + w(r("Your name (optional)", "이름 (선택)", "Tu nombre (opcional)", "你的名字（可选）", "आपका नाम (वैकल्पिक)", "Votre nom (facultatif)", "اسمك (اختياري)", "Seu nome (opcional)", "お名前（任意）")) + '<input class="irq-in irq-name" type="text" autocomplete="name" placeholder="' + w(r("Name", "이름", "Nombre", "名字", "नाम", "Nom", "الاسم", "Nome", "お名前")) + '"></label>';
+    h += '<label class="irq-lab">' + w(r("How can we reach you? (optional)", "어떻게 연락하면 될까요? (선택)", "¿Cómo podemos contactarte? (opcional)", "我们怎么联系你？（可选）", "हम आपसे कैसे संपर्क करें? (वैकल्पिक)", "Comment pouvons-nous vous joindre ? (facultatif)", "كيف يمكننا الوصول إليك؟ (اختياري)", "Como podemos falar com você? (opcional)", "連絡先（任意）")) + '<input class="irq-in irq-reach" type="text" placeholder="' + w(r("Email, or anywhere we can message you", "이메일, 또는 연락 가능한 곳", "Correo, o donde podamos escribirte", "邮箱，或任何能联系到你的方式", "ईमेल, या जहाँ हम संदेश भेज सकें", "E-mail, ou un endroit où vous écrire", "البريد الإلكتروني، أو أي مكان يمكننا مراسلتك فيه", "E-mail, ou onde podemos te mandar mensagem", "メールアドレス、または連絡できる場所")) + '"></label>';
+    h += '<button class="btn secondary irq-send" type="button">' + w(r("Send request", "요청 보내기", "Enviar solicitud", "发送申请", "अनुरोध भेजें", "Envoyer la demande", "إرسال الطلب", "Enviar pedido", "リクエストを送る")) + "</button>";
+    h += '<div class="irq-fb hidden"><p class="small">' + w(r("Sending didn't work. Copy this and send it to us any way you can:",
+            "전송이 안 됐어요. 이 내용을 복사해서 가능한 방법으로 보내주세요:",
+            "No se pudo enviar. Copia esto y envíanoslo como puedas:",
+            "发送失败。复制这段内容，用任何方式发给我们：",
+            "भेजना काम नहीं किया. इसे कॉपी करें और जैसे हो सके हमें भेजें:",
+            "L'envoi n'a pas fonctionné. Copiez ceci et envoyez-le-nous comme vous pouvez :",
+            "لم ينجح الإرسال. انسخ هذا وأرسله إلينا بأي طريقة تستطيعها:",
+            "O envio não funcionou. Copie isto e envie para nós como puder:",
+            "送信できませんでした。これをコピーして、可能な方法で送ってください。")) + '</p><pre class="irq-pre"></pre><button class="btn quiet irq-copy" type="button">' + w(r("Copy", "복사", "Copiar", "复制", "कॉपी करें", "Copier", "نسخ", "Copiar", "コピー")) + "</button></div></div>";
+    box.innerHTML = h;
+    var ni = box.querySelector(".irq-name"), ri = box.querySelector(".irq-reach");
+    if (ni) ni.value = vN;
+    if (ri) ri.value = vR;
+    var sb = box.querySelector(".irq-send");
+    if (sb) sb.addEventListener("click", function() { InvReqSend(box) });
+    var cb = box.querySelector(".irq-copy");
+    if (cb) cb.addEventListener("click", function() { var pre = box.querySelector(".irq-pre"); if (pre) D(pre.textContent, cb) })
+}
+async function InvReqSend(box) {
+    var ni = box.querySelector(".irq-name"), ri = box.querySelector(".irq-reach");
+    var nm = ni ? ni.value.trim().slice(0, 80) : "", rc = ri ? ri.value.trim().slice(0, 120) : "";
+    var msg = InvReqNote(nm, rc);
+    function done() { box.dataset.sent = "1"; PaintInvReq(box) }
+    if (E) { done(); return }
+    try {
+        var res = await fetch(we() + "/report", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ step: "Invite request", error: ("Invite request from " + (nm || "a visitor")).slice(0, 300), kind: "feedback", note: ("INVITE REQUEST\n" + msg).slice(0, 2000), ts: new Date().toISOString() }) });
+        if (!res || !res.ok) throw new Error("report failed");
+        done()
+    } catch (err) {
+        var fb = box.querySelector(".irq-fb"), pre = box.querySelector(".irq-pre");
+        if (fb && pre) { pre.textContent = msg; fb.classList.remove("hidden") }
+    }
+}
+/* ── Home export (element 4) ── */
+function PaintExport() {
+    var box = i("exportHomeWrap");
+    if (!box) return;
+    var rec = null;
+    try { rec = R() } catch (_) {}
+    var url = E ? (o.repoUrl || "") : rec && rec.repoUrl ? rec.repoUrl : "";
+    if (!url) { box.innerHTML = ""; return }
+    box.innerHTML = '<div class="export-home"><h3>' + w(r("Take a copy of your home", "내 집 사본 가져가기", "Llévate una copia de tu casa", "带走一份你家的副本", "अपने घर की एक प्रति लें", "Emportez une copie de votre foyer", "خذ نسخة من بيتك", "Leve uma cópia da sua casa", "あなたのホームのコピーを持ち帰る")) + '</h3><p class="small">' + w(r("Your home is yours. This is the whole folder, as one file.",
+            "내 집은 내 것이에요. 전체 폴더를 파일 하나로 받아요.",
+            "Tu casa es tuya. Esta es la carpeta entera, en un solo archivo.",
+            "你的家是你的。这是整个文件夹，打包成一个文件。",
+            "आपका घर आपका है. यह पूरा फ़ोल्डर है, एक ही फ़ाइल में.",
+            "Votre foyer est à vous. Voici tout le dossier, en un seul fichier.",
+            "بيتك ملكك. هذا هو المجلد كاملاً، في ملف واحد.",
+            "Sua casa é sua. Esta é a pasta inteira, em um único arquivo.",
+            "あなたのホームはあなたのものです。フォルダ全体を1つのファイルにしました。")) + '</p><a class="btn secondary" href="' + w(url) + '/archive/refs/heads/main.zip">' + w(r("Download a copy", "사본 다운로드", "Descargar una copia", "下载副本", "प्रति डाउनलोड करें", "Télécharger une copie", "تنزيل نسخة", "Baixar uma cópia", "コピーをダウンロード")) + "</a></div>"
+}
+function PaintMoreExtras() {
+    PaintInvReq(i("invReqMore"));
+    PaintExport();
+    PaintPicBtn();
+    var gs = i("screen-gift");
+    if (gs && gs.classList.contains("active")) GiftPaint(GiftName)
+}
+/* ── Gift arrival (element 3) ── */
+var GiftName = "";
+function GiftPaint(name) {
+    GiftName = name || "";
+    var h = i("giftH1");
+    if (h) h.textContent = GiftName ?
+        r("%N% set this up for you",
+            "%N%님이 준비한 선물이에요",
+            "%N% preparó esto para ti",
+            "%N% 为你准备了这个",
+            "%N% ने यह आपके लिए तैयार किया है",
+            "%N% a préparé ceci pour vous",
+            "أعدّ %N% هذا من أجلك",
+            "%N% preparou isto para você",
+            "%N% さんがあなたのために用意しました").replace("%N%", GiftName) :
+        r("This was set up for you",
+            "당신을 위해 준비된 선물이에요",
+            "Esto fue preparado para ti",
+            "这是为你准备的",
+            "यह आपके लिए तैयार किया गया है",
+            "Ceci a été préparé pour vous",
+            "تم إعداد هذا من أجلك",
+            "Isto foi preparado para você",
+            "あなたのために用意されました");
+    u("giftSub", r("A home for all your AIs — two minutes to open, and it's yours.",
+        "모든 AI를 위한 내 집 — 여는 데 2분, 온전히 내 것이에요.",
+        "Un hogar para todas tus IA — dos minutos para abrirlo, y es tuyo.",
+        "给所有 AI 的一个家——两分钟打开，它就是你的了。",
+        "आपकी सभी AI के लिए एक घर — खोलने में दो मिनट, और यह आपका है.",
+        "Un foyer pour toutes vos IA — deux minutes pour l'ouvrir, et il est à vous.",
+        "بيت لكل مساعدات الذكاء الاصطناعي لديك — دقيقتان لفتحه، وهو لك.",
+        "Uma casa para todas as suas IAs — dois minutos para abrir, e é sua.",
+        "すべてのAIのためのホーム — 開くのに2分、そしてあなたのものです。"));
+    u("giftOpenBtn", r("Open your gift", "선물 열기", "Abrir tu regalo", "打开礼物", "अपना उपहार खोलें", "Ouvrir votre cadeau", "افتح هديتك", "Abrir seu presente", "ギフトを開く"));
+    var gv = i("giftVis");
+    if (gv && window.__SMscene && !gv.querySelector("img")) gv.innerHTML = window.__SMscene("done", "")
+}
+function GiftBoot() {
+    try {
+        if (E) return !1;
+        var t = new URLSearchParams(location.search);
+        var forN = (t.get("for") || "").trim().slice(0, 80);
+        if (!forN || forN === "Alex Rivera") return !1;
+        if (t.get("code") || t.get("error")) return !1;
+        var rec = null;
+        try { rec = R() } catch (_) {}
+        if (rec && rec.steps && rec.steps.repoCreated) return !1;
+        var ref = "";
+        try { ref = sessionStorage.getItem("ah_ref") || "" } catch (_) {}
+        ref = (ref || "").trim().slice(0, 64);
+        var name = "";
+        if (ref && !/^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/.test(ref)) name = ref;
+        GiftPaint(name);
+        k("screen-gift");
+        if (ref && !name) {
+            fetch("https://api.github.com/users/" + encodeURIComponent(ref), { headers: { Accept: "application/vnd.github+json" } })
+                .then(function(res) { return res && res.ok ? res.json() : null })
+                .then(function(j) { if (j && j.name && String(j.name).trim() && String(j.name).trim() !== ref) GiftPaint(String(j.name).trim().slice(0, 80)) })
+                .catch(function() {})
+        }
+        return !0
+    } catch (_) { return !1 }
+}
+/* ── Board empty state (element 6) ── */
+function BoardGhostRow(wrap, rowFn) {
+    rowFn(r("Planning a trip", "여행 계획하기", "Planear un viaje", "计划一次旅行", "यात्रा की योजना बनाना", "Préparer un voyage", "التخطيط لرحلة", "Planejar uma viagem", "旅行の計画"),
+        "Claude · " + boardStateLabel({ k: "doing" }), "doing");
+    var d = wrap.lastElementChild;
+    if (!d) return;
+    d.classList.add("board-ghost");
+    var m = d.querySelector(".status-main");
+    if (m) {
+        var chip = document.createElement("span");
+        chip.className = "ex-chip", chip.textContent = r("Example", "예시", "Ejemplo", "示例", "उदाहरण", "Exemple", "مثال", "Exemplo", "例");
+        m.appendChild(chip)
+    }
+}
+/* ── Done picture (element 7, stretch) ── */
+function PaintPicBtn() {
+    u("saveHomePicBtn", r("Save a picture of your home", "내 집 사진 저장하기", "Guardar una imagen de tu casa", "保存一张你家的图片", "अपने घर की तस्वीर सहेजें", "Enregistrer une image de votre foyer", "حفظ صورة لبيتك", "Salvar uma imagem da sua casa", "ホームの画像を保存"))
+}
+(function() {
+    var b = i("giftOpenBtn");
+    if (b) b.addEventListener("click", function() { k("screen-welcome") });
+    var pb = i("saveHomePicBtn");
+    if (pb) {
+        PaintPicBtn();
+        pb.addEventListener("click", function() {
+            try {
+                var a = document.createElement("a");
+                a.href = window.__SMI.calm, a.download = "my-agent-home.webp";
+                document.body.appendChild(a), a.click(), a.remove()
+            } catch (_) {}
+        })
+    }
+    var pp = i("statusPartial");
+    if (pp) pp.addEventListener("click", function() {
+        try { SegGo("screen-home", "ais") } catch (_) {}
+    })
+})();
+
+</script>
 <style>
 /* ═══ Style-motion pass (2026-11-09): Soft 3D imagery + subtle motion ═══
    Imagery: hero wl layers and stagevis scenes (back/success/health/
@@ -16397,6 +16697,38 @@ window.addEventListener(
   .stagevis .sm-scene{animation:none !important}
   #sbStage .sm-streams path{animation:none !important}
 }
+</style>
+<style>
+/* ═══ Launch-polish pass (2026-11-09): status cards, invite-request
+   form, gift card, board empty state ═══ */
+#screen-home #statusUpdated.status-line{padding:16px 18px}
+.hc-head{font-weight:700;margin-bottom:4px}
+.hc-row{display:flex;gap:10px;align-items:flex-start;padding:5px 0;line-height:1.4}
+.hc-dot{width:11px;height:11px;border-radius:50%;flex:none;margin-top:7px;background:#B7BEC9}
+.hc-dot.ok{background:#1E9E62}
+.hc-dot.mid{background:#E8A33D}
+.hc-dot.warn{background:#E8A33D}
+#screen-home #statusPartial.sum-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;font-size:19px;line-height:1.45;color:var(--ink);margin-top:var(--sp-4);box-shadow:0 1px 2px rgba(31,41,55,.04);cursor:pointer}
+.sum-head{font-size:24px;font-weight:800;line-height:1.25}
+.segbar2{display:flex;gap:6px;margin:12px 0 8px}
+.segbar2 .seg2{flex:1;height:10px;border-radius:99px;background:var(--surface2);border:1px solid var(--line)}
+.segbar2 .seg2.on{background:var(--accent);border-color:var(--accent)}
+.sum-ais{display:flex;flex-direction:column}
+.sum-ai{display:flex;align-items:center;gap:10px;padding:7px 4px}
+.sum-ai .ai-status{margin-inline-start:auto}
+.invreq{margin-top:20px;border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--surface2)}
+.invreq h3{margin:0 0 6px}
+.irq-lab{display:block;font-size:16px;color:var(--muted);margin-top:12px}
+.irq-in{display:block;width:100%;margin-top:6px;padding:12px 14px;font:inherit;font-size:19px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);box-sizing:border-box}
+.irq-send{margin-top:14px}
+.irq-pre{white-space:pre-wrap;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;font-size:16px;line-height:1.5}
+.irq-sent{font-weight:600;color:var(--ink)}
+.export-home{margin-top:26px}
+#screen-gift .btn{width:100%}
+.board-ghost{opacity:.6;border-style:dashed}
+.ex-chip{display:inline-block;margin-top:6px;padding:2px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-size:14px;font-weight:700}
+.board-purpose{margin:2px 0 10px}
+#saveHomePicBtn{margin-top:12px}
 </style>
 </body>
 </html>
