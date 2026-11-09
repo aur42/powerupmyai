@@ -15858,7 +15858,9 @@ function ia(e) {
         sessionStorage.setItem(
             "ah_lang", e)
     } catch (t) {}
-    Ae(), Xt(), HkP(), nt()
+    Ae(), Xt(), HkP(), nt();
+    try { Ve() } catch (t) {}
+    try { var wb9 = i("manualBlocksW"); if (wb9 && wb9.childElementCount) Me("manualBlocksW", Mt()) } catch (t) {}
 }
 
 function Zt() {
@@ -16202,6 +16204,7 @@ function da() {
 }
 _t();
 Xt();
+try { Ve() } catch (e) {}
 var he = ["welcome", "partway",
     "step1", "memory",
     "working", "stepdone",
