@@ -7558,7 +7558,7 @@ async function A(e, t) {
     return a
 }
 function GhDoneShow() { var b = i("ghDoneBtn"); if (b) b.classList.remove("hidden") }
-function GhAdoptSay(msg) { x("ghErr", msg); var p = i("ghCollision"); if (p) { p.textContent = msg; p.classList.remove("hidden"); var dt = p.closest ? p.closest("details") : null; if (dt) dt.open = !0; var land = function() { try { var y = p.getBoundingClientRect().top + window.scrollY - 120; window.scrollTo(0, Math.max(0, y)) } catch (e) {} }; land(); setTimeout(land, 400) } var b = i("ghAdoptBtn"); if (b) b.disabled = !1 }
+function GhAdoptSay(msg) { var p = i("ghCollision"); if (p) { p.textContent = msg; p.classList.remove("hidden"); var dt = p.closest ? p.closest("details") : null; if (dt) dt.open = !0; var land = function() { try { var y = p.getBoundingClientRect().top + window.scrollY - 120; window.scrollTo(0, Math.max(0, y)) } catch (e) {} }; land(); setTimeout(land, 400) } var b = i("ghAdoptBtn"); if (b) b.disabled = !1 }
 
 async function GhAdopt() {
     var b = i("ghAdoptBtn");
@@ -7577,7 +7577,8 @@ async function GhAdopt() {
         H();
         U("ghOk", "<strong>" + w(r("Done — checked just now.", "완료 — 방금 확인했어요.", "Listo — revisado justo ahora.", "完成——刚刚检查过。", "हो गया — अभी जाँचा गया।", "Terminé — vérifié à l'instant.", "تم — فُحص الآن تمامًا.", "Pronto — verificado agora mesmo.", "完了 — たった今確認しました。")) + "</strong> " + w(r("This folder is your home now:", "이 폴더가 이제 내 홈이에요:", "Esta carpeta es tu casa ahora:", "这个文件夹现在就是你的家：", "यह फ़ोल्डर अब आपका घर है:", "Ce dossier est votre maison maintenant :", "هذا المجلد هو بيتك الآن:", "Esta pasta é a sua casa agora:", "このフォルダがあなたのホームです：")) + ' <a href="' + w(o.repoUrl) + '" target="_blank" rel="noopener">' + w(o.repoUrl) + "</a>");
         var cp = i("ghCollision"); if (cp) cp.innerHTML = "";
-        GhDoneShow()
+        var ge9 = i("ghErr"); if (ge9) ge9.textContent = "";
+        GhDoneShow(), Q("✓ Your folder is your home", "Checked on GitHub just now.", "Continue", function() { k("step2") })
     } catch (e2) {
         GhAdoptSay(r("GitHub didn't answer — nothing was changed. Try again.", "GitHub가 답하지 않았어요 — 아무것도 바꾸지 않았어요. 다시 해 보세요.", "GitHub no respondió — no se cambió nada. Inténtalo de nuevo.", "GitHub 没有回应——什么都没改。再试一次。", "GitHub ने जवाब नहीं दिया — कुछ नहीं बदला गया। फिर कोशिश करें।", "GitHub n'a pas répondu — rien n'a été changé. Réessayez.", "لم يرد GitHub — لم يتغير شيء. حاول مجددًا.", "O GitHub não respondeu — nada foi alterado. Tente outra vez.", "GitHubから応答がありませんでした — 何も変更されていません。もう一度お試しください。"))
     } finally {
@@ -8971,6 +8972,11 @@ async function qn() {
             pn = pv ?
             "Supabase" :
             "GitHub";
+        var rc12 = null;
+        try {
+            rc12 = R()
+        } catch (b) {}
+        if (rc12 && rc12.steps && (pv ? rc12.steps.databaseCreated : rc12.steps.repoCreated)) return;
         setTimeout(function() {
             try {
                 k(pv ? "step2" :
@@ -9044,6 +9050,11 @@ async function qn() {
         var xp0 = lp === "supabase",
             pn0 = xp0 ? "Supabase" :
             "GitHub";
+        var rc11 = null;
+        try {
+            rc11 = R()
+        } catch (b) {}
+        if (rc11 && rc11.steps && (xp0 ? rc11.steps.databaseCreated : rc11.steps.repoCreated)) return;
         setTimeout(function() {
             try {
                 if (xp0) {
@@ -9362,7 +9373,7 @@ async function qn() {
             .length ? (U(
                 "sbConnected",
                 r("✓ You're connected to Supabase. Pick your organisation to finish creating your memory.", "✓ Supabase에 연결됐어요. 그룹을 골라 주면 기억 만들기가 끝나요.", "✓ Estás conectado a Supabase. Elige tu organización para terminar de crear tu memoria.", "✓ 你已连接到 Supabase。选择你的组织，就能完成记忆的创建。", "✓ आप Supabase से जुड़ गए हैं. अपनी मेमोरी बनाना पूरा करने के लिए अपना संगठन चुनें.", "✓ Vous êtes connecté à Supabase. Choisissez votre organisation pour finir de créer votre mémoire.", "✓ أنت متصل بـ Supabase. اختر مؤسستك لإنهاء إنشاء ذاكرتك.", "✓ Está ligado ao Supabase. Escolha a sua organização para terminar de criar a sua memória.", "✓ Supabaseに接続しました。組織を選ぶと、メモリの作成が完了します.")
-                ), k("step2")) : (SbZeroOrg(),
+                ), k("step2"), SbOrgLand()) : (SbZeroOrg(),
                 k("step2")))
     } catch (b) {
         if (e) {
@@ -13668,7 +13679,7 @@ var pt = {
         "Creating your memory…": "기억을 만들어요…",
         "Joining everything together…": "전부 연결해요…",
         "Joining the two together…": "둘을 연결해요…",
-        "✓ Your folder is private": "✓ 내 폴더는 비밀예요", "✓ Your folder is created": "✓ 폴더가 만들어졌어요",
+        "✓ Your folder is private": "✓ 내 폴더는 비밀예요", "✓ Your folder is created": "✓ 폴더가 만들어졌어요", "✓ Your folder is your home": "✓ 폴더가 내 홈이에요",
         "Checked on GitHub just now.": "방금 GitHub에서 확인했어요.",
         "✓ Only you can open it": "✓ 나만 열 수 있어요",
         "✓ Your memory is created": "✓ 기억이 만들어졌어요",
@@ -13705,7 +13716,7 @@ var pt = {
         "Creating your memory…": "Creando tu memoria…",
         "Joining everything together…": "Uniendo todo…",
         "Joining the two together…": "Uniendo las dos partes…",
-        "✓ Your folder is private": "✓ Tu carpeta es privada", "✓ Your folder is created": "✓ Tu carpeta está creada",
+        "✓ Your folder is private": "✓ Tu carpeta es privada", "✓ Your folder is created": "✓ Tu carpeta está creada", "✓ Your folder is your home": "✓ Tu carpeta es tu casa",
         "Checked on GitHub just now.": "Verificado en GitHub hace un momento.",
         "✓ Only you can open it": "✓ Solo tú puedes abrirla",
         "✓ Your memory is created": "✓ Tu memoria está creada",
@@ -13743,7 +13754,7 @@ var az = {
         "Creating your memory…": "正在创建你的记忆…",
         "Joining everything together…": "正在把一切连接起来…",
         "Joining the two together…": "正在把两部分连接起来…",
-        "✓ Your folder is private": "✓ 你的文件夹是私有的", "✓ Your folder is created": "✓ 你的文件夹建好了",
+        "✓ Your folder is private": "✓ 你的文件夹是私有的", "✓ Your folder is created": "✓ 你的文件夹建好了", "✓ Your folder is your home": "✓ 你的文件夹就是你的家",
         "Checked on GitHub just now.": "刚刚在 GitHub 上确认过。",
         "✓ Only you can open it": "✓ 只有你能打开它",
         "✓ Your memory is created": "✓ 你的记忆已创建",
@@ -13781,7 +13792,7 @@ var dh = {
         "Creating your memory…": "आपकी मेमोरी बन रही है…",
         "Joining everything together…": "सब कुछ जोड़ा जा रहा है…",
         "Joining the two together…": "दोनों को जोड़ा जा रहा है…",
-        "✓ Your folder is private": "✓ आपका फ़ोल्डर निजी है", "✓ Your folder is created": "✓ आपका फ़ोल्डर बन गया",
+        "✓ Your folder is private": "✓ आपका फ़ोल्डर निजी है", "✓ Your folder is created": "✓ आपका फ़ोल्डर बन गया", "✓ Your folder is your home": "✓ आपका फ़ोल्डर ही आपका घर है",
         "Checked on GitHub just now.": "अभी GitHub पर जाँचा गया.",
         "✓ Only you can open it": "✓ सिर्फ़ आप इसे खोल सकते हैं",
         "✓ Your memory is created": "✓ आपकी मेमोरी बन गई है",
@@ -13819,7 +13830,7 @@ var dh = {
         "Creating your memory…": "Création de votre mémoire…",
         "Joining everything together…": "Assemblage de l'ensemble…",
         "Joining the two together…": "Assemblage des deux parties…",
-        "✓ Your folder is private": "✓ Votre dossier est privé", "✓ Your folder is created": "✓ Votre dossier est créé",
+        "✓ Your folder is private": "✓ Votre dossier est privé", "✓ Your folder is created": "✓ Votre dossier est créé", "✓ Your folder is your home": "✓ Votre dossier est votre maison",
         "Checked on GitHub just now.": "Vérifié sur GitHub à l'instant.",
         "✓ Only you can open it": "✓ Vous seul pouvez l'ouvrir",
         "✓ Your memory is created": "✓ Votre mémoire est créée",
@@ -13857,7 +13868,7 @@ var dh = {
         "Creating your memory…": "إنشاء ذاكرتك…",
         "Joining everything together…": "ربط كل شيء معًا…",
         "Joining the two together…": "ربط الاثنين معًا…",
-        "✓ Your folder is private": "✓ مجلدك خاص", "✓ Your folder is created": "✓ أُنشئ مجلدك",
+        "✓ Your folder is private": "✓ مجلدك خاص", "✓ Your folder is created": "✓ أُنشئ مجلدك", "✓ Your folder is your home": "✓ مجلدك هو بيتك",
         "Checked on GitHub just now.": "فُحص على GitHub الآن تمامًا.",
         "✓ Only you can open it": "✓ وحدك من يستطيع فتحه",
         "✓ Your memory is created": "✓ أُنشئت ذاكرتك",
@@ -13895,7 +13906,7 @@ var dh = {
         "Creating your memory…": "A criar a sua memória…",
         "Joining everything together…": "A juntar tudo…",
         "Joining the two together…": "A juntar os dois…",
-        "✓ Your folder is private": "✓ A sua pasta é privada", "✓ Your folder is created": "✓ A sua pasta foi criada",
+        "✓ Your folder is private": "✓ A sua pasta é privada", "✓ Your folder is created": "✓ A sua pasta foi criada", "✓ Your folder is your home": "✓ A sua pasta é a sua casa",
         "Checked on GitHub just now.": "Verificado no GitHub agora mesmo.",
         "✓ Only you can open it": "✓ Só você a pode abrir",
         "✓ Your memory is created": "✓ A sua memória foi criada",
@@ -13933,7 +13944,7 @@ var dh = {
         "Creating your memory…": "メモリを作成中…",
         "Joining everything together…": "すべてを結びつけ中…",
         "Joining the two together…": "二つを結びつけ中…",
-        "✓ Your folder is private": "✓ あなたのフォルダは非公開です", "✓ Your folder is created": "✓ フォルダができました",
+        "✓ Your folder is private": "✓ あなたのフォルダは非公開です", "✓ Your folder is created": "✓ フォルダができました", "✓ Your folder is your home": "✓ フォルダがあなたのホームです",
         "Checked on GitHub just now.": "たった今 GitHub で確認しました。",
         "✓ Only you can open it": "✓ 開けるのはあなただけです",
         "✓ Your memory is created": "✓ メモリが作成されました",
@@ -15401,6 +15412,8 @@ function Q(e, t, n, a) {
             if (q && c) {
                 var f = e.indexOf(
                     "folder is created"
+                    ) > -1 || e.indexOf(
+                    "folder is your home"
                     ) > -1;
                 q.classList.toggle(
                     "hidden", !f
@@ -15608,14 +15621,10 @@ function SbGateTouched() {
     return li9.classList.contains("done") || li9.classList.contains("doing") || li9.classList.contains("failed")
 }
 
+function SbOrgLand() { var land = function() { var dt = i("sbDetails"); if (dt) dt.open = !0; var bx = i("sbConnected"); if (bx) { try { var y = bx.getBoundingClientRect().top + window.scrollY - 60; window.scrollTo(0, Math.max(0, y)) } catch (e) {} } }; land(); setTimeout(land, 700) }
+
 function SbGateLand() {
-    z = "step2", k("step2");
-    var so9 = i("sbOrg");
-    if (so9) try {
-        so9.scrollIntoView({
-            block: "center"
-        })
-    } catch (e) {}
+    z = "step2", k("step2"), SbOrgLand()
 }
 
 function WireGateLand() {
@@ -15667,7 +15676,7 @@ async function SbOrgRefresh() {
             .length) {
             if (b) b.classList.add(
                 "hidden");
-            U("sbConnected", r("✓ You're connected to Supabase. Pick your organisation to finish creating your memory.", "✓ Supabase에 연결됐어요. 그룹을 골라 주면 기억 만들기가 끝나요.", "✓ Estás conectado a Supabase. Elige tu organización para terminar de crear tu memoria.", "✓ 你已连接到 Supabase。选择你的组织，就能完成记忆的创建。", "✓ आप Supabase से जुड़ गए हैं. अपनी मेमोरी बनाना पूरा करने के लिए अपना संगठन चुनें.", "✓ Vous êtes connecté à Supabase. Choisissez votre organisation pour finir de créer votre mémoire.", "✓ أنت متصل بـ Supabase. اختر مؤسستك لإنهاء إنشاء ذاكرتك.", "✓ Está ligado ao Supabase. Escolha a sua organização para terminar de criar a sua memória.", "✓ Supabaseに接続しました。組織を選ぶと、メモリの作成が完了します.")), k("step2")
+            U("sbConnected", r("✓ You're connected to Supabase. Pick your organisation to finish creating your memory.", "✓ Supabase에 연결됐어요. 그룹을 골라 주면 기억 만들기가 끝나요.", "✓ Estás conectado a Supabase. Elige tu organización para terminar de crear tu memoria.", "✓ 你已连接到 Supabase。选择你的组织，就能完成记忆的创建。", "✓ आप Supabase से जुड़ गए हैं. अपनी मेमोरी बनाना पूरा करने के लिए अपना संगठन चुनें.", "✓ Vous êtes connecté à Supabase. Choisissez votre organisation pour finir de créer votre mémoire.", "✓ أنت متصل بـ Supabase. اختر مؤسستك لإنهاء إنشاء ذاكرتك.", "✓ Está ligado ao Supabase. Escolha a sua organização para terminar de criar a sua memória.", "✓ Supabaseに接続しました。組織を選ぶと、メモリの作成が完了します.")), k("step2"), SbOrgLand()
         } else if (o.sbOrgsFailed) SbOrgsFailed(); else SbZeroOrg()
     } catch (e) { SbOrgsFailed() } finally {
         if (b) b.disabled = !1
@@ -15724,12 +15733,7 @@ async function tt() { if (o._ptRun) return;
                 "먼저 위 목록에서 그룹을 눌러 골라 주세요. 자동으로 골라주지 않아요.",
                 "Primero elige tu organización — tócala en la lista de arriba. Nada se elige por ti."
                 , "先选你的组织——点一下上面列表里的它。不会替你选任何一个。", "पहले अपना संगठन चुनें — ऊपर की सूची में उसे टैप करें. आपके लिए कुछ नहीं चुना जाता.", "Choisissez d'abord votre organisation — appuyez dessus dans la liste ci-dessus. Rien n'est choisi pour vous.", "اختر مؤسستك أولًا — اضغطها في القائمة أعلاه. لن يُختار شيء نيابة عنك.", "Escolha primeiro a sua organização — toque nela na lista acima. Nada é escolhido por si.", "まず組織を選んでください — 上のリストでタップしてください。自動では選ばれません。"));
-            var so9 = i("sbOrg");
-            if (so9) try {
-                so9.scrollIntoView({
-                    block: "center"
-                })
-            } catch (e) {}
+            SbOrgLand();
             return
         }
     }
@@ -18164,6 +18168,23 @@ details > summary, .state-msg, .whisper, .lede, .bridge { text-wrap: balance; }
 #screen-welcome .sb-stage { height: 210px; }
 #screen-welcome .why-line { margin-bottom: var(--sp-3); }
 .btn, .text-btn { text-wrap: balance; }
+
+/* === MICRO-PASS-2 (round-2): A20 section floor on the Done stack — components shrink first === */
+#screen-home #doneVis .sm-scene { max-width: 250px; }
+#screen-home #doneH1 { margin-top: var(--sp-5); }
+#screen-home .keygate-img { width: 86%; margin: var(--sp-5) auto; }
+#screen-home #doneProofLine { margin-top: var(--sp-5); margin-bottom: var(--sp-5); }
+#screen-home #donePhrase { margin-top: var(--sp-5); }
+#screen-home #saveHomePicBtn { margin-top: var(--sp-5); }
+#screen-home #picWhy { margin-top: var(--sp-5); }
+#screen-home #cfHomeDoor { margin-top: var(--sp-5); }
+
+/* === MICRO-PASS-2 fix-2b: A20 floor at the created head's own specificity === */
+#screen-home .home-head[data-head=created] #donePhrase { margin-top: var(--sp-5); }
+#screen-home .home-head[data-head=created] #picWhy { margin-top: var(--sp-5); }
+#screen-home .home-head[data-head=created] #saveHomePicBtn { margin-top: var(--sp-5); }
+#screen-home .home-head[data-head=created] #doneVis .sb-stage { max-width: 250px; margin-inline: auto; }
+#screen-home .home-head[data-head=created] #doneVis { margin-bottom: var(--sp-5); }
 </style>
 </body>
 </html>
