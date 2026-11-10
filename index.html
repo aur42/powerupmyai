@@ -7827,8 +7827,17 @@ function Ht(e) {
                 .name + " — " +
                 a.plan, t
                 .appendChild(s)
-        }), t.value = "", o
-        .sbOrgId = ""
+        }), (function() {
+            var pv9 = o.sbOrgId || "";
+            if (pv9 && On(pv9)) {
+                t.value = pv9
+            } else if (o.sbOrgs.length === 1) {
+                o.sbOrgId = o.sbOrgs[0].id,
+                    t.value = o.sbOrgId
+            } else {
+                t.value = "", o.sbOrgId = ""
+            }
+        })()
 }
 async function G(e, t) {
     if (E) throw Error(
@@ -7885,7 +7894,9 @@ async function Bn() {
             " organisation" +
             (e.length > 1 ?
                 "s" : "") +
-            " found. Tap the one to use. Its plan is shown next to it. Nothing is picked for you. Then check the region and create the database."
+            " found. " + (o.sbOrgId ?
+                "Yours is picked above — it is the only group on this account, and its plan is shown next to it. Then check the region and create the database." :
+                "Tap the one to use. Its plan is shown next to it. Nothing is picked for you. Then check the region and create the database.")
             )
     } catch (t) {
         x("sbErr", t.message)
@@ -7941,9 +7952,8 @@ async function Pt() {
             var t = await G(
                 "/organizations"
                 );
-            if (t && t.length) o
-                .sbOrgs = t.map(
-                    Yt)
+            if (t && t.length)
+                Ht(t)
         }
         if (!o.sbOrgId)
         throw Error(r(
@@ -7954,11 +7964,7 @@ async function Pt() {
         var n = On(o.sbOrgId);
         if (n && !/^free$/i
             .test(n.plan))
-        throw C("sbCheck",
-                "sb-create",
-                "failed",
-                "paid plan"
-                ), Error(r(
+        throw Error(r(
                 "That organisation is on the " +
                 n.plan +
                 " plan, and this setup only creates on Free. Nothing was created. Choose a different organisation above.",
@@ -9333,14 +9339,17 @@ async function qn() {
                         et()
                     }, 400)
         } else o.sbToken = c,
-            await qt(), U(
+            await qt(), o.sbOrgId ? (U(
                 "sbConnected",
                 "✓ You're connected to Supabase. Your memory is being created now."
                 ), k("step2"),
             setTimeout(
             function() {
                 tt()
-            }, 400)
+            }, 400)) : (U(
+                "sbConnected",
+                r("✓ You're connected to Supabase. Pick your organisation to finish creating your memory.", "✓ Supabase에 연결됐어요. 그룹을 골라 주면 기억 만들기가 끝나요.", "✓ Estás conectado a Supabase. Elige tu organización para terminar de crear tu memoria.", "✓ 你已连接到 Supabase。选择你的组织，就能完成记忆的创建。", "✓ आप Supabase से जुड़ गए हैं. अपनी मेमोरी बनाना पूरा करने के लिए अपना संगठन चुनें.", "✓ Vous êtes connecté à Supabase. Choisissez votre organisation pour finir de créer votre mémoire.", "✓ أنت متصل بـ Supabase. اختر مؤسستك لإنهاء إنشاء ذاكرتك.", "✓ Está ligado ao Supabase. Escolha a sua organização para terminar de criar a sua memória.", "✓ Supabaseに接続しました。組織を選ぶと、メモリの作成が完了します.")
+                ), k("step2"))
     } catch (b) {
         if (e) {
             k("adminView");
@@ -9551,7 +9560,7 @@ async function Jn() {
     try {
         await qt(), U(
             "sbTokenStatus",
-            "✓ This works — you're connected. Now pick your group and area above and click “Create my private memory”."
+            o.sbOrgId ? "✓ This works — you're connected, and your group is picked above. Now choose your area and click “Create my private memory”." : "✓ This works — you're connected. Now pick your group and area above and click “Create my private memory”."
             )
     } catch (t) {
         o.sbToken = "", x(
@@ -15573,6 +15582,25 @@ async function et() {
         "github", et,
         "step1")
 }
+function SbGateTouched() {
+    var ul9 = i("sbCheck");
+    if (!ul9) return !0;
+    var li9 = ul9.querySelector(
+        "li[data-k='sb-create']");
+    if (!li9) return !0;
+    return li9.classList.contains("done") || li9.classList.contains("doing") || li9.classList.contains("failed")
+}
+
+function SbGateLand() {
+    z = "step2", k("step2");
+    var so9 = i("sbOrg");
+    if (so9) try {
+        so9.scrollIntoView({
+            block: "center"
+        })
+    } catch (e) {}
+}
+
 async function tt() {
     if (E) {
         Q("✓ Your memory is created", "Checked in your database just now.",
@@ -15608,6 +15636,30 @@ async function tt() {
             }, "step2");
         return
     }
+    if (!o.sbOrgId || !On(o.sbOrgId)) {
+        try {
+            if (!o.sbOrgs || !o.sbOrgs.length) {
+                var og9 = await G(
+                    "/organizations"
+                    );
+                if (og9 && og9.length) Ht(og9)
+            }
+        } catch (ogE) {}
+        if (!o.sbOrgId || !On(o.sbOrgId)) {
+            z = "step2", k("step2"), x("sbErr", r(
+                "Pick your organisation first — tap it in the list above. Nothing is picked for you.",
+                "먼저 위 목록에서 그룹을 눌러 골라 주세요. 자동으로 골라주지 않아요.",
+                "Primero elige tu organización — tócala en la lista de arriba. Nada se elige por ti."
+                , "先选你的组织——点一下上面列表里的它。不会替你选任何一个。", "पहले अपना संगठन चुनें — ऊपर की सूची में उसे टैप करें. आपके लिए कुछ नहीं चुना जाता.", "Choisissez d'abord votre organisation — appuyez dessus dans la liste ci-dessus. Rien n'est choisi pour vous.", "اختر مؤسستك أولًا — اضغطها في القائمة أعلاه. لن يُختار شيء نيابة عنك.", "Escolha primeiro a sua organização — toque nela na lista acima. Nada é escolhido por si.", "まず組織を選んでください — 上のリストでタップしてください。自動では選ばれません。"));
+            var so9 = i("sbOrg");
+            if (so9) try {
+                so9.scrollIntoView({
+                    block: "center"
+                })
+            } catch (e) {}
+            return
+        }
+    }
     if (z = "step2", $e(
             "Creating your memory…",
             "Checking your sign-in…",
@@ -15615,6 +15667,7 @@ async function tt() {
             "sbCheck"
         ]), await Pt(), te(), o
         .dbDone) ie();
+    else if (!o.projectRef && !SbGateTouched()) SbGateLand();
     else re(i("sbErr")
         .textContent ||
         "Supabase did not confirm the memory was created.",
