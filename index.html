@@ -18723,5 +18723,31 @@ html[dir="rtl"] body:has(#previewBar:not(.hidden)):has(#screen-welcome.partway.a
 body:not(:has(#previewBar:not(.hidden))):has(#screen-welcome.partway.active) .r3-fab{top:246px;bottom:auto}
 body:not(:has(#previewBar:not(.hidden))):has(#screen-welcome.active) .r3-fab{top:327px;bottom:auto}
 </style>
+
+<style>
+/* ——— TALL-HEIGHT SCENE PRESENCE (2026-11-12; CEO sanity check 5, S-5; A29 amended) ———
+   Scene sizes were fixed pixels graded at 390x700, so presence decayed
+   with device height (standard 23.7% at 700 -> 17.8% at 932; hero
+   34.9% -> 26.2%): on a tall phone the house read as a small part of
+   the screen while every gate passed. Sizes are now SHARE-defined per
+   height band. In the tall-phone band (min-height:800px) the standard
+   band grows to full column width (354x269 — share 28.9% at 844,
+   26.2% at 932, at or above the 700 share) and the welcome hero goes
+   full-bleed (390x296 — the largest 1.316 frame a 390 viewport holds:
+   35.1% at 844, 31.8% at 932). Every binding cap is mirrored at equal
+   specificity. The 390x700 geometry — fold sizes, frozen FAB
+   stations — is untouched: nothing here applies below 800px height.
+   Ratio 1.316 everywhere; size changes, proportion never. */
+@media (max-width:640px) and (min-height:800px){
+.stagevis .sb-stage{max-width:min(354px,100%)}
+#step1 .stagevis .sb-stage,#sbPreflight .stagevis .sb-stage{max-width:min(354px,100%)}
+#welcomePartway .stagevis .sb-stage{max-width:min(354px,100%)}
+#failedVis .sb-stage{max-width:min(354px,100%)}
+#screen-home .home-head[data-head=created] #doneVis .sb-stage{max-width:min(354px,100%);margin-inline:auto}
+#screen-home #doneVis .sm-scene{max-width:352px}
+#sucVis .sm-scene{max-width:352px}
+#screen-welcome #sbStage{width:calc(100% + 36px);max-width:none;margin-left:-18px;margin-right:-18px;border-width:0;border-radius:0}
+}
+</style>
 </body>
 </html>
