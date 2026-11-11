@@ -18613,5 +18613,26 @@ details.fold-panel>summary .fold-val{display:block;margin-top:2px;font-weight:40
     if (sh) new MutationObserver(function () { doneKey(); xfade() }).observe(sh, { attributes: true, attributeFilter: ["data-entry"] });
 })();
 </script>
+
+<style>
+/* ——— SCENE PRESENCE (2026-11-12; CEO sanity check 3, S-1/S-2; A29 amended) ———
+   ONE aspect ratio for every house scene: 350:266 (1.316), the art's native
+   ratio. Three presence bands by screen share at 390x700:
+   hero 354x269 (34.9%) · standard 292x222 (23.7%) · chapter 229x174 (14.6%).
+   The hero stage was letterboxed: a 210px slot (1.686) cropping the 1.316
+   art — the same house framed two ways. The cap is removed; the stage IS
+   the art box. Chapter scenes grow 145x110 -> 229x174, paid for by tighter
+   chapter stacking (card band/who, group gaps 24->16 on the two chapter
+   screens) so the fold invariant holds in all nine languages. */
+#screen-welcome #sbStage{height:auto;min-height:0;aspect-ratio:350/266}
+#step1 #ghVis,#screen-working #sbVis{height:174px;min-height:174px}
+#step1 #step1H1,#step2 #step2H1{margin-top:16px}
+#ghCard,#sbCard{margin-top:16px}
+#ghSignupBtn,#sbPrimaryBtn{margin-top:16px}
+#ghPrimaryBtn{margin-top:16px}
+#ghCard .pcard-band,#sbCard .pcard-band{height:44px}
+#ghCard .pcard-tile,#sbCard .pcard-tile{width:44px;height:44px}
+#ghCard .pcard-who,#sbCard .pcard-who{padding-top:6px;padding-bottom:6px}
+</style>
 </body>
 </html>
