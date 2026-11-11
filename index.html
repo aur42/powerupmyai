@@ -7516,7 +7516,8 @@ async function st(e) {
             "Nothing was uploaded — setup stopped because that name is already taken.",
             "아무것도 올리지 않았어요 — 그 이름이 이미 쓰이고 있어서 설정을 멈췄어요.",
             "No se subió nada — la configuración se detuvo porque ese nombre ya está en uso."
-            , "什么都没上传——设置停了下来，因为这个名字已经被占用了。", "कुछ अपलोड नहीं हुआ — सेटअप रुक गया क्योंकि वह नाम पहले से लिया हुआ है.", "Rien n'a été envoyé — la configuration s'est arrêtée parce que ce nom est déjà pris.", "لم يُرفع شيء — توقف الإعداد لأن ذلك الاسم مأخوذ أصلًا.", "Nada foi enviado — a configuração parou porque esse nome já está ocupado.", "何もアップロードされていません — その名前がすでに使われていたため、セットアップは止まりました。"))
+            , "什么都没上传——设置停了下来，因为这个名字已经被占用了。", "कुछ अपलोड नहीं हुआ — सेटअप रुक गया क्योंकि वह नाम पहले से लिया हुआ है.", "Rien n'a été envoyé — la configuration s'est arrêtée parce que ce nom est déjà pris.", "لم يُرفع شيء — توقف الإعداد لأن ذلك الاسم مأخوذ أصلًا.", "Nada foi enviado — a configuração parou porque esse nome já está ocupado.", "何もアップロードされていません — その名前がすでに使われていたため、セットアップは止まりました。"));
+    if (!c) { var sl125 = i("ghStateLine"); if (sl125) { sl125.textContent = ""; sl125.classList.add("hidden"); sl125.classList.remove("is-err") } }
 }
 
 function B() {
@@ -8976,7 +8977,7 @@ async function qn() {
         try {
             rc12 = R()
         } catch (b) {}
-        if (rc12 && rc12.steps && (pv ? rc12.steps.databaseCreated : rc12.steps.repoCreated)) return;
+        if (rc12 && rc12.steps && (pv ? rc12.steps.databaseCreated : rc12.steps.repoCreated)) { setTimeout(function() { if (!E) try { BootRec(rc12) } catch (b) {} }, 0); return }
         setTimeout(function() {
             try {
                 k(pv ? "step2" :
@@ -9054,7 +9055,7 @@ async function qn() {
         try {
             rc11 = R()
         } catch (b) {}
-        if (rc11 && rc11.steps && (xp0 ? rc11.steps.databaseCreated : rc11.steps.repoCreated)) return;
+        if (rc11 && rc11.steps && (xp0 ? rc11.steps.databaseCreated : rc11.steps.repoCreated)) { setTimeout(function() { if (!E) try { BootRec(rc11) } catch (b) {} }, 0); return }
         setTimeout(function() {
             try {
                 if (xp0) {
