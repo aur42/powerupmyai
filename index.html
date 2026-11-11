@@ -4199,6 +4199,7 @@ function Nt(e, t, n) {
             .appendChild(mn)
     }
     if (t === "fullset") {
+        a.dataset.f3ai = e.id;
         var b = document
             .createElement("div");
         b.className = "ai-actions";
@@ -16246,7 +16247,7 @@ function sa(e, t) {
         .addEventListener("click",
             function() {
                 la(a, t)
-            }), e.appendChild(n), e
+            }), e
         .appendChild(a)
 }
 
@@ -16402,16 +16403,19 @@ function _t() {
 }
 
 function da() {
+    /* FIX-3 (item 20 refire): da() once SEEDED a demo screenshot by
+       un-hiding the feedback panel + thumbnail inside the More segment
+       — that seed was the 658px expanded-at-rest form, the empty pale
+       ghost box and the orphaned Remove link. The panel lives only in
+       the shared modal now; da() is a reset, never a paint. */
     var e = document.querySelector(
         ".fb-panel");
     if (!e) return;
-    e.classList.remove("hidden"), e
-        .querySelector(".fb-thumb")
-        .src =
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='100'%3E%3Crect width='160' height='100' fill='%23E8EFFE'/%3E%3C/svg%3E",
-        e.querySelector(
-            ".fb-thumbwrap")
-        .classList.remove("hidden")
+    e.classList.add("hidden");
+    var tw = e.querySelector(".fb-thumbwrap");
+    if (tw) tw.classList.add("hidden");
+    var th = e.querySelector(".fb-thumb");
+    if (th) th.removeAttribute("src")
 }
 _t();
 Xt();
@@ -17673,7 +17677,7 @@ body::before{animation:none !important}
 #screen-home:not([data-entry=created]) #wiringHonestLine{display:none}
 </style>
 <style>.pw-door{display:flex;width:100%;text-align:start;background:none;border:0;cursor:pointer;font:inherit;color:inherit;padding:10px 2px}.pw-door .pw-val{font-weight:600}</style>
-<style>#screen-welcome .sb-art img{max-height:232px;object-fit:cover;object-position:50% 30%}.bridge{margin:10px 0 2px;text-align:center;font-size:14.5px}</style>
+<style>#screen-welcome .sb-art img{object-fit:cover;object-position:50% 30%}.bridge{margin:10px 0 2px;text-align:center;font-size:14.5px}</style>
 <style id="cf-style">
 /* ═══ Consolidated fix pass (2026-11-09) ═══ */
 /* I6/C7: completion and failure SUBSTITUTE the working presentation */
@@ -18124,7 +18128,7 @@ details > summary, .state-msg, .whisper, .lede, .bridge { text-wrap: balance; }
 #step1 #ghVis, #sbPreflight #sbVis { height: 96px; overflow: hidden; }
 .pcard-band { height: 56px; }
 #bridgeLine { margin-top: var(--sp-5); }
-#screen-welcome .sb-stage { height: 210px; }
+#screen-welcome #sbStage { height: 210px; }
 #screen-welcome .why-line { margin-bottom: var(--sp-3); }
 .btn, .text-btn { text-wrap: balance; }
 
@@ -18283,6 +18287,37 @@ details.fold-panel>summary .fold-val{display:block;margin-top:2px;font-weight:40
 #screen-gift .sm-scene::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:3;background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.34) 50%,transparent 58%);transform:translateX(-110%);animation:thmShine 7s ease-in-out 1.2s infinite}
 @keyframes thmShine{0%,55%{transform:translateX(-110%)}88%,100%{transform:translateX(110%)}}
 @media (prefers-reduced-motion: reduce){#doneVis .sb-stage,#screen-gift .sm-scene::before{animation:none!important}}
+
+/* ——— FIX-3 (2026-11-11): A feedback ghost · B catalogue collapse · C spacing rates · D scene tokens · E home breath ——— */
+/* C — NAMED SPACING RATES (A20): --f3-flow 24px between groups on one-shot flow screens (chapters, working, finished, Done) · --f3-state 16px between groups on one-shot state screens (welcome-back, locked, gift) · --f3-group 12px headline->lede inside every headline block. A gap is on exactly one rate or it is a defect. */
+:root{--f3-flow:24px;--f3-state:16px;--f3-group:12px}
+#step1H1,#step2H1{margin-bottom:0}
+#step1Lede,#step2Lede{margin-top:var(--f3-group)}
+#screen-welcome #welcomeH1{margin-bottom:0}
+#bridgeLine{margin-top:var(--f3-group)}
+#giftH1{margin-bottom:0}
+#giftSub{margin-top:var(--f3-group)}
+#resyncH1{margin-bottom:0}
+#resyncLede{margin-top:var(--f3-group)}
+#welcomePartway #partwayH1{margin-bottom:0}
+#welcomePartway #resyncSummary{margin-top:var(--f3-state)}
+#screen-gift .stagevis{margin-bottom:var(--f3-state)}
+#screen-gift #giftH1{margin-top:0}
+#nameBlock{margin-top:var(--f3-flow)}
+#ghDetails{margin-top:var(--f3-flow)}
+#sbDetails{margin-top:var(--f3-flow)}
+.welcome-below>*+*{margin-top:var(--f3-flow)}
+.welcome-below{padding-bottom:24px}
+#screen-welcome #welcomeWhyLine{margin-bottom:0}
+/* B — catalogue at rest: header + the two battery-protected rows (muse, grok) stay; every other row joins the collapse behind the F3ALL door */
+#fullSetPitch.r3-closed #fullSetRows .ai-row:not([data-f3ai="muse"]):not([data-f3ai="grok"]){display:none}
+#fullSetPitch.r3-closed #refDisclosure{display:none}
+/* D — finished-step scene onto the moment token (scene content box 290 wide, like every other moment scene) */
+#sucVis .sm-scene{max-width:290px}
+/* E — Your home breath: a stronger warm glow on the home scene only (mcGlow's swing was sub-threshold at delta>14), breathing on an 8.5s opacity swing plus a slow 13s drift of the warm pool so no fixed sampling offset can land on coincident phases */
+#screen-home .stagevis .sm-scene::after{background:radial-gradient(60% 45% at 50% 58%,rgba(255,176,84,.48),rgba(255,176,84,0) 70%);background-size:135% 135%;animation:f3GlowHome 8.5s ease-in-out infinite,f3GlowDrift 13s ease-in-out infinite alternate}
+@keyframes f3GlowHome{0%,100%{opacity:.40}50%{opacity:1}}
+@keyframes f3GlowDrift{from{background-position:32% 40%}to{background-position:68% 60%}}
 </style>
 
 <script id="r3js">
@@ -18290,7 +18325,7 @@ details.fold-panel>summary .fold-val{display:block;margin-top:2px;font-weight:40
     "use strict";
     function i2(id) { return document.getElementById(id) }
     function R9z(t) { try { return r.apply(null, t) } catch (e) { return t[0] } }
-    var COPIED = ["Copied ✓", "복사했어요 ✓", "Copiado ✓", "已复制 ✓", "कॉपी हो गया ✓", "Copié ✓", "تم النسخ ✓", "Copiado ✓", "コピーしました ✓"], SHOWHOW = ["Show how", "방법 보기", "Ver cómo", "查看方法", "तरीका देखें", "Voir comment", "عرض الطريقة", "Ver como", "方法を見る"], HIDEHOW = ["Hide", "숨기기", "Ocultar", "隐藏", "छिपाएँ", "Masquer", "إخفاء", "Ocultar", "隠す"], SEEDET = ["See the details", "자세히 보기", "Ver los detalles", "查看详情", "विवरण देखें", "Voir les détails", "عرض التفاصيل", "Ver os detalhes", "詳しく見る"], HIDEDET = ["Hide the details", "자세히 숨기기", "Ocultar los detalles", "隐藏详情", "विवरण छिपाएँ", "Masquer les détails", "إخفاء التفاصيل", "Ocultar os detalhes", "詳細を隠す"], OPENF = ["Open your folder", "내 폴더 열기", "Abrir tu carpeta", "打开你的文件夹", "अपना फ़ोल्डर खोलें", "Ouvrir votre dossier", "افتح مجلدك", "Abrir a sua pasta", "フォルダを開く"], OPENM = ["Open your memory", "내 기억 열기", "Abrir tu memoria", "打开你的记忆", "अपनी मेमोरी खोलें", "Ouvrir votre mémoire", "افتح ذاكرتك", "Abrir a sua memória", "メモリを開く"], REFMINI = ["referral link", "추천 링크", "enlace de referido", "推荐链接", "रेफ़रल लिंक", "lien de parrainage", "رابط إحالة", "ligação de referência", "紹介リンク"], BSHOW = ["Show", "보기", "Ver", "查看", "देखें", "Voir", "عرض", "Ver", "見る"];
+    var COPIED = ["Copied ✓", "복사했어요 ✓", "Copiado ✓", "已复制 ✓", "कॉपी हो गया ✓", "Copié ✓", "تم النسخ ✓", "Copiado ✓", "コピーしました ✓"], SHOWHOW = ["Show how", "방법 보기", "Ver cómo", "查看方法", "तरीका देखें", "Voir comment", "عرض الطريقة", "Ver como", "方法を見る"], HIDEHOW = ["Hide", "숨기기", "Ocultar", "隐藏", "छिपाएँ", "Masquer", "إخفاء", "Ocultar", "隠す"], SEEDET = ["See the details", "자세히 보기", "Ver los detalles", "查看详情", "विवरण देखें", "Voir les détails", "عرض التفاصيل", "Ver os detalhes", "詳しく見る"], HIDEDET = ["Hide the details", "자세히 숨기기", "Ocultar los detalles", "隐藏详情", "विवरण छिपाएँ", "Masquer les détails", "إخفاء التفاصيل", "Ocultar os detalhes", "詳細を隠す"], OPENF = ["Open your folder", "내 폴더 열기", "Abrir tu carpeta", "打开你的文件夹", "अपना फ़ोल्डर खोलें", "Ouvrir votre dossier", "افتح مجلدك", "Abrir a sua pasta", "フォルダを開く"], OPENM = ["Open your memory", "내 기억 열기", "Abrir tu memoria", "打开你的记忆", "अपनी मेमोरी खोलें", "Ouvrir votre mémoire", "افتح ذاكرتك", "Abrir a sua memória", "メモリを開く"], REFMINI = ["referral link", "추천 링크", "enlace de referido", "推荐链接", "रेफ़रल लिंक", "lien de parrainage", "رابط إحالة", "ligação de referência", "紹介リンク"], F3ALL = ["See all your AIs", "모든 AI 보기", "Ver todas tus IA", "查看所有 AI", "अपने सभी AI देखें", "Voir toutes vos IA", "عرض كل أدوات الذكاء الاصطناعي", "Ver todas as suas IAs", "すべてのAIを見る"], BSHOW = ["Show", "보기", "Ver", "查看", "देखें", "Voir", "عرض", "Ver", "見る"];
     function setImg(id, key) { var e = i2(id); if (e && window.__SMI && window.__SMI[key]) e.src = window.__SMI[key] }
     setImg("giftExpImg", "giftexp"); setImg("howPic", "house");
     var gsb = i2("giftSeeBtn"), ge = i2("giftExp");
@@ -18559,7 +18594,7 @@ details.fold-panel>summary .fold-val{display:block;margin-top:2px;font-weight:40
     if (tb) tb.addEventListener("click", function () { setTimeout(fbOpen, 60) });
     function cardImgs() { try { if (typeof R2CardImgs === "function") R2CardImgs(); } catch (e) {} }
     function thmToggles() {
-        [["repairWrap", SEEDET, HIDEDET], ["fullSetPitch", SEEDET, HIDEDET], ["saveBackBlock", SHOWHOW, HIDEHOW], ["invReqMore", SEEDET, HIDEDET]].forEach(function (cfg) {
+        [["repairWrap", SEEDET, HIDEDET], ["fullSetPitch", F3ALL, HIDEDET], ["saveBackBlock", SHOWHOW, HIDEHOW], ["invReqMore", SEEDET, HIDEDET]].forEach(function (cfg) {
             var blk = i2(cfg[0]); if (!blk) return;
             if (blk.querySelector(":scope > .thm-toggle")) return;
             blk.classList.add("r3-closed");
