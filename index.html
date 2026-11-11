@@ -18648,5 +18648,49 @@ details.fold-panel>summary .fold-val{display:block;margin-top:2px;font-weight:40
 body:has(#screen-welcome.active) .r3-fab{bottom:calc(174px + env(safe-area-inset-bottom,0px))}
 html[dir="rtl"] body:has(#screen-welcome.active) .r3-fab{bottom:calc(134px + env(safe-area-inset-bottom,0px));inset-inline-end:auto;inset-inline-start:14px}
 </style>
+
+<style>
+/* ——— CHAPTER UNIFICATION (2026-11-12; CEO sanity check 4, S-3; A29 amended) ———
+   The two chapter scenes rendered smaller and left-aligned (229x174 slot,
+   a 242px stage cap) while every other main scene renders at the standard
+   band (292x222) centred inside the full-width pale stage frame. One
+   treatment now: chapter stagevis goes full column, the stage takes the
+   standard cap and centres; the slot's vertical stage padding (the fund
+   the fold honestly has) is released, and the fold is earned back from
+   the chapter stack (card band/who, group margins at the 12 rate). */
+#step1 #ghVis,#sbPreflight #sbVis{width:100%;height:auto;min-height:0;aspect-ratio:auto;display:flex;flex-direction:column;justify-content:center;margin-bottom:0}
+#step1 .stagevis .sb-stage,#sbPreflight .stagevis .sb-stage{max-width:min(292px,100%)}
+#progressWrap{margin-bottom:8px}
+#step1 #step1H1,#sbPreflight #step2H1{margin-top:12px}
+#ghCard,#sbCard{margin-top:12px;margin-bottom:12px}
+#ghCard .pcard-band,#sbCard .pcard-band{height:30px}
+#ghCard .pcard-tile,#sbCard .pcard-tile{width:40px;height:40px}
+#ghCard .pcard-who,#sbCard .pcard-who{padding-top:4px;padding-bottom:4px}
+#ghSignupBtn{margin-top:12px}
+#ghPrimaryBtn{margin-top:8px}
+/* ——— FAB STATIONS (S-4) ———
+   The feedback FAB's single base station (bottom:88) intersected text or
+   a pill at rest on nearly every screen, and the welcome-only raise broke
+   the welcome-back state (S-C) and the product-context welcome (its disc
+   sat on the primary button). Stations are now set per screen family and
+   per chrome context (preview tour vs the product itself, told apart by
+   the preview bar), each solved from measured text boxes in EN + AR and
+   verified by the intersection gate. Welcome keeps its tour station. */
+body:has(#previewBar:not(.hidden)):not(:has(#screen-welcome.active)) .r3-fab{bottom:380px}
+body:not(:has(#previewBar:not(.hidden))):not(:has(#screen-welcome.active)) .r3-fab{bottom:380px}
+body:has(#previewBar:not(.hidden)):has(#screen-working.active #workFailed:not(.hidden)) .r3-fab{bottom:340px}
+body:not(:has(#previewBar:not(.hidden))):has(#screen-working.active #workFailed:not(.hidden)) .r3-fab{bottom:340px}
+body:has(#previewBar:not(.hidden)):has(#screen-welcome.partway.active) .r3-fab{bottom:340px}
+body:not(:has(#previewBar:not(.hidden))):has(#screen-welcome.partway.active) .r3-fab{bottom:400px}
+body:not(:has(#previewBar:not(.hidden))):has(#screen-welcome.active) .r3-fab{bottom:319px}
+html[dir="rtl"] body:not(:has(#previewBar:not(.hidden))):has(#screen-welcome.active) .r3-fab{inset-inline-end:14px;inset-inline-start:auto}
+@media (min-height:800px){
+body:has(#previewBar:not(.hidden)):has(#screen-welcome.active) .r3-fab{bottom:333px}
+html[dir="rtl"] body:has(#previewBar:not(.hidden)):has(#screen-welcome.active) .r3-fab{inset-inline-end:14px;inset-inline-start:auto}
+body:has(#previewBar:not(.hidden)):has(#screen-welcome.partway.active) .r3-fab{bottom:340px}
+body:not(:has(#previewBar:not(.hidden))):has(#screen-welcome.active) .r3-fab{bottom:50px}
+body:not(:has(#previewBar:not(.hidden))):has(#screen-welcome.partway.active) .r3-fab{bottom:415px}
+}
+</style>
 </body>
 </html>
