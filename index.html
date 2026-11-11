@@ -18634,5 +18634,19 @@ details.fold-panel>summary .fold-val{display:block;margin-top:2px;font-weight:40
 #ghCard .pcard-tile,#sbCard .pcard-tile{width:44px;height:44px}
 #ghCard .pcard-who,#sbCard .pcard-who{padding-top:6px;padding-bottom:6px}
 </style>
+
+<style>
+/* ——— MICRO-FIX (2026-11-12; scene-presence re-review survivors) ———
+   1) Twin-chapter scene->H1 gap unified at 16px (see build_mf.py header
+      for the dead-selector root cause). Both selectors match their H1's
+      real ancestry; specificity (2,0,0), latest in source.
+   2) Welcome-only FAB offset, sized against the hero pills' measured
+      drift unions (LTR bottom 174; RTL bottom 134 + physical right —
+      the scene is not mirrored, so the safe corner is physical). */
+#step1 #step1H1{margin-top:16px}
+#sbPreflight #step2H1{margin-top:16px}
+body:has(#screen-welcome.active) .r3-fab{bottom:calc(174px + env(safe-area-inset-bottom,0px))}
+html[dir="rtl"] body:has(#screen-welcome.active) .r3-fab{bottom:calc(134px + env(safe-area-inset-bottom,0px));inset-inline-end:auto;inset-inline-start:14px}
+</style>
 </body>
 </html>
