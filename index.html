@@ -18692,5 +18692,36 @@ body:not(:has(#previewBar:not(.hidden))):has(#screen-welcome.active) .r3-fab{bot
 body:not(:has(#previewBar:not(.hidden))):has(#screen-welcome.partway.active) .r3-fab{bottom:415px}
 }
 </style>
+
+<style>
+/* ——— TALL-HEIGHT FAB ANCHOR (2026-11-12; chapter-unification re-review item 3) ———
+   The FAB stations were bottom-relative while page content is top-anchored:
+   at 390x844 the disc migrated 144px down into the headline band and covered
+   letters (memory H1, Done's emoji, gift H1 EN+AR, AR locked H1, folder
+   lede, Done house-key line). Every station is now top-anchored at exactly
+   its graded 390x700 position (top = 700 - bottom - 54), so the FAB keeps
+   its proven relationship to the top-anchored content at any height. Each
+   rule mirrors an existing station selector; the min-height:800px bottom
+   overrides are superseded by their mirrors here.
+   RTL tour welcome + welcome-back also pin the inline side: in v111 those
+   two stations flip sides at min-height:800px (right at 700, left above),
+   so the side is frozen at its 700 state (physical right) alongside the
+   top — a mixed station (one height's top, the other's side) is a station
+   that never existed. The welcome pin is scoped :not(.partway) and the
+   partway pin is its own rule, so neither can outrank the other. */
+.r3-fab{top:558px;bottom:auto}
+body:has(#screen-welcome.active) .r3-fab{top:472px;bottom:auto}
+html[dir="rtl"] body:has(#screen-welcome.active) .r3-fab{top:512px;bottom:auto}
+body:has(#previewBar:not(.hidden)):has(#screen-welcome.active) .r3-fab{top:472px;bottom:auto}
+html[dir="rtl"] body:has(#previewBar:not(.hidden)):has(#screen-welcome.active:not(.partway)) .r3-fab{top:512px;bottom:auto;inset-inline-start:14px;inset-inline-end:auto}
+body:has(#previewBar:not(.hidden)):not(:has(#screen-welcome.active)) .r3-fab{top:266px;bottom:auto}
+body:not(:has(#previewBar:not(.hidden))):not(:has(#screen-welcome.active)) .r3-fab{top:266px;bottom:auto}
+body:has(#previewBar:not(.hidden)):has(#screen-working.active #workFailed:not(.hidden)) .r3-fab{top:306px;bottom:auto}
+body:not(:has(#previewBar:not(.hidden))):has(#screen-working.active #workFailed:not(.hidden)) .r3-fab{top:306px;bottom:auto}
+body:has(#previewBar:not(.hidden)):has(#screen-welcome.partway.active) .r3-fab{top:306px;bottom:auto}
+html[dir="rtl"] body:has(#previewBar:not(.hidden)):has(#screen-welcome.partway.active) .r3-fab{top:306px;bottom:auto;inset-inline-start:14px;inset-inline-end:auto}
+body:not(:has(#previewBar:not(.hidden))):has(#screen-welcome.partway.active) .r3-fab{top:246px;bottom:auto}
+body:not(:has(#previewBar:not(.hidden))):has(#screen-welcome.active) .r3-fab{top:327px;bottom:auto}
+</style>
 </body>
 </html>
