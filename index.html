@@ -12758,14 +12758,11 @@ Listos con un solo clic.`, "给你一个属于你自己的\n私有<span class=\"
                 "ais" ? r(
                     "Your AIs",
                     "내 AI들",
-                    "Tus IA", "你的 AI", "आपके AI", "Vos IA", "أدوات ذكائك الاصطناعي", "As suas IAs", "あなたのAI") :
-                b.dataset
-                .seg ===
-                "home" ? r(
+                    "Tus IA", "你的 AI", "आपके AI", "Vos IA", "أدوات ذكائك الاصطناعي", "As suas IAs", "あなたのAI") : b.dataset.seg === "home" ? r(
                     "Your home",
                     "내 공간",
                     "Tu espacio"
-                    , "你的空间", "आपका घर", "Votre espace", "مساحتك", "A sua casa", "あなたのホーム") : r(
+                    , "你的空间", "आपका घर", "Votre espace", "مساحتك", "A sua casa", "あなたのホーム") : b.dataset.seg === "inv" ? r("Invites", "초대", "Invitaciones", "邀请", "आमंत्रण", "Invitations", "الدعوات", "Convites", "招待") : r(
                     "More",
                     "더 보기",
                     "Más", "更多", "और", "Plus", "المزيد", "Mais", "もっと見る")
@@ -13181,12 +13178,10 @@ function Segs(scr, anchor, map) {
                 k === "ais" ? r(
                     "Your AIs",
                     "내 AI들",
-                    "Tus IA", "你的 AI", "आपके AI", "Vos IA", "أدوات ذكائك الاصطناعي", "As suas IAs", "あなたのAI") :
-                k === "home" ?
-                r("Your home",
+                    "Tus IA", "你的 AI", "आपके AI", "Vos IA", "أدوات ذكائك الاصطناعي", "As suas IAs", "あなたのAI") : k === "home" ? r("Your home",
                     "내 공간",
                     "Tu espacio"
-                    , "你的空间", "आपका घर", "Votre espace", "مساحتك", "A sua casa", "あなたのホーム") : r(
+                    , "你的空间", "आपका घर", "Votre espace", "مساحتك", "A sua casa", "あなたのホーム") : k === "inv" ? r("Invites", "초대", "Invitaciones", "邀请", "आमंत्रण", "Invitations", "الدعوات", "Convites", "招待") : r(
                     "More",
                     "더 보기",
                     "Más", "更多", "और", "Plus", "المزيد", "Mais", "もっと見る");
@@ -17897,6 +17892,7 @@ p,.lede,.state-msg,.st,.nb-line,.why,.small,ul.check li{text-wrap:pretty}
     if (!doneOnly) window.__cfDoneDismissed = false;
     if (window.__cfDoneDismissed) doneOnly = false;
     home.classList.toggle("cf-done-only", !!doneOnly);
+    var _cd = el("cfHomeDoor"); if (_cd) { var _ct = pick(T.door); if (_cd.textContent !== _ct) _cd.textContent = _ct; }
     if (doneOnly && created && !el("cfHomeDoor")) {
       var d = document.createElement("button");
       d.type = "button"; d.className = "btn"; d.id = "cfHomeDoor"; d.textContent = pick(T.door);
@@ -18581,7 +18577,19 @@ details.fold-panel>summary .fold-val{display:block;margin-top:2px;font-weight:40
             blk.appendChild(b);
         });
     }
-    function boot3() { doneKey(); kgTag(); xfade(); healthToggle(); proveToggle(); invToggle(); cleanLinks(); cleanStatus(); boardViews(); whyStrip(); explainFix(); cleanDoneP(); askAi(); cardImgs(); thmToggles() }
+    function relabelToggles() {
+        [["repairWrap", REPAIRDET, REPAIRHIDE], ["fullSetPitch", F3ALL, HIDEDET], ["saveBackBlock", SBBHOW, HIDEHOW], ["invReqMore", INVREQDET, INVREQHIDE]].forEach(function (cfg) {
+            var blk = i2(cfg[0]); if (!blk) return;
+            var b = blk.querySelector(":scope > .thm-toggle"); if (!b) return;
+            var t = blk.classList.contains("r3-closed") ? R9z(cfg[1]) : R9z(cfg[2]);
+            if (b.textContent !== t) b.textContent = t;
+        });
+        var box = i2("proveItBox");
+        if (box) { var pb = box.querySelector(".r3-toggle"); if (pb) { var pt = box.classList.contains("open") ? R9z(HIDEHOW) : R9z(WHYCHK); if (pb.textContent !== pt) pb.textContent = pt; } }
+        var ib = i2("invitesBlock");
+        if (ib) { var nb = ib.querySelector(".inv-toggle"); if (nb) { var nt2 = ib.classList.contains("r3-closed") ? R9z(INVDET) : R9z(INVHIDE); if (nb.textContent !== nt2) nb.textContent = nt2; } }
+    }
+    function boot3() { doneKey(); kgTag(); xfade(); healthToggle(); proveToggle(); invToggle(); cleanLinks(); cleanStatus(); boardViews(); whyStrip(); explainFix(); cleanDoneP(); askAi(); cardImgs(); thmToggles(); relabelToggles() }
     boot3();
     ["statusRows", "doneLinks", "fullSetRows", "invitesBlock", "houseKeyText", "repairWrap", "saveBackBlock", "invReqMore", "fullSetPitch"].forEach(function (id) {
         var e = i2(id); if (e) new MutationObserver(boot3).observe(e, { childList: true, subtree: true, characterData: true });
@@ -19611,7 +19619,7 @@ body.mx-legend-open .mx-sheet{transform:none}
    signature-guarded and fail silent. ═══ */
 (function () {
   "use strict";
-  var MXS = {
+  function mkMXS() { return {
     seeWhat: r("What am I seeing?", "무엇을 보고 있는 거예요?", "¿Qué estoy viendo?", "我看到的是什么?", "मैं क्या देख रहा हूँ?", "Qu'est-ce que je vois ?", "ما الذي أراه؟", "O que estou a ver?", "これは何ですか?"),
     sub: r("Each window is §an AI.§", "창 하나하나가 §AI예요.§", "Cada ventana es §una IA.§", "每扇窗都是§一位 AI。§", "हर खिड़की §एक AI है।§", "Chaque fenêtre est §une IA.§", "كل نافذة هي §أداة ذكاء اصطناعي.§", "Cada janela é §uma IA.§", "窓ひとつひとつが§AIです。§"),
     mWorking: r("§Working. On the job§ right now.", "§일하는 중. 지금§ 작업하고 있어요.", "§Trabajando. En ello§ ahora mismo.", "§工作中。正在§干活。", "§काम चल रहा है। अभी§ काम पर है।", "§Au travail. En pleine§ tâche.", "§يعمل. منهمك§ في العمل الآن.", "§A trabalhar. Em plena§ tarefa.", "§作業中。今まさに§取り組んでいます。"),
@@ -19649,7 +19657,7 @@ body.mx-legend-open .mx-sheet{transform:none}
     movedIn: r("Moved in", "입주했어요", "Ya vive aquí", "已入住", "आ गया", "Installé", "انتقل", "Já se mudou", "入居済み"),
     giveOne: r("Give one", "하나 주기", "Dar uno", "送一个", "एक दें", "En offrir un", "أعطِ واحدًا", "Dar um", "1つ渡す"),
     checkedNow: r("You checked your home", "내 공간을 확인했어요", "Revisaste tu casa", "你检查了自己的家", "आपने अपना घर जाँचा", "Vous avez vérifié votre maison", "لقد فحصت منزلك", "Verificou a sua casa", "あなたの家を確認しました")
-  };
+  } } var MXS = mkMXS(); MXS._l = (typeof S !== "undefined" && S) || document.documentElement.lang;
   function el(tag, cls, txt) { var d = document.createElement(tag); if (cls) d.className = cls; if (txt != null) d.textContent = txt; return d; }
   function G(id) { return document.getElementById(id); }
   function boardData() { try { return (typeof E !== "undefined" && E) ? sampleBoard() : (typeof BoardCache !== "undefined" ? BoardCache : null); } catch (z) { return null; } }
@@ -19983,6 +19991,7 @@ body.mx-legend-open .mx-sheet{transform:none}
   }
   function tick() {
     if (!built) return;
+    try { var _l = (typeof S !== "undefined" && S) || document.documentElement.lang; if (MXS._l !== _l) { MXS = mkMXS(); MXS._l = _l; lastSig = ""; [["mxFound", MXS.foundations], ["mxRosterWrap", MXS.yourAIs], ["mxNeedsWrap", MXS.needsYou], ["mxHapWrap", MXS.happening], ["mxPlanWrap", MXS.thePlan]].forEach(function (pr) { var w = G(pr[0]); if (w) { var hh = w.querySelector(".mx-h2"); if (hh && hh.textContent !== pr[1]) hh.textContent = pr[1]; } }); var _ih = document.querySelector(".mx-invh .mx-h2"); if (_ih && _ih.textContent !== MXS.invites) _ih.textContent = MXS.invites; var _lc = G("mxLegend"); if (_lc && _lc.children[1] && _lc.children[1].textContent !== MXS.seeWhat) _lc.children[1].textContent = MXS.seeWhat; var _sh = G("mxSheet"); if (_sh) { var _h3 = _sh.querySelector("h3"); if (_h3) _h3.textContent = MXS.seeWhat; var _sub = _sh.querySelector(".mx-sub"); if (_sub) _sub.innerHTML = boldLead(MXS.sub); var _mk = [MXS.mWorking, MXS.mWaiting, MXS.mStuck, MXS.mNotProven, MXS.mNotHere, MXS.mHelping, MXS.mLanterns]; _sh.querySelectorAll(".mx-lrow p").forEach(function (p, ix) { if (_mk[ix]) p.innerHTML = boldLead(_mk[ix]); }); var _ft = _sh.querySelector(".mx-foot"); if (_ft) _ft.textContent = MXS.foot; } } } catch (z) {}
     var s = sig();
     if (s && s !== lastSig) { lastSig = s; paintAll(); }
   }
@@ -20409,7 +20418,7 @@ body.sp-sheet-open .sp-sheet{transform:none}
    Additive layer: no existing function is edited. */
 (function () {
   "use strict";
-  var SPS = {
+  function mkSPS() { return {
     close: r("Close", "닫기", "Cerrar", "关闭", "बंद करें", "Fermer", "إغلاق", "Fechar", "閉じる"),
     more: r("See the full text", "전체 글 보기", "Ver el texto completo", "查看全文", "पूरा पाठ देखें", "Voir le texte entier", "عرض النص الكامل", "Ver o texto completo", "全文を見る"),
     openW: r("Open", "열기", "Abrir", "打开", "खोलें", "Ouvrir", "فتح", "Abrir", "開く"),
@@ -20480,7 +20489,7 @@ body.sp-sheet-open .sp-sheet{transform:none}
     lede: function () { return r("Your own private <span class=\"acc\">codebase</span> and <span class=\"acc\">database</span>, set up for you.", "나만의 비밀 <span class=\"acc\">코드베이스</span>와 <span class=\"acc\">데이터베이스</span>를 대신 만들어 드려요.", "Tu propia <span class=\"acc\">base de código</span> y <span class=\"acc\">base de datos</span> privadas, configuradas para ti.", "您自己的私有<span class=\"acc\">代码库</span>和<span class=\"acc\">数据库</span>，我们为您设置好。", "आपका अपना निजी <span class=\"acc\">कोडबेस</span> और <span class=\"acc\">डेटाबेस</span>, आपके लिए सेट किया गया।", "Votre propre <span class=\"acc\">base de code</span> et <span class=\"acc\">base de données</span> privées, installées pour vous.", "<span class=\"acc\">قاعدة الشفرة</span> و<span class=\"acc\">قاعدة البيانات</span> الخاصة بك، مُعدّة لك بالكامل.", "Sua própria <span class=\"acc\">base de código</span> e <span class=\"acc\">banco de dados</span> privados, configurados para você.", "あなた専用のプライベートな<span class=\"acc\">コードベース</span>と<span class=\"acc\">データベース</span>を、あなたのために設定します。"); },
     openWithBrief: r("Open with the brief", "브리프와 함께 열기", "Abrir con el resumen", "带简报打开", "ब्रीफ़ के साथ खोलें", "Ouvrir avec le brief", "افتح مع الموجز", "Abrir com o resumo", "ブリーフ付きで開く"),
     hoPrompt: r("You are %s now, working in my home. My folder: %r. My memory: %m. Read CONNECT.md in the folder first — it explains how we work. Then look at my board and carry on from there.", "이제 당신은 %s입니다. 제 집에서 일해요. 내 폴더: %r. 내 메모리: %m. 먼저 폴더의 CONNECT.md를 읽어요 — 일하는 방식이 적혀 있어요. 그다음 보드를 보고 이어서 진행해요.", "Ahora eres %s y trabajas en mi casa. Mi carpeta: %r. Mi memoria: %m. Lee primero CONNECT.md en la carpeta: explica cómo trabajamos. Luego mira mi tablero y sigue desde ahí.", "你现在是 %s，在我的家里工作。我的文件夹：%r。我的记忆：%m。先读文件夹里的 CONNECT.md——里面写了我们的工作方式。然后看我的看板，从那里继续。", "अब आप %s हैं, मेरे घर में काम कर रहे हैं। मेरा फ़ोल्डर: %r। मेरी मेमोरी: %m। पहले फ़ोल्डर में CONNECT.md पढ़ें — उसमें हमारा काम करने का तरीका है। फिर मेरा बोर्ड देखें और वहीं से आगे बढ़ें।", "Tu es maintenant %s et tu travailles dans ma maison. Mon dossier : %r. Ma mémoire : %m. Lis d'abord CONNECT.md dans le dossier — il explique comment nous travaillons. Puis regarde mon tableau et continue à partir de là.", "أنت الآن %s، تعمل في بيتي. مجلدي: %r. ذاكرتي: %m. اقرأ CONNECT.md في المجلد أولاً — يشرح كيف نعمل. ثم انظر إلى لوحتي وتابع من هناك.", "Agora és %s, a trabalhar na minha casa. A minha pasta: %r. A minha memória: %m. Lê primeiro o CONNECT.md na pasta — explica como trabalhamos. Depois vê o meu quadro e continua a partir daí.", "あなたは今 %s で、私の家で働いています。私のフォルダ：%r。私のメモリ：%m。まずフォルダ内の CONNECT.md を読んでください。私たちの進め方が書いてあります。次にボードを見て、そこから続けてください。")
-  };
+  } } var SPS = mkSPS(); SPS._l = (typeof S !== "undefined" && S) || document.documentElement.lang;
   var AIURL = { claude: "https://claude.ai", chatgpt: "https://chatgpt.com", grok: "https://grok.com", muse: "https://muse.ai", kimi: "https://www.kimi.com", notion: "https://www.notion.so" };
   /* ---------- handoff doors on the AIs segment (S-26): each AI row also opens
      that AI WITH the brief — who it is here, where the home lives, the deal.
@@ -20844,6 +20853,7 @@ body.sp-sheet-open .sp-sheet{transform:none}
   /* ---------- item 1: foundations one owner; item 4/6: agreement + invites ---------- */
   function pillTextNode(pill) { for (var i = pill.childNodes.length - 1; i >= 0; i--) if (pill.childNodes[i].nodeType === 3) return pill.childNodes[i]; return null; }
   function spTick() {
+    try { var _l = (typeof S !== "undefined" && S) || document.documentElement.lang; if (SPS._l !== _l) { SPS = mkSPS(); SPS._l = _l; var _ls = document.querySelectorAll(".sp-sb3line"); if (_ls.length === 2) { _ls[0].innerHTML = SPS.sb3best; _ls[1].innerHTML = SPS.sb3sync; } try { if (typeof Se === "function") Se(); } catch (z) {} } } catch (z) {}
     var strip = G("mxInvStrip"); if (strip) strip.remove();
     var tb = G("statusCardBtn"); if (tb) tb.remove();
     var sr = G("statusRows"), sp = G("statusProblems");
@@ -21709,6 +21719,79 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 })();
 </script>
 
+<style id="sp12Style">
+/* ===== SPACING PASS (2026-11-13; CEO sanity check 12 — S-40/S-41; A20 ceilings) =====
+   S-40: the fold family's ceiling side. A closed one-line fold card was
+   66px for a 27px title line (48px header row + 14px dead bottom
+   padding), and chapter stack margins ran to 24px (f3-flow / sp-5
+   pins) over the family's own 16px. Now: header row 44px (6px pads),
+   card bottom padding 8px, every family top margin the one 16px gap,
+   and the folder chapter's name block (a transparent stack member)
+   gives its 8px top/bottom padding and 24px margin to the same 16px
+   rhythm. One-line card: 66 -> 56px at every width. Open/close
+   behaviour (S-34) and contents untouched.
+   S-41: the working family's stage frames (#screen-working .stagevis)
+   were flex-stretched to a 392px cap at desktop widths with the scene
+   centred inside the slack (45-171px of dead panel), and the success
+   scene sat at its 290px phone-era cap inside a 400px stage. At
+   desktop widths the frames now hug their stage, and the success
+   stage hugs its scene (292px — the error state's exact geometry).
+   Phone widths already hug (measured 299.4 frame / 298 scene) and
+   are untouched. The panel-to-headline gap stays the family's own
+   24px (16px on the failure panel), inside the 32px section ceiling. */
+/* S-40 — card bottom padding: the closed fold's dead band */
+details.sact, details.fold-panel, details.fold-quiet,
+.welcome-below > details, details.closing-det,
+details:has(> summary#ghSecretsSum), details#sbPwBox,
+#nameBlock details#repoFold, #ghDetails { padding-bottom: 8px; }
+#screen-welcome .welcome-below > details { padding-bottom: 8px; }
+/* S-40 — the header row: 44px for the 27px line, 6px pads */
+details.sact > summary, details.fold-panel > summary,
+.welcome-below > details > summary, details.closing-det > summary,
+details:has(> summary#ghSecretsSum) > summary, details#sbPwBox > summary,
+details#failedDetails > summary, details.ai-paste > summary,
+details.r3-explain-ex > summary, #nameBlock details#repoFold > summary,
+details.fold-quiet > summary { min-height: 44px; padding-top: 6px; padding-bottom: 6px; }
+#screen-welcome .welcome-below > details > summary { min-height: 44px; padding-top: 6px; padding-bottom: 6px; }
+#ghAdvanced > summary, #sbAdvanced > summary { min-height: 44px; padding-top: 6px; padding-bottom: 6px; }
+/* S-40 — stack rhythm: one 16px gap, owned by the card's own margin */
+#ghDetails, #sbDetails { margin-top: 16px; }
+#screen-home #deleteHomeFold { margin-top: 16px; }
+#ghAskFold, #sbNextFold { margin-top: 16px !important; }
+#nameBlock { margin-top: 16px; padding-top: 0; padding-bottom: 0; }
+/* S-41 — state-screen frames hug their scene (desktop; phone already hugs) */
+@media (min-width: 641px) {
+  #screen-working .stagevis { flex: none; min-height: 0; max-height: none; aspect-ratio: auto; }
+  #sucVis .sb-stage { max-width: 292px; }
+}
+</style>
+
+<style id="fix15Style">
+/* ===== FIX15 (2026-11-14; sanity 13/14/15 + S-41/S-42 deltas) =====
+   S-41 width hug: state-screen frames close to the stage box on ALL sides
+   (the sp12 pass closed the height; the width still floated the stage in a
+   full-width panel — 152px pale margins per side at 1440). */
+/* S-41 */
+.stagevis { width: fit-content; max-width: 100%; margin-left: auto; margin-right: auto; }
+.stagevis:has(> .sb-stage) { width: fit-content !important; }
+/* FOLD CENTRING (sanity 12 addendum 3): family cards ran 4px top / 8px bottom
+   padding, parking the 44px summary 3px above centre; #failedDetails kept
+   16px bottom (slack 18, +9px). 6/6 centres the summary, slack stays 12. */
+details.sact, details.fold-panel, details.fold-quiet,
+.welcome-below > details, details.closing-det,
+details:has(> summary#ghSecretsSum), details#sbPwBox,
+#nameBlock details#repoFold, #ghDetails, details#failedDetails { padding-top: 6px; padding-bottom: 6px; }
+/* S-44: partner cards +14px of scene strip (58 -> 72); card 105.8 -> ~119.8
+   (+13%), still cover-cropped (A29). */
+.pcard .pcard-band { height: 72px !important; }
+/* S-45: buttons -3px padding per side (primary 58 -> ~52, -10%); the 44px
+   tap floor is untouched (small buttons keep their own padding rule). */
+.btn { padding-top: 13px; padding-bottom: 13px; }
+/* S-42: the welcome proof lines own their gap — 12px under the diagram card,
+   6px between the pair (was flush/12 by accident of default margins). */
+.sp-sb3line { margin-top: 12px; }
+.sp-sb3line + .sp-sb3line { margin-top: 6px; }
+</style>
 <style id="tvStyle">
 /* ═══ THREE-VIEW HOME (2026-11-13; HV-1..HV-4) ═══
    The home segment's canonical stack is replaced by three switchable
@@ -22004,6 +22087,38 @@ html[data-hview="2"] #repairWrap { margin-top: 6px; }
   .tv-repairline { margin-top: 8px; padding-top: 4px; padding-bottom: 4px; }
   html[data-hview="2"] #repairWrap { margin-top: 2px; }
 }
+
+/* ═══ MICRO-FIX round (2026-11-13 · FAB-CHECK OCCLUSION-REAL) ═══
+   The feedback FAB's dock column (the viewport's right 50px) painted
+   over the V2 band pill's Check again button: 14px of the button and
+   the last 6px of its label, at 430 and 390, complete and asleep
+   (FAB-CHECK.md). The pass's original FAB census graded the dock only
+   against the B button and the flag — never against this button. The
+   extended gate (work/fabcoll.py) grades the dock against EVERY
+   interactive element in all three views, rest + scrolled; on the
+   v121 bytes it also caught the asleep+scrolled station (top:630)
+   resting on the full-width repair line's right end.
+   Fix, phone widths only: the pill insets out of the dock column
+   (>= 24px clearance at 430 and 390), and its stamp takes a tighter
+   line-height, smaller size and padding — plus 6px more band height
+   at <= 480px — so the narrower pill still fits inside the band in
+   the longest (asleep) state: geometry, the stamp text is unchanged
+   and still reads in full. The repair line's box likewise
+   ends before the dock column. Desktop untouched: there the pill
+   sits inside the centred 980px column, far from the dock, and
+   already read full on one line. */
+@media (max-width: 1023px) {
+  html[data-hview="2"] #tvBandPill { right: 48px; padding-top: 6px; padding-bottom: 6px; }
+  #tvBandPill .tv-btxt { line-height: 1.35; font-size: 14.5px; }
+  .tv-repairline { width: auto; margin-right: 58px; }
+}
+/* the narrower pill wraps the longest (asleep) stamp to five lines at
+   390 — the band gives it 6px more room at phone widths, inside V2's
+   B13 length budget (measured total stays <= 1,398px) */
+@media (max-width: 480px) {
+  html[data-hview="2"] #screen-home[data-tvseg="home"] .mx-scenewrap,
+  html[data-hview="2"] #screen-home[data-tvseg="home"] #mxScene { height: 116px; }
+}
 </style>
 
 <script id="tvScript">
@@ -22019,7 +22134,7 @@ html[data-hview="2"] #repairWrap { margin-top: 6px; }
    script in <body> (html[data-hview]); default View 1. */
 (function () {
   "use strict";
-  var TVS = {
+  function mkTVS() { return {
     name1: r("The house", "집", "La casa", "房子", "घर", "La maison", "البيت", "A casa", "家"),
     name2: r("One screenful", "한 화면", "Una pantalla", "一屏", "एक स्क्रीन", "Un seul écran", "شاشة واحدة", "Um ecrã", "1画面"),
     name3: r("The river", "흐름", "El río", "时间流", "धारा", "Le fil", "التدفق", "O rio", "流れ"),
@@ -22029,7 +22144,7 @@ html[data-hview="2"] #repairWrap { margin-top: 6px; }
     openAi: r("Open %s", "%s 열기", "Abrir %s", "打开 %s", "%s खोलें", "Ouvrir %s", "فتح %s", "Abrir %s", "%sを開く"),
     blocking: r("See what's blocking", "뭐가 막고 있는지 보기", "Ver qué lo bloquea", "查看受阻原因", "देखें कि क्या रुकावट है", "Voir ce qui bloque", "عرض سبب التعطّل", "Ver o que está a bloquear", "何が止めているか見る"),
     give: r("Give an invite", "초대 보내기", "Dar una invitación", "发出邀请", "आमंत्रण दें", "Donner une invitation", "قدّم دعوة", "Dar um convite", "招待を送る")
-  };
+  } } var TVS = mkTVS(); TVS._l = (typeof S !== "undefined" && S) || document.documentElement.lang;
   function G(id) { return document.getElementById(id); }
   function el(tag, cls, txt) { var n = document.createElement(tag); if (cls) n.className = cls; if (txt != null) n.textContent = txt; return n; }
   function txt(e) { return e ? (e.textContent || "").trim().replace(/\s+/g, " ") : ""; }
@@ -22607,9 +22722,11 @@ html[data-hview="2"] #repairWrap { margin-top: 6px; }
     return s;
   }
   function render(force) {
+    try { var _l = (typeof S !== "undefined" && S) || document.documentElement.lang; if (TVS._l !== _l) { TVS = mkTVS(); TVS._l = _l; } } catch (z) {}
     if (!built) return;
     var P = projAll();
     var s = sig(P);
+    try { s += "C" + ["mxHapWrap", "mxRosterWrap", "mxFound", "invitesBlock"].map(function (id) { var n = G(id); return n ? n.textContent : ""; }).join("~") + "|" + (txt(G("houseKeyLabel")) || "") + "|" + (txt(G("cfHomeDoor")) || ""); } catch (z) {}
     if (!force && s === lastSig) return;
     lastSig = s;
     // chrome state: segment + active screen for the CSS compositions
