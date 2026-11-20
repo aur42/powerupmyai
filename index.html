@@ -22847,5 +22847,105 @@ html[data-hview="2"] #repairWrap { margin-top: 6px; }
 })();
 </script>
 
+<!-- ── LAB ADDITION (CEO request 2026-11-20, preview phase): tap-to-comment.
+     Self-contained; removable by deleting this block. Posts to the existing
+     worker /report contract as kind:"feedback", step:"Comment". ── -->
+<style>
+#pwcmBtn{position:fixed;left:12px;bottom:84px;z-index:2147482000;background:#1F2937;color:#FAF2E3;border:none;border-radius:999px;padding:10px 16px;font:600 15px/1.2 -apple-system,'Segoe UI',Roboto,sans-serif;box-shadow:0 4px 14px rgba(31,41,55,.35);cursor:pointer}
+#pwcmBtn:active{transform:scale(.97)}
+#pwcmBar{position:fixed;top:0;left:0;right:0;z-index:2147482002;background:#2970FF;color:#fff;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;font:600 16px/1.35 -apple-system,'Segoe UI',Roboto,sans-serif;display:flex;justify-content:space-between;align-items:center;gap:12px}
+#pwcmBar button{background:#fff;color:#2970FF;border:none;border-radius:999px;padding:6px 14px;font:600 15px/1.2 inherit;cursor:pointer}
+#pwcmShield{position:fixed;inset:0;z-index:2147482001;background:rgba(41,112,255,.08);cursor:crosshair}
+.pwcmPin{position:fixed;z-index:2147482000;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:#E4572E;color:#fff;font:700 14px/26px -apple-system,'Segoe UI',Roboto,sans-serif;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.35);pointer-events:none}
+#pwcmCard{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:2147482003;background:#FAF2E3;color:#1F2937;border-radius:16px;box-shadow:0 10px 34px rgba(31,41,55,.4);padding:16px;font:400 16px/1.45 -apple-system,'Segoe UI',Roboto,sans-serif}
+#pwcmCard .pwcmAbout{font-weight:700;margin:0 0 8px}
+#pwcmCard textarea{width:100%;box-sizing:border-box;min-height:76px;border:1.5px solid #cbbfa5;border-radius:10px;padding:10px;font:inherit;background:#fff;color:#1F2937}
+#pwcmCard .pwcmRow{display:flex;gap:10px;margin-top:12px}
+#pwcmCard .pwcmSend{flex:1;background:#2970FF;color:#fff;border:none;border-radius:10px;padding:12px;font:700 16px/1.2 inherit;cursor:pointer}
+#pwcmCard .pwcmCancel{background:transparent;color:#1F2937;border:1.5px solid #cbbfa5;border-radius:10px;padding:12px 16px;font:600 16px/1.2 inherit;cursor:pointer}
+#pwcmToast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);z-index:2147482004;background:#1F2937;color:#FAF2E3;border-radius:999px;padding:10px 18px;font:600 15px/1.3 -apple-system,'Segoe UI',Roboto,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+</style>
+<script>
+(function(){
+"use strict";
+var WORKER="https://powerupmyai-oauth.powerupmyai.workers.dev";
+var n=0, armed=false, pending=null;
+function el(id){return document.getElementById(id)}
+function toast(msg){var t=document.createElement("div");t.id="pwcmToast";t.textContent=msg;document.body.appendChild(t);setTimeout(function(){t.remove()},3400)}
+function labelFor(node){
+  var cur=node, hops=0;
+  while(cur && hops<4){
+    var txt=(cur.getAttribute&& (cur.getAttribute("aria-label")||cur.getAttribute("title"))) || (cur.innerText||cur.textContent||"").trim().replace(/\s+/g," ");
+    if(txt) return txt.slice(0,60);
+    cur=cur.parentElement; hops++;
+  }
+  return node.tagName ? node.tagName.toLowerCase() : "page";
+}
+function screenName(){
+  var sels=document.querySelectorAll('[id^="screen-"], .screen');
+  for(var i=0;i<sels.length;i++){var r=sels[i].getBoundingClientRect();var st=getComputedStyle(sels[i]);if(st.display!=="none"&&st.visibility!=="hidden"&&r.height>0) return sels[i].id||sels[i].className}
+  return "home";
+}
+function disarm(){armed=false;var b=el("pwcmBar"),s=el("pwcmShield");if(b)b.remove();if(s)s.remove()}
+function arm(){
+  if(el("pwcmCard")) el("pwcmCard").remove();
+  armed=true;
+  var bar=document.createElement("div");bar.id="pwcmBar";
+  bar.innerHTML="<span>Tap the thing you want to comment on</span>";
+  var x=document.createElement("button");x.textContent="Cancel";x.addEventListener("click",function(ev){ev.stopPropagation();disarm()});
+  bar.appendChild(x);document.body.appendChild(bar);
+  var sh=document.createElement("div");sh.id="pwcmShield";
+  sh.addEventListener("click",function(ev){
+    ev.preventDefault();ev.stopPropagation();
+    var px=ev.clientX, py=ev.clientY;
+    sh.style.display="none";
+    var target=document.elementFromPoint(px,py)||document.body;
+    sh.style.display="";
+    var r=target.getBoundingClientRect();
+    var anchor="On: \""+labelFor(target)+"\" — "+screenName()+" screen, tapped at "+Math.round(px/innerWidth*100)+"% across, "+Math.round(py/innerHeight*100)+"% down ("+innerWidth+"x"+innerHeight+")";
+    pending={anchor:anchor,x:px,y:py};
+    disarm(); showCard(anchor);
+  },true);
+  document.body.appendChild(sh);
+}
+function showCard(anchor){
+  var card=document.createElement("div");card.id="pwcmCard";
+  var p=document.createElement("p");p.className="pwcmAbout";p.textContent=anchor;
+  var ta=document.createElement("textarea");ta.placeholder="What do you think? What should change?";
+  var row=document.createElement("div");row.className="pwcmRow";
+  var send=document.createElement("button");send.className="pwcmSend";send.textContent="Send comment";
+  var cancel=document.createElement("button");cancel.className="pwcmCancel";cancel.textContent="Cancel";
+  cancel.addEventListener("click",function(){card.remove();pending=null});
+  send.addEventListener("click",function(){
+    var text=ta.value.trim();
+    var note=("📍 "+pending.anchor+"\n"+text).slice(0,2000);
+    send.disabled=true;send.textContent="Sending…";
+    fetch(WORKER+"/report",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({step:"Comment",error:note.slice(0,300),kind:"feedback",note:note,ts:new Date().toISOString()})})
+    .then(function(res){
+      if(!res.ok) throw new Error("report "+res.status);
+      n++;
+      var pin=document.createElement("div");pin.className="pwcmPin";pin.textContent=String(n);pin.style.left=pending.x+"px";pin.style.top=pending.y+"px";document.body.appendChild(pin);
+      card.remove();pending=null;toast("Sent — thank you!");
+    })
+    .catch(function(){
+      send.disabled=false;send.textContent="Send comment";
+      ta.value=text+"\n(That didn't send — copy this text and send it to the person who shared this with you.)";
+      ta.select();
+    });
+  });
+  row.appendChild(send);row.appendChild(cancel);
+  card.appendChild(p);card.appendChild(ta);card.appendChild(row);
+  document.body.appendChild(card);ta.focus();
+}
+function init(){
+  if(el("pwcmBtn"))return;
+  var b=document.createElement("button");b.id="pwcmBtn";b.type="button";b.textContent="✎ Comment";
+  b.addEventListener("click",function(ev){ev.stopPropagation();armed?disarm():arm()});
+  document.body.appendChild(b);
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+</script>
+<!-- ── END LAB ADDITION ── -->
 </body>
 </html>
