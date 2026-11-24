@@ -3301,11 +3301,17 @@ var Z = [{
     label: "Kimi"
 }];
 
-function gn() {
+// The long block inside CONNECT.md, kept only so Tt() can swap it for the short card.
+function gnLong() {
     var e = N.ae || "",
         t = e.split("```text\n");
     return t.length > 1 ? t[1]
         .split("\n```")[0] : ""
+}
+
+// The instruction card every AI gets; it must stay under 1,500 characters once filled in.
+function gn() {
+    return "My agent home is a private GitHub repo: https://github.com/YOUR-USERNAME/agent-home\nMy personal database is: https://YOUR-PROJECT-REF.supabase.co (Supabase, owner-only RLS)\n\nHow to use it:\n1. Open the repo through your own GitHub connection (connect GitHub in your settings and allow only this repo). If you cannot open it, reply exactly: I can't read your agent home yet. Never guess what is in it.\n2. At the start of a conversation, read USER.md and MEMORY.md. Read other files only when the task needs them.\n3. Call me by the name in USER.md and use what MEMORY.md says about me, so I never repeat myself.\n4. When I tell you something worth keeping, offer one short line for MEMORY.md and wait for my yes before writing it.\n5. Never write passwords, keys or other people's private details into the repo.\n6. If I ask \"are you wired in?\", reply with the phrase on the \"Verification phrase:\" line of MEMORY.md, word for word, then my name from USER.md and one fact from MEMORY.md."
 }
 
 function Ye(e, t) {
@@ -3347,7 +3353,7 @@ function Tt(e) {
     var t = e.repoUrl ||
         "https://github.com/YOUR-USERNAME/" +
         e.repoName,
-        n = (N.ae || "").split(
+        n = (N.ae || "").split(gnLong() || "\u0000").join(gn()).split(
             "https://github.com/YOUR-USERNAME/agent-home"
             ).join(t);
     if (e.projectUrl) n = n.split(
