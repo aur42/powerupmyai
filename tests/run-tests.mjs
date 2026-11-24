@@ -323,5 +323,30 @@ console.log("K. Admin allowlist");
   check("K8 fallback config (var unset): operator B 403, operator A 200 — single-login world unchanged", soloB.status === 403 && soloB.data.error === "not_admin" && soloA.status === 200, { b: soloB.status, a: soloA.status });
 }
 
+// ---------- L. Anonymous funnel counters ----------
+console.log("L. Funnel counters");
+{
+  const kv = new StubKV();
+  const env = makeEnv(kv);
+  const day = new Date().toISOString().slice(0, 10);
+  // Guards: a known event is accepted and counted per day.
+  const c1 = await call(env, req("/count", { method: "POST", ip: "10.9.0.1", body: { event: "setup_started" } }));
+  await call(env, req("/count", { method: "POST", ip: "10.9.0.2", body: { event: "setup_started" } }));
+  check("L1 two posts of a known event make 2 for the day", c1.status === 200 && c1.data.ok === true && (await kv.get("count:setup_started:" + day)) === "2", c1);
+  // Guards: nothing outside the four event names is stored.
+  const bad = await call(env, req("/count", { method: "POST", ip: "10.9.0.1", body: { event: "anything_else", login: "someone" } }));
+  check("L2 unknown event refused with 400", bad.status === 400 && bad.data.error === "unknown_event", bad);
+  // Guards: counter keys carry only an event and a day, never a person.
+  const stored = [...kv.map.keys()].filter((k) => k.startsWith("count:"));
+  check("L3 counter keys hold only event and day", stored.length === 1 && stored.every((k) => /^count:[a-z_]+:\d{4}-\d{2}-\d{2}$/.test(k)), stored);
+  // Guards: one connection cannot inflate the counts.
+  let last;
+  for (let n = 0; n < 41; n++) last = await call(env, req("/count", { method: "POST", ip: "10.9.0.3", body: { event: "folder_ready" } }));
+  check("L4 one connection is capped at 40 an hour", last.status === 429 && (await kv.get("count:folder_ready:" + day)) === "40", last.status);
+  // Guards: the operator can read the counts, and they never show as setups.
+  const adm = await call(env, req("/admin?key=test-link-key"));
+  check("L5 admin shows the counts and no fake setups", adm.data.counts.setup_started[day] === 2 && adm.data.counts.folder_ready[day] === 40 && adm.data.setups.length === 0, adm.data.counts);
+}
+
 console.log("\nTOTAL: " + passed + " passed, " + failed + " failed");
 process.exit(failed ? 1 : 0);

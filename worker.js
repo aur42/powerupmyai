@@ -381,6 +381,9 @@ async function inviteCompletion(env, login, displayName) {
   return inviteMinePayload(kv, ledger);
 }
 
+// The only events /count accepts; a counter key holds an event name and a day, nothing else.
+const COUNT_EVENTS = ["setup_started", "folder_ready", "home_reached", "key_matched"];
+
 export default {
   async fetch(request, env) {
     const origin = env.ALLOWED_ORIGIN || "*";
@@ -540,6 +543,23 @@ export default {
           await env.SETUPS.delete("img:" + name.slice("report:".length));
         }
       }
+      return json({ ok: true });
+    }
+
+    if (url.pathname === "/count" && request.method === "POST") {
+      if (!env.SETUPS) return json({ error: "registry_not_configured" }, 501);
+      let body;
+      try { body = await request.json(); } catch { return json({ error: "invalid_json" }, 400); }
+      const ev = body && typeof body.event === "string" ? body.event : "";
+      if (!COUNT_EVENTS.includes(ev)) return json({ error: "unknown_event" }, 400);
+      const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+      const rlKey = "rl:count:" + ip;
+      const hits = parseInt((await env.SETUPS.get(rlKey)) || "0", 10) || 0;
+      if (hits >= 40) return json({ error: "rate_limited" }, 429);
+      await env.SETUPS.put(rlKey, String(hits + 1), { expirationTtl: 3600 });
+      const key = "count:" + ev + ":" + new Date().toISOString().slice(0, 10);
+      const n = parseInt((await env.SETUPS.get(key)) || "0", 10) || 0;
+      await env.SETUPS.put(key, String(n + 1));
       return json({ ok: true });
     }
 
@@ -749,11 +769,17 @@ export default {
       const reports = [];
       const inviteRows = [];
       const inviteLedgers = [];
+      const counts = {};
       let cursor;
       do {
         const page = await env.SETUPS.list(cursor ? { cursor } : {});
         for (const key of page.keys) {
           if (key.name.startsWith("img:")) continue; // screenshots are fetched via /admin/img
+          if (key.name.startsWith("count:")) {
+            const [, ev, day] = key.name.split(":");
+            (counts[ev] = counts[ev] || {})[day] = parseInt((await env.SETUPS.get(key.name)) || "0", 10) || 0;
+            continue;
+          }
           const raw = await env.SETUPS.get(key.name);
           if (!raw) continue;
           try {
@@ -796,7 +822,7 @@ export default {
         }))
         .sort((a, b) => (b.points - a.points) || a.login.localeCompare(b.login));
       return json({
-        setups: entries, reports: reports.slice(0, 50),
+        setups: entries, reports: reports.slice(0, 50), counts,
         invites: { totals: inviteTotals, codes: inviteRows, balances: inviteBalances, leaderboard },
       });
     }
