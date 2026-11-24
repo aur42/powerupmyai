@@ -3201,8 +3201,9 @@ function dn() {
     return N.ad || ""
 }
 
+// Short on purpose: no boards and no lead agents in the starter home.
 function un(e) {
-    return N.af || ""
+    return "# AGENTS.md: how any AI works in this home\n\nThis folder is my agent home. It is private. Any AI I use reads it so I never repeat myself.\n\n## Every conversation\n1. Read USER.md and MEMORY.md first. Nothing else is needed to start.\n2. Call me by the name in USER.md and use what MEMORY.md says about me.\n3. Read SOUL.md, CONNECT.md or README.md only when a task needs them.\n\n## Writing\n- Offer a new memory as one short line for MEMORY.md, and wait for my yes before writing it.\n- Keep MEMORY.md short: merge duplicates and remove what I say is no longer true.\n- Never write passwords, keys or other people's private details here.\n\n## Honesty\n- If you cannot open a file, say so. Never guess what it says.\n- Say \"done\" only after you have read the change back.\n- If a field is blank, name the blank field instead of inventing it.\n\n## Proving you are wired in\nIf I ask \"are you wired in?\", reply with the phrase on the \"Verification phrase:\" line of MEMORY.md, word for word, then my name from USER.md and one fact from MEMORY.md.\n"
 }
 
 function St(e) {
@@ -3368,6 +3369,11 @@ function Tt(e) {
     if (e.projectRef) n = n.split(
             "YOUR-PROJECT-REF")
         .join(e.projectRef);
+    // Starter home: keep the opening, the card and the per-app notes only.
+    var c1 = n.indexOf("## Your health page"),
+        c2 = n.indexOf("## Muse"),
+        c3 = n.indexOf("## Notion");
+    if (c1 > -1 && c2 > c1 && c3 > c2) n = n.slice(0, c1) + n.slice(c2, c3);
     return n
 }
 
@@ -3406,6 +3412,9 @@ function orcT() {
 function manT() {
     return "Template version v11.23\n"
 }
+
+// The starter home installs only these six files.
+var SMALL_SET = ["README.md", "USER.md", "MEMORY.md", "AGENTS.md", "SOUL.md", "CONNECT.md"];
 
 function xt(e) {
     var t = [{
@@ -3495,7 +3504,9 @@ function xt(e) {
     }, {
         path: "skills/orchestrating-your-agents.md",
         content: orcT()
-    }];
+    }].filter(function(f) {
+        return SMALL_SET.indexOf(f.path) > -1
+    });
     if (o.importState && o
         .importState.mergedMd) {
         for (var n = 0; n < t
