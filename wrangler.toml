@@ -21,7 +21,7 @@ compatibility_date = "2024-11-01"
 
 [vars]
 # Public client IDs (not secrets — the page itself fetches these from /config).
-GITHUB_CLIENT_ID = "Ov23liWNLiv4Ntxi7RKE"
+GITHUB_CLIENT_ID = "Iv23li4wuCfrAKy146aj"
 SUPABASE_CLIENT_ID = "0d0f4731-8033-4620-9415-7f0826ac933d"
 ALLOWED_ORIGIN = "https://powerupmyai.com"
 # The one exact OAuth callback for both providers; the worker rejects any
