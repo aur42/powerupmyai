@@ -23179,7 +23179,8 @@ function init(){
   if(el("pwcmBtn"))return;
   var b=document.createElement("button");b.id="pwcmBtn";b.type="button";b.textContent="✎ Comment";
   b.addEventListener("click",function(ev){ev.stopPropagation();armed?disarm():arm()});
-  document.body.appendChild(b);
+  var w=document.querySelector(".wrap");
+  if(w&&w.parentNode===document.body)document.body.insertBefore(b,w);else document.body.appendChild(b);
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();
