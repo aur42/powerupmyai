@@ -2549,7 +2549,7 @@ function tn() {
 }
 
 function Oe() {
-    if (!E && o
+    if (!E && !o.folderAdopted && o
         .verificationPhrase ===
         "harbor-lantern-42") o
         .verificationPhrase = "";
@@ -2585,6 +2585,10 @@ function Oe() {
                     .verificationPhrase
         } catch (_) {}
     }
+    return o.verificationPhrase = freshHouseKey();
+}
+
+function freshHouseKey() {
     var e = ["harbor", "lantern",
             "meadow", "cedar",
             "willow", "copper",
@@ -2611,9 +2615,7 @@ function Oe() {
     if (n + "-" + a + "-" + n2 ===
         "harbor-lantern-42") n2 =
         n2 > 97 ? 10 : n2 + 1;
-    return o.verificationPhrase =
-        n + "-" + a + "-" + n2, o
-        .verificationPhrase
+    return n + "-" + a + "-" + n2
 }
 
 function NarrFor(k) {
@@ -2624,6 +2626,7 @@ function NarrFor(k) {
                 "GitHub에 본인이 맞는지 확인하고 있어요…",
                 "Pidiendo a GitHub que confirme que eres tú…", "正在请 GitHub 确认是你在登录…", "GitHub से पुष्टि करने को कह रहे हैं कि यह आप ही हैं…", "Demande à GitHub de confirmer que c'est bien vous…", "نطلب من GitHub تأكيد هويتك…", "A pedir ao GitHub que confirme que é você…", "GitHubに本人確認をお願いしています…");
         case "gh-create":
+            if (o.checkingFolder) return setupText("checking");
             return r(
                 "Creating your private folder on GitHub…",
                 "GitHub에 비밀 폴더를 만들고 있어요…",
@@ -2941,11 +2944,11 @@ function kt(e, t) {
         ")", "Date/time: " +
         new Date()
     .toISOString(),
-        "Folder (repo) created: " +
+        "GitHub folder: " +
         (s ? "yes" + (l ?
                 " — " + l : ""
                 ) : "no"),
-        "Database created: " + (
+        "Database: " + (
             c ? "yes" + (d ?
                 " — " + d : ""
                 ) : "no")
@@ -3683,6 +3686,7 @@ function H() {
         });
         var a = {
             version: 1,
+            folderAdopted: !!o.folderAdopted,
             repoUrl: o
                 .repoUrl || e &&
                 e.repoUrl ||
@@ -4600,6 +4604,8 @@ function Nn(e) {
 
 function Ut(e) {
     if (!e) return;
+    o.folderAdopted = !!e.folderAdopted;
+    if (e.verificationPhrase) o.verificationPhrase = e.verificationPhrase;
     if (e.repoUrl) {
         o.repoUrl = e.repoUrl, o
             .repoDone = !0;
@@ -7402,129 +7408,146 @@ function Un() {
     }
     Bt()
 }
-async function st(e) {
-    C("ghCheck", "gh-create",
-            "failed",
-            "already there"), o
-        .repoFull = e.full_name;
-    var t = e.html_url ||
-        "https://github.com/" +
-        e.full_name,
-        n = null;
-    try {
-        n = R()
-    } catch (m) {}
-    var a = null;
-    try {
-        a = JSON.parse(
-            sessionStorage
-            .getItem(
-                "ah_state"
-                ) || "null")
-    } catch (m) {}
-    var s = n && n
-        .verificationPhrase ||
-        a && a
-        .verificationPhrase ||
-        "",
-        c = !1;
-    if (s) try {
-        var l = await A(
-            "/repos/" +
-            e
-            .full_name +
-            "/contents/MEMORY.md"
-            );
-        if (l && l
-            .content) {
-            var d =
-                decodeURIComponent(
-                    escape(
-                        atob(
-                            l
-                            .content
-                            .replace(
-                                /\n/g,
-                                ""
-                                )
-                            )
-                        ));
-            if (d.indexOf(
-                s) !== -1 &&
-                (s !==
-                    "harbor-lantern-42" ||
-                    n && n
-                    .repoUrl ===
-                    t))
-                c = !0
-        }
-    } catch (m) {}
-    if (c) {
-        o.repoUrl = t, o
-            .repoCreated = !0, o
-            .verificationPhrase =
-            s, C("ghCheck",
-                "gh-create",
-                "done", e
-                .full_name),
-        H(), await up();
-        return
-    }
-    o.ghCollision = !0; var ab9 = i("ghAdoptBtn"); if (ab9) ab9.classList.remove("hidden"); var p = i("ghCollision");
-    if (!p) {
-        x("ghErr", r(
-            "Nothing was added to that folder — it's untouched. A folder with this name already exists, so setup stopped. Pick a different name.",
-            "그 폴더에는 아무것도 추가하지 않았어요 — 그대로예요. 이 이름의 폴더가 이미 있어서 설정을 멈췄어요. 다른 이름을 골라 주세요.",
-            "No se agregó nada a esa carpeta — está intacta. Ya existe una carpeta con este nombre, así que la configuración se detuvo. Elige otro nombre."
-            , "那个文件夹里没有添加任何东西——它完好无损。已经有一个同名的文件夹了，所以设置停了下来。换个名字吧。", "उस फ़ोल्डर में कुछ नहीं जोड़ा गया — वह जैसा था वैसा ही है. इस नाम का फ़ोल्डर पहले से मौजूद है, इसलिए सेटअप रुक गया. कोई दूसरा नाम चुनें.", "Rien n'a été ajouté à ce dossier — il est intact. Un dossier portant ce nom existe déjà, donc la configuration s'est arrêtée. Choisissez un autre nom.", "لم يُضف شيء إلى ذلك المجلد — بقي كما هو. يوجد مجلد بهذا الاسم أصلًا، فتوقف الإعداد. اختر اسمًا مختلفًا.", "Nada foi adicionado a essa pasta — está intacta. Já existe uma pasta com este nome, por isso a configuração parou. Escolha outro nome.", "そのフォルダには何も追加されていません — 手つかずのままです。同名のフォルダがすでにあったため、セットアップは止まりました。別の名前を選んでください。"));
-        return
-    }
-    p.innerHTML = "";
-    var h = document
-        .createElement("p");
-    h.style.margin = "0 0 6px",
-        h.textContent = r(
-            "Nothing was added to that folder — it's untouched. A folder with this name already exists. Pick a different name to continue.",
-            "그 폴더에는 아무것도 추가하지 않았어요 — 그대로예요. 이 이름의 폴더가 이미 있어요. 계속하려면 다른 이름을 골라 주세요.",
-            "No se agregó nada a esa carpeta — está intacta. Ya existe una carpeta con este nombre. Elige otro nombre para continuar."
-            , "那个文件夹里没有添加任何东西——它完好无损。已经有一个同名的文件夹了。换个名字继续。", "उस फ़ोल्डर में कुछ नहीं जोड़ा गया — वह जैसा था वैसा ही है. इस नाम का फ़ोल्डर पहले से मौजूद है. जारी रखने के लिए कोई दूसरा नाम चुनें.", "Rien n'a été ajouté à ce dossier — il est intact. Un dossier portant ce nom existe déjà. Choisissez un autre nom pour continuer.", "لم يُضف شيء إلى ذلك المجلد — بقي كما هو. يوجد مجلد بهذا الاسم أصلًا. اختر اسمًا مختلفًا للمتابعة.", "Nada foi adicionado a essa pasta — está intacta. Já existe uma pasta com este nome. Escolha outro nome para continuar.", "そのフォルダには何も追加されていません — 手つかずのままです。同名のフォルダがすでにあります。続けるには別の名前を選んでください。"), p.appendChild(h);
-    var y = document
-        .createElement(
-        "button");
-    if (y.type = "button", y
-        .className =
-        "btn secondary", y.id =
-        "ghRenameBtn", y
-        .textContent = r(
-            "Pick a different name",
-            "다른 이름 고르기",
-            "Elegir otro nombre"
-            , "换个名字", "कोई दूसरा नाम चुनें", "Choisir un autre nom", "اختر اسمًا مختلفًا", "Escolha outro nome", "別の名前を選ぶ"), y
-        .addEventListener(
-            "click",
-            function() {
-                k("step1");
-                var m = i("ghDetails");
-                if (m) m.open = !0;
-                try { PaintNameBlock() } catch (f) {}
-                var b = i("fRepo");
-                if (b) {
-                    if (b
-                        .focus(),
-                        b.select
-                        ) b
-                        .select()
-                }
-            }), p.appendChild(
-        y), p.classList.remove(
-            "hidden"), !c) x(
-        "ghErr", r(
-            "Nothing was uploaded — setup stopped because that name is already taken.",
-            "아무것도 올리지 않았어요 — 그 이름이 이미 쓰이고 있어서 설정을 멈췄어요.",
-            "No se subió nada — la configuración se detuvo porque ese nombre ya está en uso."
-            , "什么都没上传——设置停了下来，因为这个名字已经被占用了。", "कुछ अपलोड नहीं हुआ — सेटअप रुक गया क्योंकि वह नाम पहले से लिया हुआ है.", "Rien n'a été envoyé — la configuration s'est arrêtée parce que ce nom est déjà pris.", "لم يُرفع شيء — توقف الإعداد لأن ذلك الاسم مأخوذ أصلًا.", "Nada foi enviado — a configuração parou porque esse nome já está ocupado.", "何もアップロードされていません — その名前がすでに使われていたため、セットアップは止まりました。"));
-    if (!c) { var sl125 = i("ghStateLine"); if (sl125) { sl125.textContent = ""; sl125.classList.add("hidden"); sl125.classList.remove("is-err") } }
+// These rows follow the existing r() locale order: en, ko, es, zh, hi, fr, ar, pt, ja.
+function setupText(key) {
+    return r.apply(null, setupStrings[key]);
 }
+var setupStrings = {
+    folderQuestion: ["Do you already have a private home folder on GitHub?", "GitHub에 이미 비공개 홈 폴더가 있나요?", "¿Ya tienes una carpeta privada para tu hogar en GitHub?", "你在 GitHub 上已经有私有主文件夹了吗？", "क्या GitHub पर आपका निजी होम फ़ोल्डर पहले से है?", "Avez-vous déjà un dossier privé pour votre espace sur GitHub ?", "هل لديك مجلد خاص لمنزلك على GitHub؟", "Já tem uma pasta privada para a sua casa no GitHub?", "GitHub に自分のホーム用の非公開フォルダはありますか？"],
+    connect: ["Yes, connect my folder", "네, 내 폴더 연결하기", "Sí, conectar mi carpeta", "有，连接我的文件夹", "हाँ, मेरा फ़ोल्डर जोड़ें", "Oui, connecter mon dossier", "نعم، اربط مجلدي", "Sim, ligar a minha pasta", "はい、フォルダを接続する"],
+    create: ["Create a private folder", "비공개 폴더 만들기", "Crear una carpeta privada", "创建私有文件夹", "निजी फ़ोल्डर बनाएँ", "Créer un dossier privé", "أنشئ مجلدًا خاصًا", "Criar uma pasta privada", "非公開フォルダを作る"],
+    templateConnect: ["Connect the folder I just created", "방금 만든 폴더 연결하기", "Conectar la carpeta que acabo de crear", "连接我刚创建的文件夹", "अभी बनाया फ़ोल्डर जोड़ें", "Connecter le dossier que je viens de créer", "اربط المجلد الذي أنشأته للتو", "Ligar a pasta que acabei de criar", "今作ったフォルダを接続する"],
+    found: ["Welcome back — this is your home", "다시 오셨네요 — 여기가 내 홈이에요", "Te damos la bienvenida de nuevo a tu hogar", "欢迎回来，这里就是你的家", "वापस स्वागत है — यह आपका घर है", "Bon retour chez vous", "مرحبًا بعودتك إلى منزلك", "Boas-vindas de volta à sua casa", "おかえりなさい。ここがあなたのホームです"],
+    keyNote: ["Your files stay in place. If the house key is missing, we’ll add it to MEMORY.md.", "파일은 그대로 둬요. 집 열쇠가 없으면 MEMORY.md에 추가해요.", "Tus archivos se quedan donde están. Si falta la llave de tu hogar, la añadiremos a MEMORY.md.", "你的文件会留在原处。如果没有家门钥匙，我们会将它添加到 MEMORY.md。", "आपकी फ़ाइलें अपनी जगह रहेंगी। घर की चाबी नहीं है तो हम उसे MEMORY.md में जोड़ेंगे।", "Vos fichiers restent en place. Si la clé de votre espace manque, nous l’ajouterons à MEMORY.md.", "تبقى ملفاتك في مكانها. إذا كان مفتاح المنزل مفقودًا، فسنضيفه إلى MEMORY.md.", "Os seus ficheiros ficam onde estão. Se faltar a chave da casa, vamos adicioná-la a MEMORY.md.", "ファイルはそのままです。ホームの鍵がなければ MEMORY.md に追加します。"],
+    useFolder: ["Use this folder", "이 폴더 쓰기", "Usar esta carpeta", "使用此文件夹", "यह फ़ोल्डर इस्तेमाल करें", "Utiliser ce dossier", "استخدم هذا المجلد", "Usar esta pasta", "このフォルダを使う"],
+    checking: ["Checking your private folder…", "비공개 폴더 확인 중…", "Comprobando tu carpeta privada…", "正在检查你的私有文件夹…", "आपका निजी फ़ोल्डर जाँचा जा रहा है…", "Vérification de votre dossier privé…", "جارٍ التحقق من مجلدك الخاص…", "A verificar a sua pasta privada…", "非公開フォルダを確認しています…"],
+    adopted: ["GitHub confirmed your private folder. Any AI you give access can use it.", "GitHub에서 비공개 폴더를 확인했어요. 접근을 허용한 AI는 모두 쓸 수 있어요.", "GitHub confirmó tu carpeta privada. Cualquier IA a la que des acceso puede usarla.", "GitHub 已确认你的私有文件夹。你授权的任何 AI 都可以使用它。", "GitHub ने आपके निजी फ़ोल्डर की पुष्टि की। आप जिस AI को पहुँच दें, वह इसे इस्तेमाल कर सकता है।", "GitHub a confirmé votre dossier privé. Chaque IA à laquelle vous donnez accès peut l’utiliser.", "أكّد GitHub مجلدك الخاص. يمكن لأي ذكاء اصطناعي تمنحه الإذن استخدامه.", "O GitHub confirmou a sua pasta privada. Qualquer IA a que der acesso pode usá-la.", "GitHub で非公開フォルダを確認しました。許可した AI はどれでも利用できます。"],
+    missing: ["GitHub could not find this folder. Check its name and which folder you allowed on GitHub.", "GitHub에서 폴더를 찾지 못했어요. 이름과 접근을 허용한 폴더를 확인해 주세요.", "GitHub no encontró esta carpeta. Comprueba el nombre y qué carpeta autorizaste.", "GitHub 找不到此文件夹。请核对名称和授权的文件夹。", "GitHub को यह फ़ोल्डर नहीं मिला। नाम और अनुमति जाँचें।", "GitHub ne trouve pas ce dossier. Vérifiez son nom et le dossier autorisé.", "لم يعثر GitHub على المجلد. تحقق من اسمه ومن المجلد الذي سمحت بالوصول إليه.", "O GitHub não encontrou a pasta. Verifique o nome e a pasta que autorizou.", "フォルダが見つかりません。名前と GitHub で許可したフォルダを確認してください。"],
+    memory: ["Set up memory", "메모리 설정", "Configurar la memoria", "设置记忆库", "मेमोरी सेट करें", "Configurer la mémoire", "إعداد الذاكرة", "Configurar a memória", "メモリを設定する"],
+    memoryDoor: ["Your database · create or connect", "내 데이터베이스 · 만들기 또는 연결", "Tu base de datos · crear o conectar", "你的数据库 · 创建或连接", "आपका डेटाबेस · बनाएँ या जोड़ें", "Votre base de données · créer ou connecter", "قاعدة بياناتك · إنشاء أو ربط", "A sua base de dados · criar ou ligar", "データベースの作成・接続"],
+    memoryIntro: ["Supabase is the default. You can use another database with your home.", "기본값은 Supabase예요. 내 홈에 다른 데이터베이스를 써도 돼요.", "Supabase es la opción predeterminada. Puedes usar otra base de datos con tu hogar.", "默认使用 Supabase。你也可以为自己的家选用其他数据库。", "Supabase डिफ़ॉल्ट है। अपने घर के लिए आप दूसरा डेटाबेस भी इस्तेमाल कर सकते हैं।", "Supabase est le choix par défaut. Votre espace peut utiliser une autre base de données.", "Supabase هو الخيار الافتراضي. يمكنك استخدام قاعدة بيانات أخرى مع منزلك.", "O Supabase é a opção predefinida. Pode usar outra base de dados na sua casa.", "標準は Supabase です。ホームにはほかのデータベースも使えます。"],
+    useDatabase: ["Use my existing database", "기존 데이터베이스 쓰기", "Usar mi base de datos existente", "使用我已有的数据库", "मेरा मौजूदा डेटाबेस इस्तेमाल करें", "Utiliser ma base de données existante", "استخدم قاعدة بياناتي الحالية", "Usar a minha base de dados existente", "既存のデータベースを使う"],
+    chooseProject: ["Choose your Supabase project", "Supabase 프로젝트 선택", "Elige tu proyecto de Supabase", "选择你的 Supabase 项目", "अपना Supabase प्रोजेक्ट चुनें", "Choisissez votre projet Supabase", "اختر مشروع Supabase", "Escolha o seu projeto Supabase", "Supabase プロジェクトを選ぶ"],
+    noProjects: ["No projects were found in this Supabase account.", "이 Supabase 계정에는 프로젝트가 없어요.", "Esta cuenta de Supabase no tiene proyectos.", "此 Supabase 账户中没有项目。", "इस Supabase खाते में कोई प्रोजेक्ट नहीं मिला।", "Aucun projet trouvé dans ce compte Supabase.", "لم نعثر على مشاريع في حساب Supabase هذا.", "Não foram encontrados projetos nesta conta Supabase.", "この Supabase アカウントにプロジェクトはありません。"],
+    useProject: ["Connect this project", "이 프로젝트 연결하기", "Conectar este proyecto", "连接此项目", "यह प्रोजेक्ट जोड़ें", "Connecter ce projet", "اربط هذا المشروع", "Ligar este projeto", "このプロジェクトを接続する"],
+    checkingProject: ["Checking your database…", "데이터베이스 확인 중…", "Comprobando tu base de datos…", "正在检查你的数据库…", "आपका डेटाबेस जाँचा जा रहा है…", "Vérification de votre base de données…", "جارٍ التحقق من قاعدة بياناتك…", "A verificar a sua base de dados…", "データベースを確認しています…"],
+    schema: ["This project needs the five home tables with row-level security enabled.", "이 프로젝트에는 행 수준 보안이 켜진 홈 테이블 5개가 필요해요.", "Este proyecto necesita las cinco tablas del hogar con seguridad por fila.", "此项目需要五个已启用行级安全的主表。", "इस प्रोजेक्ट में घर की पाँच टेबल और हर टेबल पर पंक्ति-स्तरीय सुरक्षा चाहिए।", "Ce projet doit contenir les cinq tables de votre espace avec la sécurité au niveau des lignes activée.", "يحتاج هذا المشروع إلى جداول المنزل الخمسة مع تفعيل الأمان على مستوى الصف.", "Este projeto precisa das cinco tabelas da casa com segurança ao nível da linha.", "ホーム用の5つのテーブルと各テーブルの行レベルセキュリティが必要です。"],
+    conflict: ["This folder points to another database. Choose the project already linked to your home.", "이 폴더는 다른 데이터베이스에 연결돼 있어요. 홈에 연결된 프로젝트를 골라 주세요.", "Esta carpeta apunta a otra base de datos. Elige el proyecto vinculado a tu hogar.", "此文件夹已指向其他数据库。请选择已连接到你的家的项目。", "यह फ़ोल्डर दूसरे डेटाबेस से जुड़ा है। अपने घर से जुड़ा प्रोजेक्ट चुनें।", "Ce dossier pointe vers une autre base. Choisissez le projet déjà lié à votre espace.", "يشير هذا المجلد إلى قاعدة بيانات أخرى. اختر المشروع المرتبط بمنزلك.", "Esta pasta aponta para outra base de dados. Escolha o projeto já ligado à sua casa.", "このフォルダは別のデータベースを参照しています。ホームに接続済みのプロジェクトを選んでください。"],
+    folderError: ["Your folder needs attention", "폴더를 확인해 주세요", "Revisa tu carpeta", "请检查你的文件夹", "अपना फ़ोल्डर जाँचें", "Vérifiez votre dossier", "تحقق من مجلدك", "Verifique a sua pasta", "フォルダを確認してください"],
+    memoryError: ["Your database could not be connected", "데이터베이스를 연결하지 못했어요", "No se pudo conectar tu base de datos", "未能连接你的数据库", "आपका डेटाबेस जोड़ा नहीं जा सका", "Impossible de connecter votre base de données", "تعذّر ربط قاعدة بياناتك", "Não foi possível ligar a sua base de dados", "データベースを接続できませんでした"]
+};
+
+// The template opens on GitHub in a separate tab. Keep its target in this tab,
+// then bind it to the same OAuth state that validates the provider callback.
+var foundFolder = null;
+function templateTarget() {
+    try {
+        var pending = JSON.parse(sessionStorage.getItem("ah_template_folder") || "null");
+        if (pending && pending.started > Date.now() - 3600000) return pending;
+    } catch (_) {}
+    return null;
+}
+function clearFolderChoice() {
+    foundFolder = null;
+    sessionStorage.removeItem("ah_template_folder");
+    i("step1").removeAttribute("data-folder-found");
+    paintSetupChoices();
+}
+function showFolder(repo) {
+    foundFolder = repo;
+    i("folderFoundName").textContent = repo.full_name;
+    i("step1").setAttribute("data-folder-found", "");
+    k("step1");
+    i("folderFoundTitle").focus();
+}
+async function st(repo, pending) {
+    if (repo.private !== true) throw Error(r("That folder is public, so it can't be your private home. Pick a different name, or make that folder private in GitHub first.", "그 폴더는 공개라서 비밀 홈이 될 수 없어요. 다른 이름을 고르거나, GitHub에서 먼저 비공개로 바꿔 주세요.", "Esa carpeta es pública, así que no puede ser tu casa privada. Elige otro nombre, o hazla privada en GitHub primero.", "那个文件夹是公开的，不能当你的私密家。换个名字，或者先在 GitHub 里把它设为私有。", "वह फ़ोल्डर सार्वजनिक है, इसलिए वह आपका निजी घर नहीं बन सकता। दूसरा नाम चुनें, या पहले GitHub में उसे निजी बनाएँ।", "Ce dossier est public, il ne peut donc pas être votre maison privée. Choisissez un autre nom, ou rendez-le privé dans GitHub d'abord.", "ذلك المجلد علني، فلا يمكن أن يكون بيتك الخاص. اختر اسمًا آخر، أو اجعله خاصًا في GitHub أولًا.", "Essa pasta é pública, por isso não pode ser a sua casa privada. Escolha outro nome, ou torne-a privada no GitHub primeiro.", "そのフォルダは公開されているので、プライベートなホームにはできません。別の名前を選ぶか、GitHubで先に非公開にしてください。"));
+    var created = Date.parse(repo.created_at);
+    var expected = o.ghUser + "/" + (pending && pending.name);
+    if (pending && pending.started > Date.now() - 3600000 && repo.full_name.toLowerCase() === expected.toLowerCase() &&
+            (!Number.isFinite(created) || created >= pending.started - 1000) &&
+            (!repo.template_repository || repo.template_repository.full_name === "aur42/agent-home-template")) {
+        foundFolder = repo;
+        await GhAdopt();
+    } else {
+        showFolder(repo);
+    }
+}
+function decodeHomeFile(file) {
+    if (!file || typeof file.content !== "string" || !file.sha || (file.encoding && file.encoding !== "base64"))
+        throw Error("GitHub: incomplete file response");
+    var bytes = Uint8Array.from(atob(file.content), function(ch) { return ch.charCodeAt(0) });
+    if (typeof file.size === "number" && file.size !== bytes.length) throw Error("GitHub: incomplete file");
+    return new TextDecoder("utf-8", {fatal: true, ignoreBOM: true}).decode(bytes);
+}
+async function readHouseKey(full) {
+    var path = "/repos/" + full + "/contents/MEMORY.md";
+    var file = await A(path);
+    var contents = decodeHomeFile(file);
+    var line = /^([ \t]*(?:-[ \t]+)?Verification phrase:[ \t]*)([^\r\n]*)/im;
+    var match = contents.match(line);
+    var key = match && match[2].trim();
+    if (key) return key;
+
+    // A fresh template has a blank key. Preserve every other line, and use
+    // the SHA from this exact read so a simultaneous edit can never be lost.
+    key = freshHouseKey();
+    var updated = match ? contents.replace(line, function(_, prefix) { return prefix + key }) :
+        contents + "\n- Verification phrase: " + key + "\n";
+    await A(path, {method: "PUT", body: JSON.stringify({
+        message: "Set the home verification phrase", sha: file.sha, content: vt(updated)
+    })});
+    var confirmed = decodeHomeFile(await A(path)).match(line);
+    if (!confirmed || confirmed[2].trim() !== key) throw Error("MEMORY.md: verification phrase read-back mismatch");
+    return key;
+}
+async function GhAdopt() {
+    if (!foundFolder || o.adoptingFolder) return;
+    var full = foundFolder.full_name;
+    o.adoptingFolder = true;
+    i("ghAdoptBtn").disabled = i("folderChoiceBack").disabled = true;
+    try {
+        if (E) {
+            clearFolderChoice();
+            Q("✓ Your folder is your home", setupText("adopted"), "Continue", function() { k("step2") });
+            return;
+        }
+        var repo = await A("/repos/" + full);
+        if (repo.private !== true || repo.full_name.toLowerCase() !== full.toLowerCase()) throw Error(r("That folder is public, so it can't be your private home. Pick a different name, or make that folder private in GitHub first.", "그 폴더는 공개라서 비밀 홈이 될 수 없어요. 다른 이름을 고르거나, GitHub에서 먼저 비공개로 바꿔 주세요.", "Esa carpeta es pública, así que no puede ser tu casa privada. Elige otro nombre, o hazla privada en GitHub primero.", "那个文件夹是公开的，不能当你的私密家。换个名字，或者先在 GitHub 里把它设为私有。", "वह फ़ोल्डर सार्वजनिक है, इसलिए वह आपका निजी घर नहीं बन सकता। दूसरा नाम चुनें, या पहले GitHub में उसे निजी बनाएँ।", "Ce dossier est public, il ne peut donc pas être votre maison privée. Choisissez un autre nom, ou rendez-le privé dans GitHub d'abord.", "ذلك المجلد علني، فلا يمكن أن يكون بيتك الخاص. اختر اسمًا آخر، أو اجعله خاصًا في GitHub أولًا.", "Essa pasta é pública, por isso não pode ser a sua casa privada. Escolha outro nome, ou torne-a privada no GitHub primeiro.", "そのフォルダは公開されているので、プライベートなホームにはできません。別の名前を選ぶか、GitHubで先に非公開にしてください。"));
+        var files = await A("/repos/" + full + "/contents/");
+        var missing = ["README.md", "USER.md", "AGENTS.md", "MEMORY.md"].filter(function(name) {
+            return !files.some(function(file) { return file.name === name && (!file.type || file.type === "file") });
+        });
+        if (missing.length) throw Error(r("That folder is missing files a home needs: %F%. Nothing was changed. Pick a different name, or add the template files there first.", "그 폴더에는 홈에 필요한 파일이 없어요: %F%. 아무것도 바꾸지 않았어요. 다른 이름을 고르거나, 템플릿 파일을 먼저 넣어 주세요.", "A esa carpeta le faltan archivos que una casa necesita: %F%. No se cambió nada. Elige otro nombre, o añade primero los archivos de la plantilla.", "那个文件夹缺了家需要的文件：%F%。什么都没改。换个名字，或者先把模板文件放进去。", "उस फ़ोल्डर में घर के लिए ज़रूरी फ़ाइलें नहीं हैं: %F%। कुछ नहीं बदला गया। दूसरा नाम चुनें, या पहले टेम्पलेट फ़ाइलें वहाँ जोड़ें।", "Il manque à ce dossier des fichiers qu'une maison exige : %F%. Rien n'a été changé. Choisissez un autre nom, ou ajoutez-y d'abord les fichiers du modèle.", "ينقص ذلك المجلد ملفات يحتاجها البيت: %F%. لم يتغير شيء. اختر اسمًا آخر، أو أضف ملفات القالب هناك أولًا.", "Faltam nessa pasta ficheiros de que uma casa precisa: %F%. Nada foi alterado. Escolha outro nome, ou adicione primeiro os ficheiros do modelo.", "そのフォルダには、ホームに必要なファイルが足りません：%F%。何も変更されていません。別の名前を選ぶか、テンプレートファイルを先に入れてください。").replace("%F%", missing.join(", ")));
+        o.verificationPhrase = await readHouseKey(full);
+        o.repoFull = full;
+        o.repoUrl = repo.html_url || "https://github.com/" + full;
+        o.repoName = full.split("/")[1];
+        o.repoDone = o.repoCreated = true;
+        o.folderAdopted = true;
+        H();
+        clearFolderChoice();
+        GhDoneShow();
+        Q("✓ Your folder is your home", setupText("adopted"), "Continue", function() { k("step2") });
+    } catch (err) {
+        setupFailure(err, "folder", GhAdopt);
+    } finally {
+        i("ghAdoptBtn").disabled = i("folderChoiceBack").disabled = false;
+        o.adoptingFolder = false;
+    }
+}
+// Technical details from providers and the short integrity diagnostics below are
+// English pending translation. The screen headings and actions use all nine locales.
+function setupFailure(err, part, retry) {
+    var folder = part === "folder";
+    re(err.message, folder ? "github" : "supabase", retry, folder ? "step1" : "step2");
+    u("failedH1", setupText(folder ? "folderError" : "memoryError"));
+    if (!/^(GitHub|Supabase|MEMORY\.md|agent\.config\.json)\s*(?:said no|:)|^Failed to fetch/i.test(err.message))
+        u("failedLine", err.message);
+    // The generic create checklist would describe operations this path never ran.
+    i("workCheck").replaceChildren();
+}
+
 
 function B() {
     if (document.activeElement !== i("fName")) window.__nbScene = !1;
@@ -7565,33 +7588,6 @@ async function A(e, t) {
     return a
 }
 function GhDoneShow() { var b = i("ghDoneBtn"); if (b) b.classList.remove("hidden") }
-function GhAdoptSay(msg) { var p = i("ghCollision"); if (p) { p.textContent = msg; p.classList.remove("hidden"); var dt = p.closest ? p.closest("details") : null; if (dt) dt.open = !0; var land = function() { try { var y = p.getBoundingClientRect().top + window.scrollY - 120; window.scrollTo(0, Math.max(0, y)) } catch (e) {} }; land(); setTimeout(land, 400) } var b = i("ghAdoptBtn"); if (b) b.disabled = !1 }
-
-async function GhAdopt() {
-    var b = i("ghAdoptBtn");
-    if (b) b.disabled = !0;
-    try {
-        B();
-        var full = (o.ghUser || "") + "/" + (o.repoName || "agent-home");
-        var rp = await A("/repos/" + full);
-        if (!rp || rp.private !== !0) { GhAdoptSay(r("That folder is public, so it can't be your private home. Pick a different name, or make that folder private in GitHub first.", "그 폴더는 공개라서 비밀 홈이 될 수 없어요. 다른 이름을 고르거나, GitHub에서 먼저 비공개로 바꿔 주세요.", "Esa carpeta es pública, así que no puede ser tu casa privada. Elige otro nombre, o hazla privada en GitHub primero.", "那个文件夹是公开的，不能当你的私密家。换个名字，或者先在 GitHub 里把它设为私有。", "वह फ़ोल्डर सार्वजनिक है, इसलिए वह आपका निजी घर नहीं बन सकता। दूसरा नाम चुनें, या पहले GitHub में उसे निजी बनाएँ।", "Ce dossier est public, il ne peut donc pas être votre maison privée. Choisissez un autre nom, ou rendez-le privé dans GitHub d'abord.", "ذلك المجلد علني، فلا يمكن أن يكون بيتك الخاص. اختر اسمًا آخر، أو اجعله خاصًا في GitHub أولًا.", "Essa pasta é pública, por isso não pode ser a sua casa privada. Escolha outro nome, ou torne-a privada no GitHub primeiro.", "そのフォルダは公開されているので、プライベートなホームにはできません。別の名前を選ぶか、GitHubで先に非公開にしてください。")); return }
-        var cs = await A("/repos/" + full + "/contents/");
-        var names = (cs || []).map(function(f) { return f.name });
-        var need = ["README.md", "USER.md", "AGENTS.md", "MEMORY.md"].filter(function(f) { return names.indexOf(f) === -1 });
-        if (need.length) { GhAdoptSay(r("That folder is missing files a home needs: %F%. Nothing was changed. Pick a different name, or add the template files there first.", "그 폴더에는 홈에 필요한 파일이 없어요: %F%. 아무것도 바꾸지 않았어요. 다른 이름을 고르거나, 템플릿 파일을 먼저 넣어 주세요.", "A esa carpeta le faltan archivos que una casa necesita: %F%. No se cambió nada. Elige otro nombre, o añade primero los archivos de la plantilla.", "那个文件夹缺了家需要的文件：%F%。什么都没改。换个名字，或者先把模板文件放进去。", "उस फ़ोल्डर में घर के लिए ज़रूरी फ़ाइलें नहीं हैं: %F%। कुछ नहीं बदला गया। दूसरा नाम चुनें, या पहले टेम्पलेट फ़ाइलें वहाँ जोड़ें।", "Il manque à ce dossier des fichiers qu'une maison exige : %F%. Rien n'a été changé. Choisissez un autre nom, ou ajoutez-y d'abord les fichiers du modèle.", "ينقص ذلك المجلد ملفات يحتاجها البيت: %F%. لم يتغير شيء. اختر اسمًا آخر، أو أضف ملفات القالب هناك أولًا.", "Faltam nessa pasta ficheiros de que uma casa precisa: %F%. Nada foi alterado. Escolha outro nome, ou adicione primeiro os ficheiros do modelo.", "そのフォルダには、ホームに必要なファイルが足りません：%F%。何も変更されていません。別の名前を選ぶか、テンプレートファイルを先に入れてください。").replace("%F%", need.join(", "))); return }
-        o.repoFull = rp.full_name, o.repoUrl = rp.html_url || "https://github.com/" + full, o.repoCreated = !0, o.repoDone = !0, o.ghCollision = !1;
-        C("ghCheck", "gh-create", "done", rp.full_name), C("ghCheck", "gh-upload", "done", "already there"), C("ghCheck", "gh-readback", "done", "verified");
-        H();
-        U("ghOk", "<strong>" + w(r("Done — checked just now.", "완료 — 방금 확인했어요.", "Listo — revisado justo ahora.", "完成——刚刚检查过。", "हो गया — अभी जाँचा गया।", "Terminé — vérifié à l'instant.", "تم — فُحص الآن تمامًا.", "Pronto — verificado agora mesmo.", "完了 — たった今確認しました。")) + "</strong> " + w(r("This folder is your home now:", "이 폴더가 이제 내 홈이에요:", "Esta carpeta es tu casa ahora:", "这个文件夹现在就是你的家：", "यह फ़ोल्डर अब आपका घर है:", "Ce dossier est votre maison maintenant :", "هذا المجلد هو بيتك الآن:", "Esta pasta é a sua casa agora:", "このフォルダがあなたのホームです：")) + ' <a href="' + w(o.repoUrl) + '" target="_blank" rel="noopener">' + w(o.repoUrl) + "</a>");
-        var cp = i("ghCollision"); if (cp) cp.innerHTML = "";
-        var ge9 = i("ghErr"); if (ge9) ge9.textContent = "";
-        GhDoneShow(), Q("✓ Your folder is your home", "Checked on GitHub just now.", "Continue", function() { k("step2") })
-    } catch (e2) {
-        GhAdoptSay(r("GitHub didn't answer — nothing was changed. Try again.", "GitHub가 답하지 않았어요 — 아무것도 바꾸지 않았어요. 다시 해 보세요.", "GitHub no respondió — no se cambió nada. Inténtalo de nuevo.", "GitHub 没有回应——什么都没改。再试一次。", "GitHub ने जवाब नहीं दिया — कुछ नहीं बदला गया। फिर कोशिश करें।", "GitHub n'a pas répondu — rien n'a été changé. Réessayez.", "لم يرد GitHub — لم يتغير شيء. حاول مجددًا.", "O GitHub não respondeu — nada foi alterado. Tente outra vez.", "GitHubから応答がありませんでした — 何も変更されていません。もう一度お試しください。"))
-    } finally {
-        if (b) b.disabled = !1
-    }
-}
 async function up() {
     var p = xt(ee());
     C("ghCheck", "gh-upload",
@@ -7681,8 +7677,8 @@ async function up() {
             w(o.repoUrl) +
             "</a>. The token field has been cleared on this page; you can revoke the token in GitHub settings whenever you like."), Ce(), GhDoneShow()
 }
-async function Dt() { if (o._dtRun) return; o._dtRun = !0; try { return await DtRun() } finally { o._dtRun = !1 } }
-async function DtRun() {
+async function Dt(lookupOnly, template) { if (o._dtRun) return; o._dtRun = !0; try { return await DtRun(lookupOnly === true, template) } finally { o._dtRun = !1 } }
+async function DtRun(lookupOnly, template) {
     if (E) {
         Q("✓ Your folder is created",
             "Checked on GitHub just now.",
@@ -7694,7 +7690,7 @@ async function DtRun() {
     }
     if (P("ghErr"), i("ghOk")
         .classList.remove(
-            "show"), (function() { var gb = i("ghDoneBtn"); if (gb) gb.classList.add("hidden") })(), o.ghCollision = !1, B(), !o
+            "show"), (function() { var gb = i("ghDoneBtn"); if (gb) gb.classList.add("hidden") })(), B(), !o
         .ghToken) o.ghToken = i(
             "ghToken").value
         .trim(), TkSave();
@@ -7751,11 +7747,14 @@ async function DtRun() {
                 o.ghUser +
                 "/" + o
                 .repoName)
-        } catch (f) {}
-        if (l && l.id) {
-            await st(l);
-            return
+        } catch (f) {
+            if (!/GitHub said no \(HTTP 404\)/.test(f.message)) throw f;
         }
+        if (l && l.id) {
+            await st(l, template);
+            return "existing";
+        }
+        if (lookupOnly) throw Error(setupText("missing"));
         try {
             c = await A(
                 "/user/repos", {
@@ -7790,11 +7789,12 @@ async function DtRun() {
                 } catch (g) {}
                 if (d && d.id) {
                     await st(d);
-                    return
+                    return "existing"
                 }
             }
             throw f
         }
+        o.folderAdopted = false;
         o.repoFull = c
             .full_name, o
             .repoUrl = c
@@ -7909,6 +7909,119 @@ function Ht(e) { SbZeroHome();
             }
         })()
 }
+var projectListRun = 0;
+var connectingProject = false;
+
+function closeProjectPicker() {
+    projectListRun++;
+    i("sbPreflight").removeAttribute("data-project-picker");
+    i("existingProject").replaceChildren();
+    i("useProjectBtn").disabled = true;
+}
+async function chooseExistingMemory() {
+    if (connectingProject) return;
+    if (!o.ghToken && !E) TkLoad();
+    if (!E && !o.ghToken && L("github")) {
+        X("github", "existing-memory");
+        return;
+    }
+    if (!o.sbToken) o.sbToken = i("sbToken").value.trim();
+    if (!E && !o.sbToken && L("supabase")) {
+        X("supabase", "existing");
+        return;
+    }
+    if (!E && !o.sbToken) {
+        k("step2");
+        i("sbDetails").open = i("sbAdvanced").open = true;
+        i("sbToken").focus();
+        return;
+    }
+    var run = ++projectListRun;
+    var select = i("existingProject");
+    select.replaceChildren();
+    i("useProjectBtn").disabled = true;
+    i("sbPreflight").setAttribute("data-project-picker", "");
+    k("step2");
+    u("projectStatus", setupText("checkingProject"));
+    try {
+        var projects = E ? [{ref: "preview", name: "Supabase"}] : await G("/projects");
+        if (run !== projectListRun) return;
+        if (!Array.isArray(projects)) throw Error("Supabase: unexpected projects response");
+        select.add(new Option(setupText("chooseProject"), ""));
+        projects.forEach(function(project) {
+            var ref = project.ref || project.id;
+            if (typeof ref === "string" && /^[a-z0-9-]+$/i.test(ref)) {
+                select.add(new Option(project.name + " · " + ref, ref));
+            }
+        });
+        u("projectStatus", select.length > 1 ? "" : setupText("noProjects"));
+        select.focus();
+    } catch (err) {
+        if (run === projectListRun) setupFailure(err, "memory", chooseExistingMemory);
+    }
+}
+async function homeConfig() {
+    var path = "/repos/" + o.repoFull + "/contents/agent.config.json";
+    try {
+        var file = await A(path);
+        return {path: path, sha: file.sha, value: JSON.parse(decodeHomeFile(file))};
+    } catch (err) {
+        if (!/GitHub said no \(HTTP 404\)/.test(err.message)) throw err;
+        return {path: path, value: {}};
+    }
+}
+async function linkExistingProject(ref, url) {
+    await jt();
+    var config = await homeConfig();
+    if (!config.value || typeof config.value !== "object" || Array.isArray(config.value)) throw Error("agent.config.json: invalid document");
+    var current = config.value.supabase || {};
+    if (typeof current !== "object" || Array.isArray(current)) throw Error("agent.config.json: invalid Supabase configuration");
+    if ((current.project_ref && current.project_ref !== ref) ||
+            (current.url && current.url.replace(/\/$/, "") !== url)) throw Error(setupText("conflict"));
+    if (current.project_ref === ref && current.url === url && (!config.value.canonical_store || config.value.canonical_store === "database")) return;
+    var next = config.sha ? config.value : JSON.parse(fn({repoName: o.repoName, projectRef: ref, projectUrl: url}));
+    next.canonical_store = "database";
+    next.supabase = Object.assign({}, current, {project_ref: ref, url: url});
+    await A(config.path, {method: "PUT", body: JSON.stringify({
+        message: "Connect existing home database", sha: config.sha, content: vt(JSON.stringify(next, null, 2) + "\n")
+    })});
+    var checked = (await homeConfig()).value.supabase;
+    if (!checked || checked.project_ref !== ref || checked.url !== url) throw Error("agent.config.json: project read-back mismatch");
+}
+async function useExistingProject() {
+    var ref = i("existingProject").value;
+    if (!ref || connectingProject) return;
+    if (E) { closeProjectPicker(); await Se(); return }
+    var run = projectListRun;
+    connectingProject = true;
+    i("projectPickerFields").disabled = true;
+    u("projectStatus", setupText("checkingProject"));
+    try {
+        // A project name is not unique. Re-check the selected reference with
+        // the current account, then verify the same RLS tables as create.
+        var project = await G("/projects/" + encodeURIComponent(ref));
+        if ((project.ref || project.id) !== ref) throw Error("Supabase: project reference mismatch");
+        var rows = await xe(ref, "select count(*)::int as n from pg_tables where schemaname='public' and rowsecurity and tablename in ('memories','people','goals','conversations','sources')");
+        if (!rows || !rows[0] || Number(rows[0].n) !== 5) throw Error(setupText("schema"));
+        if (run !== projectListRun) return;
+        var url = "https://" + ref + ".supabase.co";
+        await linkExistingProject(ref, url);
+        o.projectRef = o.databaseId = ref;
+        o.projectUrl = url;
+        o.dbDone = o.wired = true;
+        o.dbSkipped = false;
+        H();
+        closeProjectPicker();
+        await Se();
+    } catch (err) {
+        setupFailure(err, "memory", chooseExistingMemory);
+    } finally {
+        connectingProject = false;
+        i("projectPickerFields").disabled = false;
+    }
+}
+
+
 async function G(e, t) {
     if (E) throw Error(
         "Preview — nothing is created"
@@ -8478,6 +8591,13 @@ async function Gt() {
         .textContent =
         "Committing…";
     try {
+        if (o.folderAdopted) {
+            if (o.dbDone && !o.dbSkipped) await linkExistingProject(o.projectRef, o.projectUrl);
+            o.wired = true;
+            H();
+            await Se();
+            return;
+        }
         var t = ee();
         C("wireCheck",
                 "wire-config",
@@ -8828,7 +8948,7 @@ function L(e) {
         T.oauthExchangeUrl)
 }
 
-function X(e) {
+function X(e, setupChoice) {
     if (!F()) {
         x(e === "supabase" ?
             "sbErr" : "ghErr",
@@ -8850,7 +8970,10 @@ function X(e) {
             "ah_oauth", JSON
             .stringify({
                 state: a,
-                provider: e
+                provider: e,
+                setupChoice: typeof setupChoice === "string" ? setupChoice : "",
+                folderName: e === "github" ? B() : "",
+                templateFolder: setupChoice === "template" ? templateTarget() : null
             }))
     } catch (l) {}
     try {
@@ -9339,31 +9462,18 @@ async function qn() {
                     return
                 }
             }
-            U("ghConnected",
-                    l.login ? r(
-                        "Welcome back — GitHub says you're <strong>@" +
-                        w(l.login) +
-                        "</strong>. That's you.",
-                        "다시 오셨네요 — GitHub가 <strong>@" +
-                        w(l.login) +
-                        "</strong> 님이라고 알려 줬어요. 본인이 맞아요.",
-                        "Hola de nuevo — GitHub dice que eres <strong>@" +
-                        w(l.login) +
-                        "</strong>. Eres tú."
-                        , "欢迎回来——GitHub 说你是 <strong>@" + w(l.login) + "</strong>。是你本人。", "फिर से स्वागत है — GitHub कहता है कि आप <strong>@" + w(l.login) + "</strong> हैं. यह आप ही हैं.", "Bon retour — GitHub dit que vous êtes <strong>@" +
-                        w(l.login) +
-                        "</strong>. C'est bien vous.", "مرحبًا بعودتك — يقول GitHub إنك <strong>@" +
-                        w(l.login) +
-                        "</strong>. هذا أنت.", "Bem-vindo de volta — o GitHub diz que é <strong>@" +
-                        w(l.login) +
-                        "</strong>. É você.", "お帰りなさい — GitHub によると、あなたは <strong>@" + w(l.login) + "</strong> です。ご本人です。") :
-                    r("✓ You're connected as <strong>@" + w(l.login) + "</strong>. Your folder is being created now.", "✓ <strong>@" + w(l.login) + "</strong> 님으로 연결됐어요. 지금 폴더를 만들고 있어요.", "✓ Estás conectado como <strong>@" + w(l.login) + "</strong>. Tu carpeta se está creando ahora.", "✓ 你已连接为 <strong>@" + w(l.login) + "</strong>。正在创建你的文件夹。", "✓ आप <strong>@" + w(l.login) + "</strong> के रूप में जुड़ गए हैं. अभी आपका फ़ोल्डर बन रहा है.", "✓ Vous êtes connecté en tant que <strong>@" + w(l.login) + "</strong>. Votre dossier est en cours de création.", "✓ أنت متصل باسم <strong>@" + w(l.login) + "</strong>. يجري الآن إنشاء مجلدك.", "✓ Está ligado como <strong>@" + w(l.login) + "</strong>. A sua pasta está a ser criada agora.", "✓ <strong>@" + w(l.login) + "</strong> として接続しました。フォルダを作成しています。")
-                    ), k(
-                    "step1"),
-                setTimeout(
-                    function() {
-                        et()
-                    }, 400)
+            if (s.setupChoice === "existing-memory") {
+                Ut(R());
+                await jt();
+                await chooseExistingMemory();
+                return;
+            }
+            if (s.folderName) { i("fRepo").value = s.folderName; o.repoName = s.folderName; o.repoTouched = true }
+            await et(s.templateFolder);
+        } else if (s.setupChoice === "existing") {
+            o.sbToken = c;
+            Ut(R());
+            await chooseExistingMemory();
         } else o.sbToken = c,
             await qt(), o.sbOrgsFailed ? (SbOrgsFailed(), k("step2")) : o.sbOrgId ? (U(
                 "sbConnected",
@@ -10857,6 +10967,68 @@ function Qe() {
 ` + `3. Mirror only: never edit my home based on the Notion page, and if the two disagree, my home wins.
 4. Tell me in one line what changed.`
 }
+function paintSetupChoices() {
+    if (!i("folderFoundTitle")) return;
+    u("step1Lede", setupText("folderQuestion"));
+    u("ghPrimaryBtn", setupText(templateTarget() ? "templateConnect" : "connect"));
+    u("ghTemplateBtn", setupText("create"));
+    u("folderFoundTitle", setupText("found"));
+    u("folderKeyNote", setupText("keyNote"));
+    u("ghAdoptBtn", setupText("useFolder"));
+    u("step2Lede", setupText("memoryIntro"));
+    u("sbExistingBtn", setupText("useDatabase"));
+    u("existingProjectLabel", setupText("chooseProject"));
+    u("useProjectBtn", setupText("useProject"));
+    u("successMemCreateBtn", setupText("memory"));
+    u("successMemFrame", setupText("memoryIntro"));
+    if (i("workDone").dataset.folderReceipt === "adopted") {
+        u("successTitle", ae("✓ Your folder is your home"));
+        u("successLine", setupText("adopted"));
+    }
+    u("homeMemoryDoor", setupText("memoryDoor"));
+    var back = r("Go back", "돌아가기", "Volver", "返回", "वापस जाएँ", "Retour", "رجوع", "Voltar", "戻る");
+    u("folderChoiceBack", back);
+    u("projectBackBtn", back);
+}
+function installSetupChoices() {
+    i("successMemCreateBtn").before(i("successMemSkipBtn"));
+    var connect = i("ghPrimaryBtn");
+    var create = i("ghTemplateBtn");
+    i("step1Lede").after(connect, create);
+    create.classList.add("secondary");
+    i("step1").insertAdjacentHTML("afterbegin",
+        '<section id="folderFound"><h1 id="folderFoundTitle" tabindex="-1"></h1>' +
+        '<p class="lede" id="folderFoundName" dir="auto"></p><p id="folderKeyNote" class="small"></p><button class="btn quiet" id="folderChoiceBack" type="button"></button></section>');
+    var adopt = i("ghAdoptBtn");
+    adopt.className = "btn btn-fw";
+    i("folderChoiceBack").before(adopt);
+    i("folderChoiceBack").addEventListener("click", function() { clearFolderChoice(); connect.focus() });
+
+    i("step2Lede").after(i("sbPrimaryBtn"));
+    i("sbPrimaryBtn").insertAdjacentHTML("afterend",
+        '<button type="button" class="btn secondary btn-fw" id="sbExistingBtn"></button>' +
+        '<fieldset id="projectPickerFields"><label for="existingProject" id="existingProjectLabel"></label>' +
+        '<select id="existingProject"></select><p class="small" role="status" id="projectStatus"></p>' +
+        '<button type="button" class="btn btn-fw" id="useProjectBtn" disabled></button>' +
+        '<button type="button" class="btn quiet" id="projectBackBtn"></button></fieldset>');
+    i("existingProject").addEventListener("change", function() { i("useProjectBtn").disabled = !this.value });
+    i("sbExistingBtn").addEventListener("click", chooseExistingMemory);
+    i("useProjectBtn").addEventListener("click", useExistingProject);
+    i("projectBackBtn").addEventListener("click", function() { closeProjectPicker(); i("sbExistingBtn").focus() });
+    // All signed-in home layouts share this top-level container.
+    i("homeSegTop").before(Object.assign(document.createElement("button"), {
+        id: "homeMemoryDoor", className: "btn secondary btn-fw", type: "button"
+    }));
+    i("homeMemoryDoor").addEventListener("click", function() {
+        if (i("screen-home").dataset.entry === "locked") { i("resyncBtn").click(); return }
+        if (!o.repoFull) Ut(R());
+        closeProjectPicker();
+        k("step2");
+    });
+    paintSetupChoices();
+}
+installSetupChoices();
+
 i("startBtn").addEventListener(
     "click",
     function() {
@@ -12819,6 +12991,7 @@ Listos con un solo clic.`, "给你一个属于你自己的\n私有<span class=\"
             "계속하기", "Seguir", "继续", "जारी रखें", "Continuer", "تابع", "Continuar", "続ける")),
         RVR && Rv();
     try { PaintSweep() } catch (f) {}
+    paintSetupChoices();
     try {
         ke()
     } catch (f) {}
@@ -13139,7 +13312,7 @@ function CfRows(root) {
         ex.textContent = m[2]
     })
 }function FailStepTxt(k) {
-    if (k === "gh-create" && typeof o !== "undefined" && o && o.ghCollision) return r("Your private folder was already there", "비밀 폴더가 이미 있었어요", "Tu carpeta privada ya estaba ahí", "你的私有文件夹已经存在了", "आपका निजी फ़ोल्डर पहले से मौजूद था", "Votre dossier privé était déjà là", "كان مجلدك الخاص موجودًا بالفعل", "A sua pasta privada já estava lá", "非公開フォルダはすでにありました");
+
     switch (k) {
         case "gh-verify":
             return r("GitHub didn't confirm it's you", "GitHub가 본인임을 확인하지 못했어요", "GitHub no confirmó que eres tú", "GitHub 没能确认是你本人", "GitHub पुष्टि नहीं कर पाया कि यह आप ही हैं", "GitHub n'a pas confirmé que c'est vous", "لم يؤكد GitHub أنك أنت", "O GitHub não confirmou que é você", "GitHubで本人確認ができませんでした");
@@ -13171,7 +13344,6 @@ function CfRows(root) {
 
 function FailClassify(e) { var m = String(e && e.message || e || ""); if (/maximum number of projects|too many projects|project limit|exceeded[^.]*project/i.test(m)) return "limit"; if (/said no \(HTTP|HTTP \d{3}/i.test(m)) return "refused"; if ((e && e.name === "AbortError") || /failed to fetch|networkerror|load failed|abort|timed?\s?out|ERR_/i.test(m)) return "transport"; return "" }
 function FailMeanTxt(k2) {
-    if (k2 === "gh-create" && typeof o !== "undefined" && o && o.ghCollision) return r("GitHub said that name is taken.", "GitHub가 그 이름은 이미 사용 중이라고 했어요.", "GitHub dijo que ese nombre ya está en uso.", "GitHub 说这个名字已被使用。", "GitHub ने कहा कि यह नाम पहले से उपयोग में है।", "GitHub a dit que ce nom est déjà utilisé.", "قال GitHub إن هذا الاسم مستخدم بالفعل.", "O GitHub disse que esse nome já está em uso.", "GitHubはその名前がすでに使われていると言いました。");
     var fc = window.__failClass || null;
     if (!fc) return ""; var _fam = function(k) { k = String(k || ""); if (k.indexOf("wire") === 0) return "wire"; if (k.indexOf("sb") === 0 || k.indexOf("supabase") === 0) return "sb"; if (k.indexOf("gh") === 0 || k.indexOf("github") === 0) return "gh"; return "" }; if (!_fam(k2) || _fam(fc.key) !== _fam(k2)) return "";
     if (fc.cause === "limit" && k2.indexOf("sb") === 0) return r("That account already holds as many free projects as it can. Delete one in Supabase — or upgrade there — then tap Try again.", "그 계정에는 무료 프로젝트가 이미 가득 찼어요. Supabase에서 하나를 지우거나 업그레이드한 뒤, 다시 하기를 눌러 주세요.", "Esa cuenta ya tiene todos los proyectos gratuitos que puede. Borra uno en Supabase — o mejora tu plan allí — y luego toca Intentar de nuevo.", "那个账户的免费项目已经满了。在 Supabase 里删掉一个，或者在那里升级，然后点“再试一次”。", "उस खाते में मुफ़्त प्रोजेक्ट पूरे हो चुके हैं। Supabase में एक हटाएँ — या वहीं अपग्रेड करें — फिर 'फिर कोशिश करें' दबाएँ।", "Ce compte a déjà tous les projets gratuits possibles. Supprimez-en un dans Supabase — ou passez à un plan supérieur là-bas — puis touchez Réessayer.", "ذلك الحساب لديه كل المشاريع المجانية الممكنة. احذف واحدًا في Supabase — أو رقِّ خطتك هناك — ثم اضغط حاول مجددًا.", "Essa conta já tem todos os projetos gratuitos que pode. Apague um no Supabase — ou faça upgrade lá — e depois toque em Tentar outra vez.", "そのアカウントは無料プロジェクトの上限に達しています。Supabaseで一つ削除するか、そこでアップグレードしてから「もう一度試す」をタップしてください。");
@@ -13185,7 +13357,8 @@ document.addEventListener("toggle", function (event) {
         if (pre && !pre.textContent.trim()) pre.textContent = FailTechTxt("");
     }
 }, true);
-function FailTechTxt(e) { var m = String(e || ""); if (!m) return r("No technical message was provided.", "기술적인 메시지가 없어요.", "No se proporcionó ningún mensaje técnico.", "没有提供技术信息。", "कोई तकनीकी संदेश नहीं दिया गया।", "Aucun message technique n'a été fourni.", "لم تُقدَّم أي رسالة تقنية.", "Não foi fornecida nenhuma mensagem técnica.", "技術的なメッセージはありませんでした。"); var mm = m.match(/^(GitHub|Supabase) said no \(HTTP (\d+)\)\s*:?\s*/); if (mm) { var _h = mm[1] === "GitHub" ? r("GitHub said no (HTTP %S%)", "GitHub가 거절했어요 (HTTP %S%)", "GitHub dijo que no (HTTP %S%)", "GitHub 拒绝了 (HTTP %S%)", "GitHub ने मना कर दिया (HTTP %S%)", "GitHub a dit non (HTTP %S%)", "قال GitHub لا (HTTP %S%)", "O GitHub disse que não (HTTP %S%)", "GitHubに断られました (HTTP %S%)") : r("Supabase said no (HTTP %S%)", "Supabase가 거절했어요 (HTTP %S%)", "Supabase dijo que no (HTTP %S%)", "Supabase 拒绝了 (HTTP %S%)", "Supabase ने मना कर दिया (HTTP %S%)", "Supabase a dit non (HTTP %S%)", "قال Supabase لا (HTTP %S%)", "O Supabase disse que não (HTTP %S%)", "Supabaseに断られました (HTTP %S%)"); _h = _h.replace("%S%", mm[2]); var _rest = m.slice(mm[0].length); return _rest ? _h + ": " + _rest : _h } return m } function FailCollisionPaint() { var rb = i("failedRetryBtn"); if (typeof o !== "undefined" && o.ghCollision) { u("failedH1", r("That folder already exists", "그 폴더는 이미 있어요", "Esa carpeta ya existe", "那个文件夹已经存在了", "वह फ़ोल्डर पहले से मौजूद है", "Ce dossier existe déjà", "ذلك المجلد موجود أصلًا", "Essa pasta já existe", "そのフォルダはすでにあります")); i("failedLine").textContent = r("Nothing was added to it — it's untouched. Go back, and you can use it as your home or pick a different name.", "그 폴더에는 아무것도 추가되지 않았어요 — 그대로예요. 돌아가면 그 폴더를 내 홈으로 쓰거나 다른 이름을 고를 수 있어요.", "No se agregó nada — está intacta. Vuelve, y podrás usarla como tu casa o elegir otro nombre.", "里面没有添加任何东西——完好无损。返回后，你可以把它当作你的家，或者换个名字。", "उसमें कुछ नहीं जोड़ा गया — वह जैसी थी वैसी है। वापस जाएँ, और आप उसे अपना घर बना सकते हैं या दूसरा नाम चुन सकते हैं।", "Rien n'y a été ajouté — il est intact. Revenez en arrière, et vous pourrez l'utiliser comme votre espace ou choisir un autre nom.", "لم يُضف إليه شيء — بقي كما هو. ارجع، ويمكنك استخدامه كمساحتك أو اختيار اسم مختلف.", "Nada foi adicionado — está intacta. Volte, e poderá usá-la como a sua casa ou escolher outro nome.", "中には何も追加されていません — そのままです。戻れば、そのフォルダをあなたのホームとして使うか、別の名前を選べます。"); if (rb) rb.classList.add("hidden") } else if (rb) rb.classList.remove("hidden") } function CfFail(root) { var sc = root || document; sc.querySelectorAll("li.failed").forEach(function(li) { var et = li.querySelector(".eta"); if (et) et.remove(); var dot = li.querySelector(".dot"); var k2 = li.getAttribute("data-k") || ""; var ft = (typeof FailStepTxt === "function") ? FailStepTxt(k2) : ""; if (ft) { var sps = li.querySelectorAll(":scope > span"); for (var q2 = 0; q2 < sps.length; q2++) { if (!sps[q2].className && sps[q2] !== dot) { sps[q2].textContent = ft; break } } } var st = li.querySelector(".st"); if (st && (st.textContent || "").trim().length > 14) return; var mn = li.querySelector(".mean"); if (mn && mn.textContent && !mn.getAttribute("data-stock")) return; if (!mn) { mn = document.createElement("span"); mn.className = "mean"; li.appendChild(mn) } var k2 = li.getAttribute("data-k") || ""; var fm9 = (typeof FailMeanTxt === "function") ? FailMeanTxt(k2) : ""; if (fm9) { mn.textContent = fm9; mn.setAttribute("data-stock", "1"); return } mn.textContent = (k2.indexOf("gh") === 0 || k2.indexOf("wire") === 0) ? r("GitHub didn't answer in time.", "GitHub가 제때 답하지 않았어요.", "GitHub no respondió a tiempo.", "GitHub 没能及时回应。", "GitHub ने समय पर जवाब नहीं दिया.", "GitHub n'a pas répondu à temps.", "لم يرد GitHub في الوقت المناسب.", "O GitHub não respondeu a tempo.", "GitHubから時間内に応答がありませんでした。") : k2.indexOf("sb") === 0 ? r("Supabase didn't answer in time.", "Supabase가 제때 답하지 않았어요.", "Supabase no respondió a tiempo.", "Supabase 没能及时回应。", "Supabase ने समय पर जवाब नहीं दिया.", "Supabase n'a pas répondu à temps.", "لم يرد Supabase في الوقت المناسب.", "O Supabase não respondeu a tempo.", "Supabaseから時間内に応答がありませんでした。") : r("This step didn't finish.", "이 단계가 끝나지 않았어요.", "Este paso no se completó.", "这一步没有完成。", "यह चरण पूरा नहीं हुआ.", "Cette étape ne s'est pas terminée.", "لم تكتمل هذه الخطوة.", "Este passo não terminou.", "このステップが終わりませんでした。"); mn.setAttribute("data-stock", "1") }) }  function SegGo(scr, k) {
+function FailTechTxt(e) { var m = String(e || ""); if (!m) return r("No technical message was provided.", "기술적인 메시지가 없어요.", "No se proporcionó ningún mensaje técnico.", "没有提供技术信息。", "कोई तकनीकी संदेश नहीं दिया गया।", "Aucun message technique n'a été fourni.", "لم تُقدَّم أي رسالة تقنية.", "Não foi fornecida nenhuma mensagem técnica.", "技術的なメッセージはありませんでした。"); var mm = m.match(/^(GitHub|Supabase) said no \(HTTP (\d+)\)\s*:?\s*/); if (mm) { var _h = mm[1] === "GitHub" ? r("GitHub said no (HTTP %S%)", "GitHub가 거절했어요 (HTTP %S%)", "GitHub dijo que no (HTTP %S%)", "GitHub 拒绝了 (HTTP %S%)", "GitHub ने मना कर दिया (HTTP %S%)", "GitHub a dit non (HTTP %S%)", "قال GitHub لا (HTTP %S%)", "O GitHub disse que não (HTTP %S%)", "GitHubに断られました (HTTP %S%)") : r("Supabase said no (HTTP %S%)", "Supabase가 거절했어요 (HTTP %S%)", "Supabase dijo que no (HTTP %S%)", "Supabase 拒绝了 (HTTP %S%)", "Supabase ने मना कर दिया (HTTP %S%)", "Supabase a dit non (HTTP %S%)", "قال Supabase لا (HTTP %S%)", "O Supabase disse que não (HTTP %S%)", "Supabaseに断られました (HTTP %S%)"); _h = _h.replace("%S%", mm[2]); var _rest = m.slice(mm[0].length); return _rest ? _h + ": " + _rest : _h } return m }
+ function CfFail(root) { var sc = root || document; sc.querySelectorAll("li.failed").forEach(function(li) { var et = li.querySelector(".eta"); if (et) et.remove(); var dot = li.querySelector(".dot"); var k2 = li.getAttribute("data-k") || ""; var ft = (typeof FailStepTxt === "function") ? FailStepTxt(k2) : ""; if (ft) { var sps = li.querySelectorAll(":scope > span"); for (var q2 = 0; q2 < sps.length; q2++) { if (!sps[q2].className && sps[q2] !== dot) { sps[q2].textContent = ft; break } } } var st = li.querySelector(".st"); if (st && (st.textContent || "").trim().length > 14) return; var mn = li.querySelector(".mean"); if (mn && mn.textContent && !mn.getAttribute("data-stock")) return; if (!mn) { mn = document.createElement("span"); mn.className = "mean"; li.appendChild(mn) } var k2 = li.getAttribute("data-k") || ""; var fm9 = (typeof FailMeanTxt === "function") ? FailMeanTxt(k2) : ""; if (fm9) { mn.textContent = fm9; mn.setAttribute("data-stock", "1"); return } mn.textContent = (k2.indexOf("gh") === 0 || k2.indexOf("wire") === 0) ? r("GitHub didn't answer in time.", "GitHub가 제때 답하지 않았어요.", "GitHub no respondió a tiempo.", "GitHub 没能及时回应。", "GitHub ने समय पर जवाब नहीं दिया.", "GitHub n'a pas répondu à temps.", "لم يرد GitHub في الوقت المناسب.", "O GitHub não respondeu a tempo.", "GitHubから時間内に応答がありませんでした。") : k2.indexOf("sb") === 0 ? r("Supabase didn't answer in time.", "Supabase가 제때 답하지 않았어요.", "Supabase no respondió a tiempo.", "Supabase 没能及时回应。", "Supabase ने समय पर जवाब नहीं दिया.", "Supabase n'a pas répondu à temps.", "لم يرد Supabase في الوقت المناسب.", "O Supabase não respondeu a tempo.", "Supabaseから時間内に応答がありませんでした。") : r("This step didn't finish.", "이 단계가 끝나지 않았어요.", "Este paso no se completó.", "这一步没有完成。", "यह चरण पूरा नहीं हुआ.", "Cette étape ne s'est pas terminée.", "لم تكتمل هذه الخطوة.", "Este passo não terminou.", "このステップが終わりませんでした。"); mn.setAttribute("data-stock", "1") }) }  function SegGo(scr, k) {
     var sc = i(scr);
     if (!sc) return;
     sc.querySelectorAll(".segbtn")
@@ -15042,6 +15215,8 @@ function KH(entry) {
     var h = i("screen-home");
     if (h) h.dataset.entry =
         EntryCur;
+    var heading = h && h.querySelector('.home-head[data-head="' + EntryCur + '"] h1');
+    if (heading && i("homeMemoryDoor")) heading.after(i("homeMemoryDoor"));
     if (EntryCur === "created" &&
         !E) {
         var rr = null;
@@ -15134,6 +15309,7 @@ function BootRec(rec) {
 }
 
 function k(e) {
+    if (e !== "step2" && i("sbPreflight").hasAttribute("data-project-picker")) closeProjectPicker();
     if (e !== "screen-working" && e !== "step2") window.__pfStep = !1;
     var pf3 = e === "step2";
     if (pf3) {
@@ -15339,6 +15515,7 @@ var ft = {
 };
 
 function Q(e, t, n, a) {
+    i("workDone").dataset.folderReceipt = e === "✓ Your folder is your home" ? "adopted" : "";
     if (te(), i("successTitle")
         .textContent = ae(e), ft[t])
         t = ft[t];
@@ -15379,6 +15556,13 @@ function Q(e, t, n, a) {
             x.classList.add(
                 "done")
         });
+    if (e === "✓ Your folder is your home") {
+        l.replaceChildren();
+        var receipt = document.createElement("li");
+        receipt.className = "done";
+        receipt.textContent = o.repoFull;
+        l.appendChild(receipt);
+    }
     if (typeof Lc === "function")
         Lc(l);
     var dc9 = i("doneCheck");
@@ -15390,7 +15574,7 @@ function Q(e, t, n, a) {
         try {
             ph9 = (o && o.verificationPhrase) || (R() && R().verificationPhrase) || ""
         } catch (e9) {}
-        if (ph9 && ph9 !== "harbor-lantern-42") {
+        if (ph9 && (o.folderAdopted || ph9 !== "harbor-lantern-42")) {
             skt9.textContent = ph9, sk9.classList.remove("hidden")
         } else sk9.classList.add("hidden")
     }
@@ -15527,7 +15711,7 @@ function FailSafeTxt() {
 }
 
 function re(e, t, n, a) {
-    te(), DbWaitStop(), ye = { step: yt(t), key: t, error: String(e || "") }, window.__failClass = { cause: FailClassify(e), key: t }, i("failedLine").textContent = FailSafeTxt(), u("failedH1", FailHeadTxt(t)), i("failedTech").textContent = FailTechTxt(e), i("failedDetails").open = !1, FailCollisionPaint(), Re = n, z = a ||
+    te(), DbWaitStop(), ye = { step: yt(t), key: t, error: String(e || "") }, window.__failClass = { cause: FailClassify(e), key: t }, i("failedLine").textContent = FailSafeTxt(), u("failedH1", FailHeadTxt(t)), i("failedTech").textContent = FailTechTxt(e), i("failedDetails").open = !1, i("failedRetryBtn").classList.remove("hidden"), Re = n, z = a ||
         z, (function() {
             var wc9 = i(
                 "workCheck");
@@ -15553,25 +15737,20 @@ function re(e, t, n, a) {
         })(), Wm("stopped"), k(
             "screen-working")
 }
-async function et() { if (o._dtRun) return;
+async function et(template) { if (o._dtRun) return;
     window.__nbScene = !1;
     var gv9 = i("ghVis");
     if (gv9 && gv9.dataset.scene === "name") { gv9.dataset.scene = "link"; gv9._k = null }
     if (E) {
-        Q("✓ Your folder is created",
-            "Checked on GitHub just now.",
-            "Continue",
-            function() {
-                k("step2")
-            });
-        return
+        showFolder({full_name: o.repoFull || "GitHub / agent-home"});
+        return;
     }
     if (!o.ghToken) o.ghToken =
         i("ghToken").value
         .trim(), TkSave();
     if (!o.ghToken) {
         if (L("github")) {
-            X("github");
+            X("github", template ? "template" : "connect");
             return
         }
         re("Demo mode: one-click GitHub sign-in isn't switched on for this copy of the page yet, so no connection exists. Use the code option under Details on the folder screen. It does exactly the same job.",
@@ -15592,23 +15771,15 @@ async function et() { if (o._dtRun) return;
             }, "step1");
         return
     }
-    if (z = "step1", $e(
-            "Creating your folder…",
+    $e(setupText("checking"),
             "Checking your sign-in…",
-            "step1"), _e([
-            "ghCheck"
-        ]), await Dt(), te(), o
-        .repoDone) Q("✓ Your folder is created",
-        "Checked on GitHub just now.",
-        "Continue",
-        function() {
-            k("step2")
-        });
-    else re(i("ghErr")
-        .textContent ||
-        "GitHub did not confirm the folder was created.",
-        "github", et,
-        "step1")
+            "step1");
+    o.checkingFolder = true;
+    var outcome;
+    try { outcome = await Dt(true, template) }
+    finally { o.checkingFolder = false; te() }
+    if (outcome === "existing") return;
+    setupFailure(Error(i("ghErr").textContent || setupText("missing")), "folder", et);
 }
 function SbGateTouched() {
     var ul9 = i("sbCheck");
@@ -15805,12 +15976,18 @@ if (i("notMyNameBtn")) i(
         });
 // The person makes the folder from the template, so the app never needs access to any other repository.
 if (i("ghTemplateBtn")) i("ghTemplateBtn").addEventListener("click", function() {
-    if (T.githubTemplateUrl) window.open(T.githubTemplateUrl, "_blank", "noopener")
+    if (!T.githubTemplateUrl) return;
+    var url = new URL(T.githubTemplateUrl);
+    var name = B();
+    url.searchParams.set("name", name);
+    sessionStorage.setItem("ah_template_folder", JSON.stringify({name: name, started: Date.now()}));
+    paintSetupChoices();
+    window.open(url.href, "_blank", "noopener");
 });
 i("ghPrimaryBtn").addEventListener(
     "click",
     function() {
-        et()
+        et(templateTarget())
     });
 i("ghSignupBtn").addEventListener(
     "click",
@@ -15844,6 +16021,12 @@ if (i("successMemSkipBtn")) i(
         "successMemSkipBtn")
     .addEventListener("click",
         function() {
+            if (o.folderAdopted) {
+                o.dbSkipped = !o.dbDone;
+                H();
+                Se();
+                return;
+            }
             o.dbSkipped = !0, H(),
                 Ce(), setTimeout(
                     function() {
@@ -15937,7 +16120,7 @@ function HkP(phr) {
                 .verificationPhrase
         } catch (x) {}
     }
-    if (!p || !E && p ===
+    if (!p || !E && !o.folderAdopted && p ===
         "harbor-lantern-42") {
         b.classList.add("hidden");
         var pb0 = i("proveItBox");
@@ -22895,6 +23078,18 @@ html[data-hview="2"] #repairWrap { margin-top: 6px; }
      worker /report contract as kind:"feedback", step:"Comment". ── -->
 <style>
 #pwcmBtn{position:fixed;left:12px;bottom:84px;z-index:2147482000;background:#1F2937;color:#FAF2E3;border:none;border-radius:999px;padding:10px 16px;font:600 15px/1.2 -apple-system,'Segoe UI',Roboto,sans-serif;box-shadow:0 4px 14px rgba(31,41,55,.35);cursor:pointer}
+#step1:not([data-folder-found]) #folderFound,
+#step1[data-folder-found] > :not(#folderFound),
+#sbPreflight:not([data-project-picker]) #projectPickerFields,
+#sbPreflight[data-project-picker] > :not(#projectPickerFields):not(#step2H1):not(#step2Lede){display:none!important}
+#projectPickerFields{border:0;margin:1rem 0;padding:0;min-width:0}
+#projectPickerFields select{width:100%}
+#projectStatus:empty{display:none}
+#folderFoundName{overflow-wrap:anywhere}
+#step1 #ghTemplateBtn,#sbExistingBtn,#useProjectBtn,#homeMemoryDoor{margin-block:0.75rem}
+@media(max-width:600px){
+  #pwcmBtn{position:static;display:block;margin:1rem auto calc(1rem + env(safe-area-inset-bottom));min-height:44px}
+}
 #pwcmBtn:active{transform:scale(.97)}
 #pwcmBar{position:fixed;top:0;left:0;right:0;z-index:2147482002;background:#2970FF;color:#fff;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;font:600 16px/1.35 -apple-system,'Segoe UI',Roboto,sans-serif;display:flex;justify-content:space-between;align-items:center;gap:12px}
 #pwcmBar button{background:#fff;color:#2970FF;border:none;border-radius:999px;padding:6px 14px;font:600 15px/1.2 inherit;cursor:pointer}
