@@ -7425,7 +7425,9 @@ var setupStrings = {
     create: ["Create a private folder", "비공개 폴더 만들기", "Crear una carpeta privada", "创建私有文件夹", "निजी फ़ोल्डर बनाएँ", "Créer un dossier privé", "أنشئ مجلدًا خاصًا", "Criar uma pasta privada", "非公開フォルダを作る"],
     templateConnect: ["Connect the folder I just created", "방금 만든 폴더 연결하기", "Conectar la carpeta que acabo de crear", "连接我刚创建的文件夹", "अभी बनाया फ़ोल्डर जोड़ें", "Connecter le dossier que je viens de créer", "اربط المجلد الذي أنشأته للتو", "Ligar a pasta que acabei de criar", "今作ったフォルダを接続する"],
     found: ["Welcome back — this is your home", "다시 오셨네요 — 여기가 내 홈이에요", "Te damos la bienvenida de nuevo a tu hogar", "欢迎回来，这里就是你的家", "वापस स्वागत है — यह आपका घर है", "Bon retour chez vous", "مرحبًا بعودتك إلى منزلك", "Boas-vindas de volta à sua casa", "おかえりなさい。ここがあなたのホームです"],
+    foundCreated: ["Your folder is ready — this is your home", "내 폴더가 준비됐어요 — 여기가 내 홈이에요", "Tu carpeta está lista — es tu casa", "你的文件夹已就绪 — 这里就是你的家", "आपका फ़ोल्डर तैयार है — यह आपका घर है", "Votre dossier est prêt — c'est votre maison", "مجلدك جاهز — هذا بيتك", "A sua pasta está pronta — é a sua casa", "フォルダの準備ができました。ここがあなたのホームです"],
     keyNote: ["Your files stay in place. If the house key is missing, we’ll add it to MEMORY.md.", "파일은 그대로 둬요. 집 열쇠가 없으면 MEMORY.md에 추가해요.", "Tus archivos se quedan donde están. Si falta la llave de tu hogar, la añadiremos a MEMORY.md.", "你的文件会留在原处。如果没有家门钥匙，我们会将它添加到 MEMORY.md。", "आपकी फ़ाइलें अपनी जगह रहेंगी। घर की चाबी नहीं है तो हम उसे MEMORY.md में जोड़ेंगे।", "Vos fichiers restent en place. Si la clé de votre espace manque, nous l’ajouterons à MEMORY.md.", "تبقى ملفاتك في مكانها. إذا كان مفتاح المنزل مفقودًا، فسنضيفه إلى MEMORY.md.", "Os seus ficheiros ficam onde estão. Se faltar a chave da casa, vamos adicioná-la a MEMORY.md.", "ファイルはそのままです。ホームの鍵がなければ MEMORY.md に追加します。"],
+    keyNoteCreated: ["We just created this folder for you. If the house key is missing, we’ll add it to MEMORY.md.", "이 폴더는 방금 만들어졌어요. 집 열쇠가 없으면 MEMORY.md에 추가해요.", "Tu carpeta está creada. Si falta la llave de tu hogar, la añadiremos a MEMORY.md.", "你的文件夹建好了。如果没有家门钥匙，我们会将它添加到 MEMORY.md。", "आपका फ़ोल्डर बन गया। घर की चाबी नहीं है तो हम उसे MEMORY.md में जोड़ेंगे।", "Votre dossier est créé. Si la clé de votre espace manque, nous l’ajouterons à MEMORY.md.", "أُنشئ مجلدك. إذا كان مفتاح المنزل مفقودًا، فسنضيفه إلى MEMORY.md.", "A sua pasta foi criada. Se faltar a chave da casa, vamos adicioná-la a MEMORY.md.", "フォルダができました。ホームの鍵がなければ MEMORY.md に追加します。"],
     useFolder: ["Use this folder", "이 폴더 쓰기", "Usar esta carpeta", "使用此文件夹", "यह फ़ोल्डर इस्तेमाल करें", "Utiliser ce dossier", "استخدم هذا المجلد", "Usar esta pasta", "このフォルダを使う"],
     checking: ["Checking your private folder…", "비공개 폴더 확인 중…", "Comprobando tu carpeta privada…", "正在检查你的私有文件夹…", "आपका निजी फ़ोल्डर जाँचा जा रहा है…", "Vérification de votre dossier privé…", "جارٍ التحقق من مجلدك الخاص…", "A verificar a sua pasta privada…", "非公開フォルダを確認しています…"],
     adopted: ["GitHub confirmed your private folder. Any AI you give access can use it.", "GitHub에서 비공개 폴더를 확인했어요. 접근을 허용한 AI는 모두 쓸 수 있어요.", "GitHub confirmó tu carpeta privada. Cualquier IA a la que des acceso puede usarla.", "GitHub 已确认你的私有文件夹。你授权的任何 AI 都可以使用它。", "GitHub ने आपके निजी फ़ोल्डर की पुष्टि की। आप जिस AI को पहुँच दें, वह इसे इस्तेमाल कर सकता है।", "GitHub a confirmé votre dossier privé. Chaque IA à laquelle vous donnez accès peut l’utiliser.", "أكّد GitHub مجلدك الخاص. يمكن لأي ذكاء اصطناعي تمنحه الإذن استخدامه.", "O GitHub confirmou a sua pasta privada. Qualquer IA a que der acesso pode usá-la.", "GitHub で非公開フォルダを確認しました。許可した AI はどれでも利用できます。"],
@@ -7926,6 +7928,7 @@ document.addEventListener("focusin",function(ev){
 // The template opens on GitHub in a separate tab. Keep its target in this tab,
 // then bind it to the same OAuth state that validates the provider callback.
 var foundFolder = null;
+var folderJustCreated = false;
 function templateTarget() {
     try {
         var pending = JSON.parse(sessionStorage.getItem("ah_template_folder") || "null");
@@ -7935,13 +7938,21 @@ function templateTarget() {
 }
 function clearFolderChoice() {
     foundFolder = null;
+    folderJustCreated = false;
     sessionStorage.removeItem("ah_template_folder");
     i("step1").removeAttribute("data-folder-found");
     paintSetupChoices();
 }
 function showFolder(repo) {
     foundFolder = repo;
+    var pending = templateTarget();
+    var createdTs = repo && repo.created_at ? Date.parse(repo.created_at) : NaN;
+    folderJustCreated = !!(pending && pending.name && o.ghUser && repo && repo.full_name &&
+        (o.ghUser + "/" + pending.name).toLowerCase() === String(repo.full_name).toLowerCase() &&
+        (!Number.isFinite(createdTs) || createdTs >= pending.started - 5000));
     i("folderFoundName").textContent = repo.full_name;
+    u("folderFoundTitle", setupText(folderJustCreated ? "foundCreated" : "found"));
+    u("folderKeyNote", setupText(folderJustCreated ? "keyNoteCreated" : "keyNote"));
     i("step1").setAttribute("data-folder-found", "");
     k("step1");
     i("folderFoundTitle").focus();
@@ -11508,8 +11519,8 @@ function paintSetupChoices() {
     u("ghAdvancedSum", copy2("pasteAccess"));
     if (i("repoFold") && i("repoFold").querySelector("summary")) i("repoFold").querySelector("summary").textContent = copy2("otherName");
     if (i("doneH1")) u("doneH1", copy2(o.dbDone ? "memoryReady" : "homeReady"));
-    u("folderFoundTitle", setupText("found"));
-    u("folderKeyNote", setupText("keyNote"));
+    u("folderFoundTitle", setupText(folderJustCreated ? "foundCreated" : "found"));
+    u("folderKeyNote", setupText(folderJustCreated ? "keyNoteCreated" : "keyNote"));
     u("ghAdoptBtn", setupText("useFolder"));
     u("step2Lede", copy2("memoryMeaning"));
     u("sbExistingBtn", copy2("checkMemory"));
@@ -24036,6 +24047,15 @@ html[data-hview="2"] #screen-home[data-tvseg="home"] .mx-scenewrap{display:grid;
 html[data-hview="2"] #screen-home[data-tvseg="home"] #tvBandPill{position:static;margin:0;flex-wrap:wrap}
 html[data-hview="2"] #screen-home[data-tvseg="home"] #mxScene{width:100%!important}
 #folderHelp>summary:focus-visible{outline-offset:0}
+
+/* v128 lab F2 - home fold: tighten the above-primary stack on the complete home (spacing only, no copy change) */
+#screen-home .home-head[data-head=created] #doneVis{margin-bottom:10px}
+#screen-home #doneH1{margin-top:14px;margin-bottom:8px}
+#screen-home #doneProofLine{margin-top:12px;margin-bottom:12px}
+#doneKeyRow{margin-top:8px;padding-top:8px}
+#doneKeyRow .dk-row{margin-top:4px;gap:6px}
+#doneKeyChip{margin-top:4px;margin-bottom:4px}
+#doneKeyCopy{margin-top:4px}
 </style>
 </body>
 </html>
