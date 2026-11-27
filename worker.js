@@ -52,6 +52,13 @@ function secretEquals(a, b) {
   return diff === 0;
 }
 
+// SHA-256 hex of a string — the digest endpoint stores only the hash of
+// its token (DIGEST_TOKEN_SHA256), never the token itself.
+async function sha256Hex(value) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
 const PROVIDERS = {
   github: {
     tokenUrl: "https://github.com/login/oauth/access_token",
@@ -408,6 +415,64 @@ export default {
         github_client_id: env.GITHUB_CLIENT_ID || null,
         supabase_client_id: env.SUPABASE_CLIENT_ID || null,
         invites: invitesConfig(env),
+      });
+    }
+
+    // Read-only maintenance digest for the lab: funnel counters by day +
+    // the report store, nothing else. Gated by a dedicated token sent as
+    // the x-digest-token header; the worker stores only the token's
+    // SHA-256 (DIGEST_TOKEN_SHA256), so the credential that unlocks this
+    // route exists nowhere in the repo or the worker config. No writes,
+    // no admin actions, no invite operations — this route can only read.
+    if (url.pathname === "/digest" && request.method === "GET") {
+      if (!env.SETUPS) return json({ error: "registry_not_configured" }, 501);
+      const presented = request.headers.get("x-digest-token") || "";
+      if (!presented) return json({ error: "missing_token" }, 401);
+      const expectedHash = typeof env.DIGEST_TOKEN_SHA256 === "string" ? env.DIGEST_TOKEN_SHA256.toLowerCase() : "";
+      if (!expectedHash || !secretEquals(await sha256Hex(presented), expectedHash)) {
+        return json({ error: "invalid_token" }, 401);
+      }
+      const counters = {};
+      for (const name of await listAllKvKeys(env.SETUPS, "count:")) {
+        const [, ev, day] = name.split(":");
+        if (!COUNT_EVENTS.includes(ev) || !day) continue;
+        if (!counters[day]) {
+          counters[day] = { setup_started: 0, folder_ready: 0, home_reached: 0, key_matched: 0 };
+        }
+        counters[day][ev] = parseInt((await env.SETUPS.get(name)) || "0", 10) || 0;
+      }
+      const sortedCounters = {};
+      for (const day of Object.keys(counters).sort()) sortedCounters[day] = counters[day];
+      const reports = [];
+      for (const name of await listAllKvKeys(env.SETUPS, "report:")) {
+        const raw = await env.SETUPS.get(name);
+        if (!raw) continue;
+        let entry;
+        try { entry = JSON.parse(raw); } catch { continue; }
+        if (!entry || typeof entry !== "object") continue;
+        const tsNum = typeof entry.ts === "number" ? entry.ts : Date.parse(entry.ts);
+        const ts = Number.isFinite(tsNum) ? tsNum : 0;
+        reports.push({
+          timestamp: ts ? new Date(ts).toISOString() : null,
+          ts,
+          // Feedback submissions (the page's comment box, the feedback
+          // panel, invite requests) are comments; the rest of the
+          // /report store is failure-screen problem reports.
+          kind: entry.kind === "feedback" ? "comment" : "problem",
+          text: typeof entry.note === "string" && entry.note ? entry.note
+            : (typeof entry.error === "string" ? entry.error : ""),
+          step: typeof entry.step === "string" ? entry.step : "",
+          lang: typeof entry.lang === "string" ? entry.lang : "",
+          has_image: entry.has_image === true,
+        });
+      }
+      reports.sort((a, b) => b.ts - a.ts);
+      return json({
+        ok: true,
+        generated_at: new Date().toISOString(),
+        counters: sortedCounters,
+        report_count: reports.length,
+        reports,
       });
     }
 

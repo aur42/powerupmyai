@@ -33,6 +33,11 @@ ADMIN_GITHUB_LOGIN = "aur42"
 # flip only per INVITE-DEPLOY.md's order (codes issued and confirmed first).
 INVITES_REQUIRED = "false"
 INVITES_BALANCE = "5"
+# Read-only /digest gate: SHA-256 of the lab's digest token. Only the
+# hash lives here — the plaintext token is a lab-side file, never in
+# this repo, and the endpoint compares hashes, so this value alone
+# unlocks nothing.
+DIGEST_TOKEN_SHA256 = "8ca41d45e09e69827a223b8b2322fc4eb75336fc3f371cd711fc7fd93f1dc08b"
 
 [[kv_namespaces]]
 binding = "SETUPS"
